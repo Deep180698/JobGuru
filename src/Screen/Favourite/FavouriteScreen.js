@@ -85,7 +85,7 @@ const FavouriteScreen = (props) => {
 
   return (
     <View style={styles.container}>
-      <Header screenName={'Favourite'} onPress={() => props.navigation.goBack()} />
+            <Header screenName={"normal"} title={'Favourite'}onPress={() => props.navigation.goBack()} />
 
       <FlatList
         data={data}

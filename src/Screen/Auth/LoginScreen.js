@@ -36,14 +36,16 @@ const LoginScreen = (props) => {
 
     const fetchData = async () => {
         try {
-
+           const headers ={
+                "Content-type":"application/json"
+            }
          
             const data = {
                 'email': email,
                 'password': password
             }
      
-            const result = await apiCall.apiPOSTCall(AppConstants.AsyncKeyLiterals.getLogin, data);
+            const result = await apiCall.apiPOSTCall(AppConstants.AsyncKeyLiterals.getLogin, data,headers);
 
             console.log(result);
 
@@ -143,7 +145,7 @@ const LoginScreen = (props) => {
                                 onChangeText={(i) => setEmail(i)}
                                 isVisible={isVisible}
                                 onVisible={() => setIsVisible(!isVisible)}
-                                type={"Email"}
+                                type={"whiteBc"}
                                 placeholder={"Email"}
                             />
 
@@ -153,7 +155,7 @@ const LoginScreen = (props) => {
                                 onChangeText={(i) => setPassword(i)}
                                 isVisible={isVisible}
                                 onVisible={() => setIsVisible(!isVisible)}
-                                type={"Password"}
+                                type={"whiteBc"}
                                 placeholder={"Password"}
                             />
 

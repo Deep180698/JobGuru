@@ -19,7 +19,7 @@ const ReportScreen = (props) => {
     return (
         <View style={styles.container}>
             {/* Header */}
-            <Header screenName={"Report"} onPress={() => props.navigation.goBack()} />
+            <Header title={"Report"} screenName={"normal"} onPress={() => props.navigation.goBack()} />
             {/* body */}
 
 

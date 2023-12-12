@@ -169,14 +169,14 @@ const ResetPasswordScreen = (props) => {
                                     onChangeText={(i) => setPassword(i)}
                                     isVisible={isVisible}
                                     onVisible={() => setIsVisible(!isVisible)}
-                                    type={"Password"}
+                                    type={"whiteBc"}
                                     placeholder={"Password"}
                                 />
                                 <CustomTextInput
                                     onChangeText={(i) => setconfirmPassword(i)}
                                     isVisible={isVisible}
                                     onVisible={() => setIsVisible(!isVisible)}
-                                    type={"Password"}
+                                    type={"whiteBc"}
                                     placeholder={"Confirm Password"}
                                 />
                                 {/* Login btn */}

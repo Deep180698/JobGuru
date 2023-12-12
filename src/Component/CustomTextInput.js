@@ -1,84 +1,80 @@
-import { StyleSheet, Text, View, TextInput, PixelRatio, TouchableOpacity } from 'react-native'
-import React, { useState,useEffect } from 'react'
+import { StyleSheet, Text, View, PixelRatio, TouchableOpacity, Dimensions } from 'react-native'
+import React, { useState, useEffect } from 'react'
 import color from '../Utils/Color'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Entypo from 'react-native-vector-icons/Entypo'
-const CustomTextInput = ({ placeholder, type, value, leftIcon, RightIcon, onVisible, onChangeText, isVisible }) => {
-    const [data, setData] = useState('')
+import { TextInput } from 'react-native-paper'
+const { height, width } = Dimensions.get('screen')
+const CustomTextInput = ({ placeholder, type, value, leftIcon, RightIcon, onVisible, onChangeText, isVisible, onPress }) => {
     useEffect(() => {
-     setData(value)
     }, [])
-    
+
     return (
         <View>
+            {type === 'firstName' ?
+                <TextInput
+                    mode='outlined'
+                    value={value}
+                    textColor={color.black}
+                    outlineStyle={{ borderColor: color.black }}
+                    placeholderTextColor={color.white}
+                    style={styles.TextInputStyle}
+                    contentStyle={{ width: width - PixelRatio.getPixelSizeForLayoutSize(175 / PixelRatio.get()) }}
+                    onChangeText={(i) => [onChangeText(i)]}
+                    label={placeholder}
+                />
+
+                : null}
             {type === 'normal' ?
-                <View style={styles.TextInputStyle}>
-                    <TextInput
-                        value={data}
-                        onChangeText={(i) => [setData(i), onChangeText(i)]}
-                        style={{ flex: 1 }}
-                        placeholder={placeholder}
-                    />
+                <TextInput
+                    mode='outlined'
+                    value={value}
+                    textColor={color.white}
+                    outlineStyle={{ borderColor: color.white }}
+                    style={styles.TextInputStyle}
+                    contentStyle={{ width: width - PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }}
+                    onChangeText={(i) => [onChangeText(i)]}
+                    label={placeholder}
 
-                </View>
+                />
+
                 : null}
+
             {type === 'Address' ?
-                <View style={styles.TextInputStyle}>
-                    <TextInput
-                        value={data}
-                        onChangeText={(i) => [setData(i), onChangeText(i)]}
-                        maxLength={2000}
-                        style={{ flex: 1 ,height:80,textAlignVertical:'top'}}
-                        multiline={true}
-                        placeholder={placeholder}
-                    />
 
-                </View>
+
+                <TextInput
+                    mode='outlined'
+                    value={value}
+                    textColor={color.black}
+                    outlineStyle={{ borderColor: color.black }}
+                    multiline={true}
+                    style={[styles.TextInputStyle, { height: 80, textAlignVertical: 'top' }]}
+                    contentStyle={{ width: width - PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }}
+                    onChangeText={(i) => [onChangeText(i)]}
+                    label={placeholder}
+
+                />
+
+
                 : null}
 
-            {type === 'MobileNumber' ?
-                <View style={styles.TextInputStyle}>
-                    <Entypo name='mobile' size={25} color={color.black} />
 
-                    <TextInput
-                        value={data}
-                        onChangeText={(i) => [setData(i), onChangeText(i)]}
-                        style={{ flex: 1 }}
-                        keyboardType='number-pad'
-                        placeholder={placeholder}
-                    />
+            {type === 'whiteBc' ?
+                <TextInput
+                    mode='outlined'
+                    value={value}
+                    textColor={color.black}
+                    outlineStyle={{ borderColor: color.black }}
+                    style={[styles.TextInputStyle, { backgroundColor: color.white }]}
+                    contentStyle={{ width: width - PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }}
+                    onChangeText={(i) => [onChangeText(i)]}
+                    label={placeholder}
 
-                </View>
+                />
                 : null}
-            {type === 'Email' ?
-                <View style={styles.TextInputStyle}>
-                    <MaterialIcons name='email' size={25} color={color.black} />
-                    <TextInput
-                        value={data}
-                        onChangeText={(i) => [setData(i), onChangeText(i)]}
-                        style={{ flex: 1 }}
-                        placeholder={placeholder}
-                    />
 
-                </View>
-                : null}
-            {type === 'Password' ?
-                <View style={styles.TextInputStyle}>
-                    <MaterialIcons name='lock' size={25} color={color.black} />
-                    <TextInput
-                        value={data}
-                        onChangeText={(i) => [setData(i), onChangeText(i)]}
-                        secureTextEntry={isVisible}
-                        style={{ flex: 1 }}
-                        placeholder={placeholder}
-                    />
-
-                    <TouchableOpacity onPress={onVisible}>
-                        <FontAwesome name={isVisible ? 'eye-slash' : 'eye'} size={25} color={color.black} />
-                    </TouchableOpacity>
-                </View>
-                : null}
         </View>
     )
 }
@@ -87,19 +83,12 @@ export default CustomTextInput
 
 const styles = StyleSheet.create({
     TextInputStyle: {
-        backgroundColor: color.golden,
+
+        backgroundColor: color.white,
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
         marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-        paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
         alignItems: 'center',
         flexDirection: 'row',
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.20,
-        shadowRadius: 1.41,
-        elevation: 2,
+
     }
 })

@@ -229,7 +229,7 @@ const PostScreen = (props) => {
     }
     return (
         <View style={styles.container}>
-            <Header screenName={"PostScreen"} onPress={() => props.navigation.goBack()} />
+            <Header screenName={"normal"} title={'Post'}onPress={() => props.navigation.goBack()} />
             <Wizard activeIndex={activeIndex} onActiveIndexChanged={() => { }}>
                 <Wizard.Step state={() => getStepState(0)} label={'Image Selection'} />
                 <Wizard.Step state={() => getStepState(1)} label={'Post details'} />

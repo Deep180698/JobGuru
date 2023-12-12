@@ -125,7 +125,7 @@ const ForgotPasswordScreen = (props) => {
 
                         <CustomTextInput
                             onChangeText={(i) => setEmail(i)}
-                            type={"Email"}
+                            type={"whiteBc"}
                             placeholder={"Email"}
                         />
 

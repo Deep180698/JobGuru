@@ -5,7 +5,9 @@ const AppConstants = {
         isLoggedIn:"isLoggedIn",
         token:"token",
         getField:'/fields',
-        getLogin:'/login'
+        getLogin:'/login',
+        getProfile:'/profile',
+        Base_URL:'http://10.0.0.217:3000'
     },
 };
 

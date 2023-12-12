@@ -22,7 +22,7 @@ const SignUpScreen = (props) => {
     const [firstName, setFirstName] = useState('Deep')
     const [lasttName, setLastName] = useState('Patel')
 
-    const [email, setEmail] = useState('pateldeep09@gmail.com')
+    const [email, setEmail] = useState('pateldeep0989@gmail.com')
     const [password, setPassword] = useState('Deep0909@')
     const [confirmPassword, setconfirmPassword] = useState('Deep0909@')
     const [message, setMessage] = useState('')
@@ -136,7 +136,7 @@ const SignUpScreen = (props) => {
         }
     };
 
- 
+
 
     return (
         <View style={styles.container}>
@@ -174,20 +174,20 @@ const SignUpScreen = (props) => {
                             <CustomTextInput
                                 value={firstName}
                                 onChangeText={(i) => setFirstName(i)}
-                                type={"normal"}
+                                type={"whiteBc"}
                                 placeholder={"First Name"}
                             />
                             <CustomTextInput
                                 value={lasttName}
                                 onChangeText={(i) => setLastName(i)}
-                                type={"normal"}
+                                type={"whiteBc"}
                                 placeholder={"Last Name"}
                             />
 
                             <CustomTextInput
                                 value={email}
                                 onChangeText={(i) => setEmail(i)}
-                                type={"Email"}
+                                type={"whiteBc"}
                                 placeholder={"Email"}
                             />
 
@@ -196,7 +196,7 @@ const SignUpScreen = (props) => {
                                 onChangeText={(i) => setPassword(i)}
                                 isVisible={isVisible}
                                 onVisible={() => setIsVisible(!isVisible)}
-                                type={"Password"}
+                                type={"whiteBc"}
                                 placeholder={"Password"}
                             />
                             <CustomTextInput
@@ -204,10 +204,10 @@ const SignUpScreen = (props) => {
                                 onChangeText={(i) => setconfirmPassword(i)}
                                 isVisible={isVisible}
                                 onVisible={() => setIsVisible(!isVisible)}
-                                type={"Password"}
+                                type={"whiteBc"}
                                 placeholder={"Confirm Password"}
                             />
-
+                          
                             {/* Next btn */}
                             <CustomButton press={validatefunc} style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }} text="Next" />
                         </View>

@@ -69,7 +69,7 @@ const FaqScreen = (props) => {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <Header screenName={"FAQ"} onPress={() => props.navigation.goBack()} />
+      <Header title={"FAQ"} screenName={"normal"} onPress={() => props.navigation.goBack()} />
       {/* body */}
 
 

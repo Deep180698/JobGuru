@@ -13,6 +13,7 @@ import * as Animatable from 'react-native-animatable';
 import FontFamily from '../../Utils/FontFamily';
 import apiCall from '../../Utils/apiCall';
 import AppConstants from '../../Storage/AppConstants';
+import cacheData from '../../Storage/cacheData';
 
 const HomeScreen = (props, { navigation }) => {
 
@@ -31,6 +32,7 @@ const HomeScreen = (props, { navigation }) => {
 
 
   useEffect(() => {
+
     getBannerData()
     setData(JSONList.DashboardList)
   }, [isOpen])
@@ -153,7 +155,7 @@ const HomeScreen = (props, { navigation }) => {
 
 
       {/* Header */}
-      <Header screenName={'Home'} onNavigate={(item) => onNavigateScreen(item)} onPress={() => props.navigation.openDrawer()} />
+      <Header screenName={'Home'} title={"Dashboard"} onNavigate={(item) => onNavigateScreen(item)} onPress={() => props.navigation.openDrawer()} />
       <ScrollView>
 
         {/* Searchbar */}

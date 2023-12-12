@@ -1,17 +1,16 @@
 import axios from 'axios';
+import AppConstants from '../Storage/AppConstants';
 
-const BASE_URL = 'http://10.0.0.217:3000'; // Replace with your actual base API URL
 
-const apiPOSTCall = async (endpoint, data = null) => {
+const apiPOSTCall = async (endpoint, data = null,headers) => {
     try {
-        const apiUrl = BASE_URL + endpoint;
+        const apiUrl = AppConstants.AsyncKeyLiterals.Base_URL + endpoint;
 
-        const headers = {
-            'Content-Type': 'application/json',
-        };
-        console.log("apiUrl",apiUrl);
+        console.log(apiUrl);
+        console.log(data);
+        console.log(headers);
 
-        const response = await axios.post(apiUrl, data, headers);
+        const response = await axios.post(apiUrl, data, {headers});
 
         return response.data
         // Handle the response data as needed
@@ -20,15 +19,13 @@ const apiPOSTCall = async (endpoint, data = null) => {
         // Handle errors
     }
 };
-const apiGETCall = async (endpoint) => {
+
+const apiGETCall = async (endpoint,headers) => {
     try {
-        const apiUrl = BASE_URL + endpoint;
-        const headers = {
-            'Content-Type': 'application/json',
-        };
-
-        const response = await axios.get(apiUrl, headers);
-
+        const apiUrl = AppConstants.AsyncKeyLiterals.Base_URL + endpoint;
+       
+        const response = await axios.get(apiUrl, {headers});
+        console.log(response.data);
         return response.data
         // Handle the response data as needed
     } catch (error) {
@@ -40,6 +37,6 @@ const apiGETCall = async (endpoint) => {
 
 const apiCall = {
     apiPOSTCall,
-    apiGETCall
+    apiGETCall,
 };
 export default apiCall;

@@ -6,7 +6,7 @@ import Header from '../../Component/Header'
 const SettingScreen = (props) => {
   return (
     <View style={styles.container}>
-        <Header screenName={"SettingScreen"}  onPress={()=>props.navigation.goBack()}/>
+      <Header title={"Setting"} screenName={"normal"} onPress={() => props.navigation.goBack()} />
       <Text>SettingScreen</Text>
     </View>
   )
