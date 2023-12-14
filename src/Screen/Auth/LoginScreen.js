@@ -36,16 +36,14 @@ const LoginScreen = (props) => {
 
     const fetchData = async () => {
         try {
-           const headers ={
-                "Content-type":"application/json"
+            const headers = {
+                "Content-type": "application/json"
             }
-         
             const data = {
                 'email': email,
                 'password': password
             }
-     
-            const result = await apiCall.apiPOSTCall(AppConstants.AsyncKeyLiterals.getLogin, data,headers);
+            const result = await apiCall.apiPOSTCall(AppConstants.AsyncKeyLiterals.getLogin, data, headers);
 
             console.log(result);
 
@@ -98,17 +96,15 @@ const LoginScreen = (props) => {
         }
         else {
             fetchData();
-           
-
         }
     };
 
 
     return (
-        <Animatable.View animation={"slideInRight"} duration={600} style={styles.container}>
+        <View style={styles.container}>
             <ImageBackground source={require('../../assets/BackGround.png')} style={{ width: width, height: height }}>
 
-                <KeyboardAvoidingView style={{ flex: 1 }} removeClippedSubviews={true} contentContainerStyle={{ flexGrow: 1 }}>
+                <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
                     <Image source={require('../../assets/logo.png')} style={styles.logoStyle} />
 
                     <Animatable.Text animation={"zoomIn"} style={[styles.textStyles, {
@@ -118,68 +114,70 @@ const LoginScreen = (props) => {
                         textAlign: 'center', padding: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())
                     }]}>Welcome</Animatable.Text>
 
-                    <Animatable.View animation={"zoomIn"} style={{
-                        marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
-
-                        backgroundColor: color.white,
-                        marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
-                        paddingBottom: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()),
-                        shadowColor: "#000",
-                        shadowOffset: {
-                            width: 0,
-                            height: 2,
-                        },
-                        shadowOpacity: 0.25,
-                        shadowRadius: 3.84,
-                        elevation: 5,
-                    }}>
-
+                    <View style={{ flex: 1 }}>
                         <View style={{
+                            
                             marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
-                            marginTop: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get())
+                            backgroundColor: color.white,
+                            marginTop: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()),
+                            paddingBottom: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()),
+                            shadowColor: "#000",
+                            shadowOffset: {
+                                width: 0,
+                                height: 2,
+                            },
+                            shadowOpacity: 0.25,
+                            shadowRadius: 3.84,
+                            elevation: 5,
                         }}>
 
-                            {/* Email Style*/}
-                            <CustomTextInput
-                                value={email}
-                                onChangeText={(i) => setEmail(i)}
-                                isVisible={isVisible}
-                                onVisible={() => setIsVisible(!isVisible)}
-                                type={"whiteBc"}
-                                placeholder={"Email"}
-                            />
+                            <View style={{
+                                marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
+                                marginTop: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get())
+                            }}>
 
-                            {/* Password Style */}
-                            <CustomTextInput
-                                value={password}
-                                onChangeText={(i) => setPassword(i)}
-                                isVisible={isVisible}
-                                onVisible={() => setIsVisible(!isVisible)}
-                                type={"whiteBc"}
-                                placeholder={"Password"}
-                            />
+                                {/* Email Style*/}
+                                <CustomTextInput
+                                    value={email}
+                                    onChangeText={(i) => setEmail(i)}
+                                    isVisible={isVisible}
+                                    onVisible={() => setIsVisible(!isVisible)}
+                                    type={"whiteBc"}
+                                    placeholder={"Email"}
+                                />
+
+                                {/* Password Style */}
+                                <CustomTextInput
+                                    value={password}
+                                    onChangeText={(i) => setPassword(i)}
+                                    isVisible={isVisible}
+                                    onVisible={() => setIsVisible(!isVisible)}
+                                    type={"whiteBc"}
+                                    placeholder={"Password"}
+                                />
 
 
-                            {/* Login btn */}
-                            <CustomButton press={validatefunc} style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }} text="Login" />
-                            <TouchableOpacity activeOpacity={0.6} onPress={() => props.navigation.navigate('ResetPasswordScreen')} style={{ alignItems: 'center', marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                                <Text style={styles.textStyles}>{"Forgot your password ?"}</Text>
-                            </TouchableOpacity>
+                                {/* Login btn */}
+                                <CustomButton press={validatefunc} style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }} text="Login" />
+                                <TouchableOpacity activeOpacity={0.6} onPress={() => props.navigation.navigate('ResetPasswordScreen')} style={{ alignItems: 'center', marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+                                    <Text style={styles.textStyles}>{"Forgot your password ?"}</Text>
+                                </TouchableOpacity>
 
+
+                            </View>
 
                         </View>
-
-                    </Animatable.View>
-                    <View style={{ justifyContent: 'center', alignItems: 'flex-end', flexDirection: 'row', marginTop: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()) }}>
+                    </View>
+                    <View style={{ flexDirection: 'row',justifyContent:'center',marginBottom:PixelRatio.getPixelSizeForLayoutSize(30/PixelRatio.get()) }}>
                         <Text style={styles.textStyles}>{"Don't you have account? "}</Text>
                         <TouchableOpacity activeOpacity={0.6} style={{}} onPress={() => props.navigation.navigate('SignUpScreen')}>
-                            <Text style={[styles.textStyles, { color: color.golden, fontFamily: FontFamily.Roboto_Bold }]}>{"Register Here"}</Text>
+                            <Text style={[styles.textStyles, { color: color.golden, fontFamily: FontFamily.Roboto_Bold,fontSize:14/PixelRatio.getFontScale() }]}>{"Register Here"}</Text>
                         </TouchableOpacity>
                     </View>
                     <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"login"} />
-                </KeyboardAvoidingView>
+                </ScrollView>
             </ImageBackground>
-        </Animatable.View>
+        </View>
     )
 }
 const styles = StyleSheet.create({
@@ -198,7 +196,7 @@ const styles = StyleSheet.create({
     },
     textStyles: {
         color: color.black,
-        fontSize: 16 / PixelRatio.getFontScale(),
+        fontSize: 12 / PixelRatio.getFontScale(),
         fontFamily: FontFamily.Roboto_Light
     }
 })

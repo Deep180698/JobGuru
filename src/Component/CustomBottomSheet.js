@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, StyleSheet, PixelRatio ,PermissionsAndroid, Platform} from 'react-native';
+import { View, Text, Modal, TouchableOpacity, StyleSheet, PixelRatio, PermissionsAndroid, Platform } from 'react-native';
 import color from '../Utils/Color';
 import Entypo from 'react-native-vector-icons/Entypo'
 import ImagePicker from 'react-native-image-crop-picker';
 import FontFamily from '../Utils/FontFamily';
 
 
-const CustomBottomSheet = ({ isOpen, onClose, getCall ,data}) => {
+const CustomBottomSheet = ({ isOpen, onClose, getCall, data, type }) => {
   const [images, setImages] = useState(null);
 
   useEffect(() => {
@@ -14,39 +14,39 @@ const CustomBottomSheet = ({ isOpen, onClose, getCall ,data}) => {
     requestPermissions();
   }, []);
 
-  
-const requestCameraPermission = async () => {
-  if (Platform.OS === 'android') {
-    const cameraPermission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
-    return cameraPermission === PermissionsAndroid.RESULTS.GRANTED;
-  }
-  return true; // On iOS, permission is handled at build time in the Info.plist
-};
 
-const requestStoragePermission = async () => {
-  if (Platform.OS === 'android') {
-    const storagePermission = await PermissionsAndroid.requestMultiple([
-      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-    ]);
-    return (
-      storagePermission['android.permission.READ_EXTERNAL_STORAGE'] ===
+  const requestCameraPermission = async () => {
+    if (Platform.OS === 'android') {
+      const cameraPermission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
+      return cameraPermission === PermissionsAndroid.RESULTS.GRANTED;
+    }
+    return true; // On iOS, permission is handled at build time in the Info.plist
+  };
+
+  const requestStoragePermission = async () => {
+    if (Platform.OS === 'android') {
+      const storagePermission = await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      ]);
+      return (
+        storagePermission['android.permission.READ_EXTERNAL_STORAGE'] ===
         PermissionsAndroid.RESULTS.GRANTED &&
-      storagePermission['android.permission.WRITE_EXTERNAL_STORAGE'] === PermissionsAndroid.RESULTS.GRANTED
-    );
-  }
-  return true; // On iOS, permission is handled at build time in the Info.plist
-};
+        storagePermission['android.permission.WRITE_EXTERNAL_STORAGE'] === PermissionsAndroid.RESULTS.GRANTED
+      );
+    }
+    return true; // On iOS, permission is handled at build time in the Info.plist
+  };
 
-const requestPermissions = async () => {
-  const cameraPermissionGranted = await requestCameraPermission();
-  const storagePermissionGranted = await requestStoragePermission();
+  const requestPermissions = async () => {
+    const cameraPermissionGranted = await requestCameraPermission();
+    const storagePermissionGranted = await requestStoragePermission();
 
-  if (!cameraPermissionGranted || !storagePermissionGranted) {
-    // Handle the case when permissions are not granted
-  }
-};
-  
+    if (!cameraPermissionGranted || !storagePermissionGranted) {
+      // Handle the case when permissions are not granted
+    }
+  };
+
   const openPicker = async () => {
     try {
       const result = await ImagePicker.openPicker({
@@ -57,10 +57,10 @@ const requestPermissions = async () => {
 
       data(result)
 
-    
+
     } catch (error) {
       console.error('Error picking image:', error);
-    
+
     }
   };
   const openCamaraPicker = async () => {
@@ -72,11 +72,11 @@ const requestPermissions = async () => {
       });
 
       // Handle the selected image
-     data(result)
+      data(result)
 
     } catch (error) {
       console.error('Error picking image:', error);
-    
+
     }
   };
 
@@ -102,13 +102,13 @@ const requestPermissions = async () => {
                   <Entypo name='folder-images' color={color.black} size={PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get())} />
                   <Text style={[styles.textStyle, { marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"Upload from Gallery"}</Text>
                 </TouchableOpacity>
-
+                <TouchableOpacity activeOpacity={0.6} onPress={onClose} style={[styles.btnStyle, { backgroundColor: color.golden, marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
+                  <Text style={[styles.textStyle]}>{"Cancel"}</Text>
+                </TouchableOpacity>
               </View>
               : null}
 
-            <TouchableOpacity activeOpacity={0.6} onPress={onClose} style={[styles.btnStyle, { backgroundColor: color.golden, alignSelf: 'center', padding: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
-              <Text style={[styles.textStyle]}>{"Cancel"}</Text>
-            </TouchableOpacity>
+          
           </View>
         </View>
       </Modal>
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   },
   bottomSheet: {
     backgroundColor: 'white',
-    padding: PixelRatio.getPixelSizeForLayoutSize(16 / PixelRatio.get()),
+    paddingBottom: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     borderTopLeftRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     borderTopRightRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     width: '100%',
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   textStyle: {
     fontSize: 14 / PixelRatio.getFontScale(),
     color: color.black,
-    fontFamily:FontFamily.Roboto_Light
+    fontFamily: FontFamily.Roboto_Light
   },
   btnStyle: {
     justifyContent: 'center',

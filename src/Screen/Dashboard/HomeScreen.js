@@ -131,7 +131,7 @@ const HomeScreen = (props, { navigation }) => {
             >
               <FontAwesome
                 name={'heart'}
-                size={30}
+                size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())}
                 color={item.isFavourite ? color.white : color.white}
               />
             </Animatable.View>
@@ -156,12 +156,13 @@ const HomeScreen = (props, { navigation }) => {
 
       {/* Header */}
       <Header screenName={'Home'} title={"Dashboard"} onNavigate={(item) => onNavigateScreen(item)} onPress={() => props.navigation.openDrawer()} />
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
 
         {/* Searchbar */}
         <Searchbar
           style={styles.searchbarStyle}
           value={searchText}
+          inputStyle={styles.textStyle}
           textAlignVertical='top'
           onChangeText={(i) => setSearchText(i)}
           placeholder='search job'
@@ -186,10 +187,7 @@ const HomeScreen = (props, { navigation }) => {
             renderItem={renderItem}
           />
         </Animatable.View>
-
         <CustomBottomSheet onClose={() => setIsOpen(false)} isOpen={isOpen} />
-
-
       </ScrollView>
     </View>
   )
@@ -221,7 +219,7 @@ const styles = StyleSheet.create({
     marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
   },
   textStyle: {
-    fontSize: 14 / PixelRatio.getFontScale(),
+    fontSize: 12 / PixelRatio.getFontScale(),
     color: color.white,
     fontFamily: FontFamily.Roboto_Light
   },
@@ -237,7 +235,7 @@ const styles = StyleSheet.create({
   },
   bannerText: {
     color: color.black,
-    fontSize: 14 / PixelRatio.getFontScale(),
+    fontSize: 12 / PixelRatio.getFontScale(),
     paddingTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     fontFamily: FontFamily.Roboto_Medium
   },
@@ -245,6 +243,7 @@ const styles = StyleSheet.create({
     marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
     marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     height: 40,
-    borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
+    borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    backgroundColor: color.white
   }
 })

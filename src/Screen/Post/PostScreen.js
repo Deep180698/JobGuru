@@ -1,74 +1,128 @@
-import { PixelRatio, StyleSheet, ScrollView, Text, TouchableOpacity, View, FlatList, Dimensions, Image, TextInput } from 'react-native'
+import { PixelRatio, StyleSheet, ScrollView, Text, TouchableOpacity, View, FlatList, Dimensions, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import color from '../../Utils/Color'
 import Header from '../../Component/Header'
-import JSONList from '../../JSON/JSONList'
 const screenWidth = Dimensions.get('window').width;
 import { Checkbox } from 'react-native-paper';
 import CustomBottomSheet from '../../Component/CustomBottomSheet'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import FontFamily from '../../Utils/FontFamily'
-import { Wizard, WizardStep } from 'react-native-ui-lib';
-import { KeyboardAvoidingView } from 'react-native'
+import { Wizard } from 'react-native-ui-lib';
+import CustomTextInput from '../../Component/CustomTextInput'
+import CustomAutoComplate from '../../Component/CustomAutoComplate'
+import CustomAddress from '../../Component/CustomAddress'
+import cacheData from '../../Storage/cacheData';
+import AppConstants from '../../Storage/AppConstants';
 
 const PostScreen = (props) => {
 
-    const [imageList, setImageList] = useState([])
-    const [firstName, setFirstName] = useState('Deep')
-    const [lastName, setLastName] = useState('Patel')
-    const [title, setTitle] = useState('')
-    const [isNext, setIsNext] = useState('1')
-    const [description, setDescription] = useState('')
-    const [salary, setSalary] = useState('')
-    const [selectedType, setSelectedType] = useState([]);
-    const [isOpen, setIsOpen] = useState(false);
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [completedStepIndex, setCompletedStepIndex] = useState();
+    // const [imageList, setImageList] = useState([])
+    // const [firstName, setFirstName] = useState('')
+    // const [lastName, setLastName] = useState('')
+    // const [profileImage, setProfileImage] = useState('')
+    // const [title, setTitle] = useState('')
+    // const [address, setAddress] = useState('')
+    // const [type, setType] = useState('')
+    // const [additionalNote, setAdditionalNote] = useState('')
+    // const [texts, setTexts] = useState([]);
+    // const [isNext, setIsNext] = useState('1')
+    // const [description, setDescription] = useState('')
+    // const [salary, setSalary] = useState('')
+    // const [selectedType, setSelectedType] = useState([]);
+    // const [isOpen, setIsOpen] = useState(false);
+    // const [skillsOpen, setSkillsOpen] = useState(false);
+    // const [addresOpen, setAddresOpen] = useState(false);
+    // const [isVisible, setIsVisible] = useState(false);
+    // const [activeIndex, setActiveIndex] = useState(0);
+    // const [completedStepIndex, setCompletedStepIndex] = useState();
 
+    const [state, setState] = useState({
+        imageList: [],
+        firstName: '',
+        lastName: '',
+        profileImage: '',
+        title: '',
+        address: '',
+        type: '',
+        additionalNote: '',
+        texts: [],
+        isNext: '1',
+        description: '',
+        salary: '',
+        selectedType: [],
+        isOpen: false,
+        skillsOpen: false,
+        addresOpen: false,
+        isVisible: false,
+        activeIndex: 0,
+        completedStepIndex: null,
+    });
 
-
-    useEffect(() => {
+    useEffect(async () => {
         // setImageList(JSONList.Imagelist)
-    })
+        const data = await cacheData.getDataFromCachedWithKey(AppConstants.AsyncKeyLiterals.IS_AUTH)
+        setState({
+            ...state,
+            firstName: data?.data?.userData?.firstName,
+            lastName: data?.data?.userData?.lastName,
+            profileImage: data?.data?.userData?.profileImage,
+        });
+
+    }, [])
 
     // JobType picker
     const handleCheckboxChange = (jobType) => {
-        const isSelected = selectedType.includes(jobType);
+        const isSelected = state.selectedType.includes(jobType);
 
         const updatedjobTypes = isSelected
             ? selectedType.filter((item) => item !== jobType)
-            : [...selectedType, jobType];
+            : [...state.selectedType, jobType];
 
         setSelectedType(updatedjobTypes);
+
+        setState({
+            ...state,
+            selectedType: updatedjobTypes,
+        });
     };
     const getImages = (item) => {
         if (item.path) {
-            console.log("get Images", item);
-
-            imageList.push(item)
+            state.imageList.push(item)
         }
 
-
-        setIsOpen(false)
+        setState({
+            ...state,
+            isOpen: false,
+        });
     };
     const removeImage = (item, index) => {
-        const newArray = [...imageList];
+        const newArray = [...state.imageList];
         newArray.splice(index, 1); // Remove 1 element at the specified index
-        setImageList(newArray);
+        setState({
+            ...state,
+            imageList: newArray,
+        });
     };
 
     const nextItem = (item) => {
 
-        console.log("item", item);
         switch (item) {
             case '1':
-                setIsNext('2')
+                setState({
+                    ...state,
+                    isNext: '2',
+                    activeIndex:1
+                });
                 break;
             case '2':
-                setIsNext('1')
+                setState({
+                    ...state,
+                    isNext: '1',
+                    activeIndex:0
+                });
                 break;
             case 'Next':
-                setIsNext('1')
                 props.navigation.navigate('HomeScreen')
                 break;
 
@@ -78,17 +132,26 @@ const PostScreen = (props) => {
     };
 
     const getStepState = (index) => {
-        const state = Wizard.States.DISABLED;
-        if (completedStepIndex && completedStepIndex > index - 1) {
-            state = Wizard.States.COMPLETED;
-        } else if (activeIndex === index || completedStepIndex === index - 1) {
-            state = Wizard.States.ENABLED;
+        const state1 = Wizard.States.DISABLED;
+        if (state.completedStepIndex && state.completedStepIndex > index - 1) {
+            state1 = Wizard.States.COMPLETED;
+        } else if (state.activeIndex === index || state.completedStepIndex === index - 1) {
+            state1 = Wizard.States.ENABLED;
         }
 
-        return state;
+        return state1;
     }
+    const renderSkillsItem = ({ item, index }) => (
+        <View>
+            <View style={styles.item}>
+                <Text style={[styles.textStyles, { color: color.white }]}>{item}</Text>
+            </View>
+            <TouchableOpacity activeOpacity={0.6} onPress={() => handleItemPress(index)} style={{ position: 'absolute', right: 0, top: 0, zIndex: 2, backgroundColor: color.white, borderRadius: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }} >
+                <AntDesign name='closecircle' color={color.red} size={PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get())} />
+            </TouchableOpacity>
+        </View>
+    );
     const renderItem = ({ item, index }) => {
-        console.log(item);
         return (
             <View style={[styles.item, { paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
                 <TouchableOpacity activeOpacity={0.6} onPress={() => removeImage(item, index)} style={{ position: 'absolute', right: 0, top: 0, zIndex: 2, backgroundColor: color.white, borderRadius: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }} >
@@ -110,11 +173,16 @@ const PostScreen = (props) => {
                     marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
                     marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
                 }}>
-                    <TouchableOpacity onPress={() => setIsOpen(true)} activeOpacity={0.6} style={[{ width: '100%', marginVertical: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()), paddingVertical: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()), justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: color.gray, borderStyle: 'dashed' }]}>
+                    <TouchableOpacity onPress={() => setState({
+                        ...state,
+                        type: 'imageSelection',
+                        isOpen: true
+                    })}
+                        activeOpacity={0.6} style={[{ width: '100%', marginVertical: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()), paddingVertical: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()), justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: color.gray, borderStyle: 'dashed' }]}>
                         <AntDesign name='plus' size={PixelRatio.getPixelSizeForLayoutSize(50 / PixelRatio.get())} color={color.gray} />
                     </TouchableOpacity>
                     <FlatList
-                        data={imageList}
+                        data={state.imageList}
                         renderItem={renderItem}
                         keyExtractor={(item) => item.id}
                         numColumns={3}
@@ -122,7 +190,9 @@ const PostScreen = (props) => {
 
                 </View>
                 {/* Next btn */}
-                <TouchableOpacity onPress={() => [nextItem('1'), setActiveIndex(1)]} activeOpacity={0.6} style={styles.floatBtnStyle}>
+                <TouchableOpacity
+                    onPress={() => nextItem('1')}
+                    activeOpacity={0.6} style={styles.floatBtnStyle}>
                     <Text style={[styles.textStyles, { color: color.white }]}>{"Next"}</Text>
                 </TouchableOpacity>
             </View>
@@ -131,123 +201,226 @@ const PostScreen = (props) => {
     const DescriptionItem = () => {
         return (
             <View style={{ flex: 1 }}>
-                {/* description */}
-                <View style={{ marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                    <View style={{
-                        flexDirection: 'row',
-                        borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-                    }}>
-                        <Image
-                            style={styles.ProfileImage}
-                            source={{ uri: 'https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?size=626&ext=jpg&ga=GA1.1.2062017442.1699557938&semt=sph' }} />
-                        <View style={{ flexDirection: 'row', marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                            <Text style={[styles.textStyles, { fontSize: 16 / PixelRatio.getFontScale(), color: color.black, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{firstName}</Text>
-                            <Text style={[styles.textStyles, { fontSize: 16 / PixelRatio.getFontScale(), color: color.black, marginLeft: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }]}>{lastName}</Text>
-                        </View>
+                {state.addresOpen && !state.skillsOpen ?
+                    <View style={{ flex: 1 }}>
+                        <CustomAddress press={(texts) => setState({
+                            ...state,
+                            texts: texts,
+                            addresOpen: false
+                        })}
+                            title={"Find Location"} />
                     </View>
-                    <Text style={[styles.textStyles, { color: color.black, fontSize: 16 / PixelRatio.getFontScale(), marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), }]} >{"Post Description"}</Text>
+                    : null}
+                {state.skillsOpen && !state.addresOpen ?
+                    <View style={{ flex: 1 }}>
+                        <CustomAutoComplate press={(texts) =>
+                            setState({
+                                ...state,
+                                texts: texts,
+                                skillsOpen: false
+                            })}
+                            title={"Add skills"} />
+                    </View>
+                    : null}
 
-                    <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+                {!state.skillsOpen && !state.addresOpen ?
+                    <View style={{ flex: 1, justifyContent: 'space-between' }}>
 
-                        {/* Titile */}
-                        <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                            <Text style={[styles.textStyles, { color: color.black, fontSize: 16 / PixelRatio.getFontScale() }]} >{"Title"}</Text>
-                            <TextInput
-                                value={title}
-                                onChangeText={(i) => setTitle(i)}
-                                placeholder='Title'
-                                style={styles.textInputStyle}
+                        {/* description */}
+                        <View style={{ marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+                            <View style={{
+                                flexDirection: 'row',
+                                borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+                            }}>
+                                <Image
+                                    style={styles.ProfileImage}
+                                    source={{ uri: state.profileImage ? AppConstants.AsyncKeyLiterals.Base_URL + state.profileImage : 'https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?size=626&ext=jpg&ga=GA1.1.2062017442.1699557938&semt=sph' }} />
+                                <View style={{ flexDirection: 'row', marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+                                    <Text style={[styles.textStyles, { fontSize: 16 / PixelRatio.getFontScale(), color: color.black, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{state.firstName}</Text>
+                                    <Text style={[styles.textStyles, { fontSize: 16 / PixelRatio.getFontScale(), color: color.black, marginLeft: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }]}>{state.lastName}</Text>
+                                </View>
+                            </View>
 
-                            />
-                        </View>
-                        {/* Description */}
-                        <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                            <Text style={[styles.textStyles, { color: color.black, fontSize: 16 / PixelRatio.getFontScale() }]} >{"Description"}</Text>
-                            <TextInput
-                                value={description}
-                                onChangeText={(i) => setDescription(i)}
-                                placeholder='Description'
-                                style={styles.textInputStyle}
-                            />
-                        </View>
+                            <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
 
-                        {/* Job type */}
-                        <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                            <Text style={[styles.textStyles, { color: color.black, fontSize: 16 / PixelRatio.getFontScale() }]} >{"Job Type"}</Text>
-                            <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                                <Checkbox.Item
-                                    label="FullTime"
-                                    labelStyle={styles.textStyles}
-                                    status={selectedType.includes('FullTime') ? 'checked' : 'unchecked'}
-                                    onPress={() => handleCheckboxChange('FullTime')}
+                                {/* Titile */}
+
+                                <CustomTextInput
+                                    value={state.title}
+                                    onChangeText={(i) => setState({
+                                        ...state,
+                                        title: i
+                                    })}
+                                    type={"whiteBc"}
+                                    placeholder={"Title"}
                                 />
-                                <Checkbox.Item
-                                    label="PartTime"
-                                    labelStyle={styles.textStyles}
-                                    status={selectedType.includes('PartTime') ? 'checked' : 'unchecked'}
-                                    onPress={() => handleCheckboxChange('PartTime')}
+
+                                {/* Description */}
+                                <CustomTextInput
+                                    value={state.description}
+                                    onChangeText={(i) => setState({
+                                        ...state,
+                                        description: i
+                                    })}
+                                    type={"whiteBc"}
+                                    placeholder={"Description"}
                                 />
-                                <Checkbox.Item
-                                    label="Seasonal"
-                                    labelStyle={styles.textStyles}
-                                    status={selectedType.includes('Seasonal') ? 'checked' : 'unchecked'}
-                                    onPress={() => handleCheckboxChange('Seasonal')}
-                                />
-                                <Checkbox.Item
-                                    label="Contract"
-                                    labelStyle={styles.textStyles}
-                                    status={selectedType.includes('Contract') ? 'checked' : 'unchecked'}
-                                    onPress={() => handleCheckboxChange('Contract')}
-                                />
+
+                                {/* Salary */}
+
+                                <View style={{ justifyContent: 'center' }}>
+                                    <CustomTextInput
+                                        value={state.salary}
+                                        onChangeText={(i) => setState({
+                                            ...state,
+                                            salary: i
+                                        })}
+                                        type={"whiteBc"}
+                                        placeholder={"Salary"}
+                                    />
+                                    <TouchableOpacity onPress={() => { }} style={{ position: 'absolute', right: 10 }}>
+                                        <Text style={{ color: color.black }}>{`| ${'Hourly'}`}</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+
+                                {/* Job type */}
+                                <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+                                    <TouchableOpacity style={styles.blockStyle}
+                                        onPress={() => setState(prevState => ({
+                                            ...prevState,
+                                            isVisible: !prevState.isVisible,
+                                        }))}>
+                                        <Text style={[styles.textStyles, { flex: 1, color: color.black, fontSize: 12 / PixelRatio.getFontScale() }]} >{"Job Type"}</Text>
+                                        <AntDesign name={state.isVisible ? 'down' : 'right'} size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.black} />
+
+                                    </TouchableOpacity>
+                                    <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }}>
+                                        {state.isVisible ? <View>
+                                            <Checkbox.Item
+                                                label="FullTime"
+                                                labelStyle={styles.textStyles}
+                                                status={state.selectedType.includes('FullTime') ? 'checked' : 'unchecked'}
+                                                onPress={() => handleCheckboxChange('FullTime')}
+                                            />
+                                            <Checkbox.Item
+                                                label="PartTime"
+                                                labelStyle={styles.textStyles}
+                                                status={state.selectedType.includes('PartTime') ? 'checked' : 'unchecked'}
+                                                onPress={() => handleCheckboxChange('PartTime')}
+                                            />
+                                            <Checkbox.Item
+                                                label="Seasonal"
+                                                labelStyle={styles.textStyles}
+                                                status={state.selectedType.includes('Seasonal') ? 'checked' : 'unchecked'}
+                                                onPress={() => handleCheckboxChange('Seasonal')}
+                                            />
+                                            <Checkbox.Item
+                                                label="Contract"
+                                                labelStyle={styles.textStyles}
+                                                status={state.selectedType.includes('Contract') ? 'checked' : 'unchecked'}
+                                                onPress={() => handleCheckboxChange('Contract')}
+                                            />
+                                        </View> : null}
+                                        {/* Skills */}
+                                        <TouchableOpacity onPress={() => setState({
+                                            ...state,
+                                            skillsOpen: true
+                                        })}
+                                            style={[styles.blockStyle, { marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
+                                            <Text style={styles.textStyles}>{'Add Skills'}</Text>
+                                        </TouchableOpacity>
+                                        <FlatList
+                                            data={state.texts}
+                                            renderItem={renderSkillsItem}
+                                            keyExtractor={(item, index) => index.toString()}
+                                            numColumns={3}
+                                        />
+                                        {/* Addition note */}
+                                        <CustomTextInput
+                                            value={state.additionalNote}
+                                            onChangeText={(i) => setState({
+                                                ...state,
+                                                additionalNote: i
+                                            })}
+                                            type={"Address"}
+                                            placeholder={"Additional Note (Optional)"}
+                                        />
+
+                                        {/* Address */}
+                                        <View style={{ justifyContent: 'center' }}>
+                                            <CustomTextInput
+                                                value={state.address}
+
+                                                onChangeText={(i) => setState({
+                                                    ...state,
+                                                    address: i
+                                                })}
+                                                type={"whiteBc"}
+                                                placeholder={"Address"}
+                                            />
+                                            <TouchableOpacity onPress={() => setState({
+                                                ...state,
+                                                addresOpen: true,
+                                                skillsOpen:false
+                                            })}
+                                                style={{ position: 'absolute', right: 10 }}>
+                                                <Ionicons name='location-sharp' color={color.black} size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} />
+                                            </TouchableOpacity>
+                                        </View>
+
+
+                                    </View>
+                                </ View>
+
+
+
                             </View>
                         </View>
-
-                        {/* Salary */}
-                        <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                            <Text style={[styles.textStyles, { color: color.black, fontSize: 16 / PixelRatio.getFontScale() }]} >{"Salary"}</Text>
-                            <TextInput
-                                value={salary}
-                                onChangeText={(i) => setSalary(i)}
-                                placeholder='Salary'
-                                style={styles.textInputStyle}
-                            />
+                        {/* Next btn */}
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+                            <TouchableOpacity onPress={() => [nextItem('2')]} activeOpacity={0.6} style={styles.floatBtnStyle}>
+                                <Text style={[styles.textStyles, { color: color.white }]}>{"Back"}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => nextItem('Next')} activeOpacity={0.6} style={[styles.floatBtnStyle, { left: 0 }]}>
+                                <Text style={[styles.textStyles, { color: color.white }]}>{"Next"}</Text>
+                            </TouchableOpacity>
                         </View>
-
                     </View>
-                </View>
-                {/* Next btn */}
-                <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-                    <TouchableOpacity onPress={() => [nextItem('2'), setActiveIndex(0)]} activeOpacity={0.6} style={styles.floatBtnStyle}>
-                        <Text style={[styles.textStyles, { color: color.white }]}>{"Back"}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => nextItem('Next')} activeOpacity={0.6} style={[styles.floatBtnStyle, { left: 0 }]}>
-                        <Text style={[styles.textStyles, { color: color.white }]}>{"Next"}</Text>
-                    </TouchableOpacity>
-                </View>
+                    : null}
             </View>
+
         )
     }
     return (
         <View style={styles.container}>
-            <Header screenName={"normal"} title={'Post'}onPress={() => props.navigation.goBack()} />
-            <Wizard activeIndex={activeIndex} onActiveIndexChanged={() => { }}>
-                <Wizard.Step state={() => getStepState(0)} label={'Image Selection'} />
-                <Wizard.Step state={() => getStepState(1)} label={'Post details'} />
-            </Wizard>
 
-            <KeyboardAvoidingView style={{ flex: 1 }}>
-                <ScrollView contentContainerStyle={{flexGrow:1}} style={{flex:1}}>
+
+
+            <View style={{ flex: 1 }}>
+                <Header screenName={"normal"} title={'Post'} onPress={() => props.navigation.goBack()} />
+                <Wizard activeIndex={state.activeIndex} onActiveIndexChanged={() => { }}>
+                    <Wizard.Step state={() => getStepState(0)} label={'Image Selection'} />
+                    <Wizard.Step state={() => getStepState(1)} label={'Post details'} />
+                </Wizard>
+
+                <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ flex: 1 }}>
                     <View style={{ flex: 1, backgroundColor: color.white, paddingTop: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }}>
 
                         {/*  page */}
-                        {isNext === '1' ? <ImagePickerItem /> : null}
-                        {isNext === '2' ? <DescriptionItem /> : null}
+                        {state.isNext === '1' ? <ImagePickerItem /> : null}
+                        {state.isNext === '2' ? <DescriptionItem /> : null}
 
                     </View>
+                    <CustomBottomSheet getCall={state.type} onClose={() => setState({
+                        ...state,
+                        isOpen: false
+                    })} isOpen={state.isOpen} data={(item) => getImages(item)} />
 
-                    <CustomBottomSheet getCall="imageSelection" onClose={() => setIsOpen(false)} isOpen={isOpen} data={(item) => getImages(item)} />
                 </ScrollView>
-            </KeyboardAvoidingView>
+
+            </View>
+
         </View >
     )
 }
@@ -267,8 +440,8 @@ const styles = StyleSheet.create({
     },
     textStyles: {
         color: color.black,
-        fontSize: 14 / PixelRatio.getFontScale(),
-        fontFamily: FontFamily.Roboto_Light
+        fontSize: 12 / PixelRatio.getFontScale(),
+        fontFamily: FontFamily.Roboto_Regular
 
     },
     item: {
@@ -306,11 +479,23 @@ const styles = StyleSheet.create({
         paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
         backgroundColor: color.black,
     },
-    textInputStyle: {
-        color: color.black,
-        backgroundColor: color.gray,
-        borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-        marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-        fontFamily: FontFamily.Roboto_Light
+
+    blockStyle: {
+        borderWidth: 1,
+        borderColor: color.black,
+        borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+        paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+        paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+        alignItems: 'center',
+        flexDirection: 'row'
+    },
+    item: {
+        backgroundColor: color.black,
+        marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+        paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+        paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
+        marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+        borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
     }
+
 })

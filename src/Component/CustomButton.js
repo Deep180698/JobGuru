@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   },
   textStyles: {
     color: color.white,
-    fontSize: 16 / PixelRatio.getFontScale(),
+    fontSize: 14 / PixelRatio.getFontScale(),
     textAlign: 'center',
     fontFamily: FontFamily.Roboto_Regular
 

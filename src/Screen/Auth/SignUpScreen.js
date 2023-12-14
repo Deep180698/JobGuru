@@ -1,22 +1,13 @@
-import { View, Text, ScrollView, TextInput, StyleSheet, PixelRatio, Image, TouchableOpacity, ImageBackground, Dimensions, Alert, KeyboardAvoidingView } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, PixelRatio, Image, ImageBackground, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import color from '../../Utils/Color'
 const { height, width } = Dimensions.get('window');
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import Entypo from "react-native-vector-icons/Entypo";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import CustomButton from '../../Component/CustomButton';
 import CustomAlert from '../../Component/CustomAlert';
-import * as Animatable from 'react-native-animatable';
 import FontFamily from '../../Utils/FontFamily';
 import apiCall from '../../Utils/apiCall';
 import CustomTextInput from '../../Component/CustomTextInput';
-import CustomBottomSheet from '../../Component/CustomBottomSheet';
-import PhoneInput from 'react-native-phone-number-input';
 
-import AntDesign from 'react-native-vector-icons/AntDesign'
-import Header from '../../Component/Header';
 const SignUpScreen = (props) => {
     const [countryImage, setCountryImage] = useState('https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_the_Taliban.svg')
     const [firstName, setFirstName] = useState('Deep')
@@ -137,86 +128,94 @@ const SignUpScreen = (props) => {
     };
 
 
+    const InputBlock = () => {
+        return (
+            <View style={{
+                marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
+                marginTop: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
+
+            }}>
+                <CustomTextInput
+                    value={firstName}
+                    onChangeText={(i) => setFirstName(i)}
+                    type={"whiteBc"}
+                    placeholder={"First Name"}
+                />
+                <CustomTextInput
+                    value={lasttName}
+                    onChangeText={(i) => setLastName(i)}
+                    type={"whiteBc"}
+                    placeholder={"Last Name"}
+                />
+
+                <CustomTextInput
+                    value={email}
+                    onChangeText={(i) => setEmail(i)}
+                    type={"whiteBc"}
+                    placeholder={"Email"}
+                />
+
+                <CustomTextInput
+                    value={password}
+                    onChangeText={(i) => setPassword(i)}
+                    isVisible={isVisible}
+                    onVisible={() => setIsVisible(!isVisible)}
+                    type={"whiteBc"}
+                    placeholder={"Password"}
+                />
+                <CustomTextInput
+                    value={confirmPassword}
+                    onChangeText={(i) => setconfirmPassword(i)}
+                    isVisible={isVisible}
+                    onVisible={() => setIsVisible(!isVisible)}
+                    type={"whiteBc"}
+                    placeholder={"Confirm Password"}
+                />
+
+                <CustomButton press={validatefunc} style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }} text="Next" />
+            </View>
+        )
+    }
 
     return (
         <View style={styles.container}>
+            <ImageBackground source={require('../../assets/BackGround.png')} style={{ width: width, height: height }}>
 
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+                <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
 
-                <View style={{ flex: 1, justifyContent: 'space-around' }}>
-                    <Image source={require('../../assets/logo.png')} style={styles.logoStyle} />
-
-                    <View style={{ alignSelf: 'center' }}  >
-                        <Text style={[styles.textStyles, { color: color.white, fontSize: 25 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Italic }]}>{"Create Yout Profile"}</Text>
-                    </View>
-                    <Animatable.View animation={"zoomIn"} duration={1000} style={{
-                        backgroundColor: color.white,
-                        marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
-                        paddingBottom: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
-                        marginBottom: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
-                        shadowColor: "#000",
-                        shadowOffset: {
-                            width: 0,
-                            height: 2,
-                        },
-                        shadowOpacity: 0.25,
-                        shadowRadius: 3.84,
-                        elevation: 5,
-                    }}>
+                    <View style={{ flex: 1 }}>
+                        <Image source={require('../../assets/logo.png')} style={styles.logoStyle} />
 
                         <View style={{
-                            marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
-                            marginTop: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
-
-                        }}>
-
-
-                            <CustomTextInput
-                                value={firstName}
-                                onChangeText={(i) => setFirstName(i)}
-                                type={"whiteBc"}
-                                placeholder={"First Name"}
-                            />
-                            <CustomTextInput
-                                value={lasttName}
-                                onChangeText={(i) => setLastName(i)}
-                                type={"whiteBc"}
-                                placeholder={"Last Name"}
-                            />
-
-                            <CustomTextInput
-                                value={email}
-                                onChangeText={(i) => setEmail(i)}
-                                type={"whiteBc"}
-                                placeholder={"Email"}
-                            />
-
-                            <CustomTextInput
-                                value={password}
-                                onChangeText={(i) => setPassword(i)}
-                                isVisible={isVisible}
-                                onVisible={() => setIsVisible(!isVisible)}
-                                type={"whiteBc"}
-                                placeholder={"Password"}
-                            />
-                            <CustomTextInput
-                                value={confirmPassword}
-                                onChangeText={(i) => setconfirmPassword(i)}
-                                isVisible={isVisible}
-                                onVisible={() => setIsVisible(!isVisible)}
-                                type={"whiteBc"}
-                                placeholder={"Confirm Password"}
-                            />
-                          
-                            {/* Next btn */}
-                            <CustomButton press={validatefunc} style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }} text="Next" />
+                            alignSelf: 'center',
+                        }}  >
+                            <Text style={[styles.textStyles, { color: color.white, fontSize: 20 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Italic }]}>{"Create Yout Profile"}</Text>
                         </View>
+                        <View
+                            style={{
+                                marginTop: height/9.5,
+                                backgroundColor: color.white,
+                                paddingBottom: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
+                                marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
+                                marginBottom: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
+                                shadowColor: "#000",
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 2,
+                                },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 3.84,
+                                elevation: 5,
+                            }}>
 
-                    </Animatable.View>
-                </View>
-                <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"login"} />
-            </ScrollView>
+                            <InputBlock />
 
+
+                        </View>
+                    </View>
+                    <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"login"} />
+                </ScrollView>
+            </ImageBackground>
         </View >
 
     )

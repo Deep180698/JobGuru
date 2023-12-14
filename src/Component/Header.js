@@ -13,16 +13,16 @@ const Header = ({ screenName, onPress, onNavigate, title }) => {
             {/* Home */}
             {screenName === "Home" ?
 
-                <Appbar.Header style={{ backgroundColor: color.black }}>
+                <Appbar.Header style={{ backgroundColor: color.black, alignItems: 'center' }}>
                     <TouchableOpacity activeOpacity={0.6} style={{ marginRight: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }} onPress={onPress}>
-                        <Octicons name='three-bars' color={color.white} size={PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get())} />
+                        <Octicons name='three-bars' color={color.white} size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} />
                     </TouchableOpacity>
                     <Appbar.Content titleStyle={[styles.textStyles, { color: color.white }]} title={title} />
                     <TouchableOpacity activeOpacity={0.6} onPress={() => onNavigate('post')}>
-                        <AntDesign name={"plussquare"} size={24} color={color.white} />
+                        <AntDesign name={"plussquare"} size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
                     </TouchableOpacity>
                     <TouchableOpacity activeOpacity={0.6} style={{ marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }} onPress={() => onNavigate('notifications')}>
-                        <Ionicons name='notifications' color={color.white} size={PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get())} />
+                        <Ionicons name='notifications' color={color.white} size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} />
                     </TouchableOpacity>
                 </Appbar.Header>
 
@@ -32,15 +32,19 @@ const Header = ({ screenName, onPress, onNavigate, title }) => {
             {/* SignUp */}
             {screenName === "normal" ?
 
-                <Appbar.Header style={{ backgroundColor: color.black }}>
+                <Appbar.Header style={{
+                    backgroundColor: color.black,
+                    height: PixelRatio.getPixelSizeForLayoutSize(50 / PixelRatio.get()),
+                    alignItems: 'center'
+                }}>
                     <Appbar.BackAction color={color.white} onPress={onPress} />
-                    <Appbar.Content color={color.white} title={title} />
+                    <Appbar.Content titleStyle={styles.textStyles} color={color.white} title={title} />
 
                 </Appbar.Header>
 
                 : null
             }
-          
+
         </View>
     )
 }
@@ -52,12 +56,11 @@ const styles = StyleSheet.create({
 
     btnStyles: {
         backgroundColor: color.white,
-        padding: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())
     },
     textStyles: {
-        color: color.black,
-        fontSize: 20 / PixelRatio.getFontScale(),
+        color: color.white,
+        fontSize: 16 / PixelRatio.getFontScale(),
         fontFamily: FontFamily.Roboto_Regular
 
     }

@@ -47,7 +47,7 @@ const FavouriteScreen = (props) => {
           alignItems: 'center'
         }}>
           <Image source={{ uri: item.useData.profilePic }} style={styles.profileStyle} />
-          <Text style={[styles.textStyle, { flex: 1, fontFamily:FontFamily.Roboto_Regular,fontSize: 14 / PixelRatio.getFontScale(), marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{item.useData.Name}</Text>
+          <Text style={[styles.textStyle, { flex: 1, fontFamily: FontFamily.Roboto_Regular, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{item.useData.Name}</Text>
 
           <TouchableOpacity activeOpacity={0.6} onPress={() => setIsOpen(true)}>
             <Entypo name={'dots-three-vertical'} color={color.white} size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} />
@@ -57,17 +57,17 @@ const FavouriteScreen = (props) => {
         <View>
           <Image source={{ uri: item.images }} style={styles.imageStyle} />
           <View style={styles.heartPositionStyle}>
-          <TouchableOpacity style={styles.heartPositionStyle} onPress={() => onSelectFavourite(item, index)}>
-          <Animatable.View
-            animation={ 'bounceIn' }
-          >
-            <FontAwesome
-              name={ 'heart'}
-              size={30}
-              color={item.isFavourite ? color.white : color.white}
-            />
-          </Animatable.View>
-        </TouchableOpacity>
+            <TouchableOpacity style={styles.heartPositionStyle} onPress={() => onSelectFavourite(item, index)}>
+              <Animatable.View
+                animation={'bounceIn'}
+              >
+                <FontAwesome
+                  name={'heart'}
+                  size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())}
+                  color={item.isFavourite ? color.white : color.white}
+                />
+              </Animatable.View>
+            </TouchableOpacity>
           </View>
         </View>
         {/* description */}
@@ -85,7 +85,7 @@ const FavouriteScreen = (props) => {
 
   return (
     <View style={styles.container}>
-            <Header screenName={"normal"} title={'Favourite'}onPress={() => props.navigation.goBack()} />
+      <Header screenName={"normal"} title={'Favourite'} onPress={() => props.navigation.goBack()} />
 
       <FlatList
         data={data}
@@ -126,9 +126,9 @@ const styles = StyleSheet.create({
     marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
   },
   textStyle: {
-    fontSize: 14 / PixelRatio.getFontScale(),
+    fontSize: 12 / PixelRatio.getFontScale(),
     color: color.white,
-    fontFamily:FontFamily.Roboto_Light
+    fontFamily: FontFamily.Roboto_Light
 
   },
 })

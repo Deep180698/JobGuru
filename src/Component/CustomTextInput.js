@@ -5,6 +5,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Entypo from 'react-native-vector-icons/Entypo'
 import { TextInput } from 'react-native-paper'
+import FontFamily from '../Utils/FontFamily'
 const { height, width } = Dimensions.get('screen')
 const CustomTextInput = ({ placeholder, type, value, leftIcon, RightIcon, onVisible, onChangeText, isVisible, onPress }) => {
     useEffect(() => {
@@ -19,13 +20,15 @@ const CustomTextInput = ({ placeholder, type, value, leftIcon, RightIcon, onVisi
                     textColor={color.black}
                     outlineStyle={{ borderColor: color.black }}
                     placeholderTextColor={color.white}
-                    style={styles.TextInputStyle}
+                    textAlignVertical='top'
+                    textContentType='streetAddressLine1'
+                    style={[styles.TextInputStyle,{textAlignVertical:'top'}]}
                     contentStyle={{ width: width - PixelRatio.getPixelSizeForLayoutSize(175 / PixelRatio.get()) }}
                     onChangeText={(i) => [onChangeText(i)]}
                     label={placeholder}
                 />
-
                 : null}
+
             {type === 'normal' ?
                 <TextInput
                     mode='outlined'
@@ -38,12 +41,9 @@ const CustomTextInput = ({ placeholder, type, value, leftIcon, RightIcon, onVisi
                     label={placeholder}
 
                 />
-
                 : null}
 
             {type === 'Address' ?
-
-
                 <TextInput
                     mode='outlined'
                     value={value}
@@ -56,10 +56,7 @@ const CustomTextInput = ({ placeholder, type, value, leftIcon, RightIcon, onVisi
                     label={placeholder}
 
                 />
-
-
                 : null}
-
 
             {type === 'whiteBc' ?
                 <TextInput
@@ -67,11 +64,11 @@ const CustomTextInput = ({ placeholder, type, value, leftIcon, RightIcon, onVisi
                     value={value}
                     textColor={color.black}
                     outlineStyle={{ borderColor: color.black }}
-                    style={[styles.TextInputStyle, { backgroundColor: color.white }]}
+                    style={[styles.TextInputStyle]}
                     contentStyle={{ width: width - PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }}
                     onChangeText={(i) => [onChangeText(i)]}
+                    cursorColor={color.black}
                     label={placeholder}
-
                 />
                 : null}
 
@@ -83,12 +80,11 @@ export default CustomTextInput
 
 const styles = StyleSheet.create({
     TextInputStyle: {
-
         backgroundColor: color.white,
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-        marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-        alignItems: 'center',
+        marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
         flexDirection: 'row',
-
+        fontSize:12/PixelRatio.getFontScale(),
+        fontFamily: FontFamily.Roboto_Regular
     }
 })

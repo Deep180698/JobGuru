@@ -252,10 +252,10 @@ const UserDetails = (props) => {
                         defaultValue={userDetails.phoneNumber}
                         defaultCode={userDetails.countryCode}
                         textContainerStyle={{
-                         
                             borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
                             backgroundColor: color.white,
                             paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+                            
                         }}
                         layout="first"
                         onChangeText={(text) => handleOnChangeText(text)}
@@ -323,10 +323,21 @@ const UserDetails = (props) => {
                     />
 
 
-                    <TouchableOpacity activeOpacity={0.6} onPress={showDatepicker} style={styles.btnStyle}>
-                        <Text style={[styles.textStyles, { color: color.black, flex: 1 }]}>{moment(userDetails.date).format('YYYY-MM-DD')}</Text>
-                        <FontAwesome name='calendar-o' color={color.black} size={PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get())} />
-                    </TouchableOpacity>
+                    <View style={{ justifyContent: 'center' }}>
+
+
+                        <CustomTextInput
+                            value={moment(userDetails.date).format('YYYY-MM-DD')}
+                            onChangeText={(i) => setUserDetails({
+                                ...userDetails,
+                                country: i,
+                            })}
+                            type={"whiteBc"}
+                            placeholder={"Date of birth"}
+                        />
+                        <FontAwesome name='calendar-o' onPress={showDatepicker} style={{ position: 'absolute', right: 10 }} color={color.black} size={PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get())} />
+
+                    </View>
 
                     {showDatePicker && (
                         <DateTimePicker
@@ -355,7 +366,7 @@ const UserDetails = (props) => {
                         <Text style={[styles.textStyles, { marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"I agree to the "}<Text style={{ textDecorationLine: 'underline', fontFamily: FontFamily.Roboto_Bold }}>{"terms and condition"}</Text></Text>
                     </View>
                     {/* Login btn */}
-                    <CustomButton press={validatefunc}  style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),  }} text="Sign Up" />
+                    <CustomButton press={validatefunc} style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()), }} text="Sign Up" />
                 </View>
                 <CustomBottomSheet getCall="imageSelection" onClose={() => setIsOpen(false)} isOpen={isOpen} data={(item) => getImages(item)} />
                 <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"login"} />
@@ -378,10 +389,10 @@ const styles = StyleSheet.create({
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
         marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
         color: color.black,
-
+        elevation:0
     },
     phoneInputText: {
-        fontSize: 16,
+        fontSize:12/PixelRatio.getFontScale(),
         backgroundColor: color.white,
         padding: PixelRatio.getPixelSizeForLayoutSize(0 / PixelRatio.get()),
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
@@ -389,7 +400,7 @@ const styles = StyleSheet.create({
 
     },
     phoneInputCodeText: {
-        fontSize: 16 / PixelRatio.getFontScale(),
+        fontSize:12/PixelRatio.getFontScale(),
         color: color.black
 
     },
@@ -398,6 +409,7 @@ const styles = StyleSheet.create({
 
     },
     phoneInputCodeContainer: {
+        fontSize:12/PixelRatio.getFontScale(),
         color: color.black,
         paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
 
@@ -416,7 +428,7 @@ const styles = StyleSheet.create({
     textStyles: {
         color: color.black,
         fontFamily: FontFamily.Roboto_Regular,
-        fontSize: 14 / PixelRatio.getFontScale()
+        fontSize:12/PixelRatio.getFontScale()
     },
     btnStyle: {
         backgroundColor: color.white,

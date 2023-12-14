@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   },
   textStyles: {
     color: color.white,
-    fontSize: 20 / PixelRatio.getFontScale(),
+    fontSize: 12 / PixelRatio.getFontScale(),
     fontFamily:FontFamily.Roboto_Light
   }
 })

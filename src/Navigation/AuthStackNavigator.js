@@ -19,16 +19,52 @@ import Profile from '../Screen/EditProfile/Profile';
 import PostScreen from '../Screen/Post/PostScreen';
 import SettingScreen from '../Screen/Setting/SettingScreen';
 import DynamicLinkHandler from '../Utils/DynamicLinkHandler';
-
+import {Animated} from 'react-native'
 
 const Stack = createStackNavigator();
 
 
 const AuthStackNavigator = () => {
+  const SlideFromRight = ({ current, next, inverted, layouts }) => {
+    const progress = Animated.add(
+      current.progress,
+      next
+        ? next.progress.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, 1],
+          })
+        : 0
+    );
   
+    const translateX = Animated.multiply(
+      progress.interpolate({
+        inputRange: [0, 1, 2],
+        outputRange: [
+          layouts.screen.width, // Offscreen to the right
+          0, // Onscreen
+          -layouts.screen.width, // Offscreen to the left
+        ],
+      }),
+      inverted
+    );
+  
+    return {
+      cardStyle: {
+        transform: [{ translateX }],
+      },
+      transitionSpec: {
+        open: { animation: 'timing', config: { duration: 300 } },
+        close: { animation: 'timing', config: { duration: 300 } },
+      },
+    };
+  };
 
   return (
-    <Stack.Navigator initialRouteName={"SplashScreen"} screenOptions={{ headerShown: false }}>
+    <Stack.Navigator initialRouteName={"SplashScreen"}  screenOptions={{
+      headerShown:false,
+      cardStyleInterpolator: SlideFromRight,
+
+    }} >
       <Stack.Screen name="SplashScreen" component={SplashScreen} />
       <Stack.Screen name="AuthScreen" component={AuthScreen} />
       <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} />

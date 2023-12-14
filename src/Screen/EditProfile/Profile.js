@@ -100,7 +100,6 @@ const Profile = (props) => {
         setIsOpen(false)
         setUserDetails({
             ...userDetails,
-
             profileImage: item,
         });
     }
@@ -117,7 +116,6 @@ const Profile = (props) => {
     };
 
     const validatefunc = async () => {
-        console.log("2333", userDetails.formattedValue);
 
         if (!userDetails.firstName) {
             setMessage('Enter first name');
@@ -159,8 +157,6 @@ const Profile = (props) => {
             showAlert()
             return;
         }
-
-
         else if (!userDetails.country) {
             setMessage('Enter country');
             showAlert()
@@ -171,32 +167,15 @@ const Profile = (props) => {
             showAlert()
             return;
         }
-
-
-
         else {
-            console.log("2222");
-
             fetchData()
         }
 
-
-
-        // setMessage(result.message);
-
-        // props.navigation.navigate("UserDetails")
     };
 
     const fetchData = async () => {
 
-
-
-
-
         const formData = new FormData();
-
-
-
         formData.append("firstName", userDetails.firstName)
         formData.append("lastName", userDetails.lastName)
         formData.append("countryCode", userDetails.countryCode)
@@ -359,12 +338,19 @@ const Profile = (props) => {
                         type={"whiteBc"}
                         placeholder={"country"}
                     />
+                    <View style={{ justifyContent: 'center' }}>
 
-
-                    <TouchableOpacity activeOpacity={0.6} onPress={showDatepicker} style={styles.btnStyle}>
-                        <Text style={[styles.textStyles, {  flex: 1 }]}>{moment(userDetails.date).format('YYYY-MM-DD')}</Text>
-                        <FontAwesome name='calendar-o' color={color.black} size={PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get())} />
-                    </TouchableOpacity>
+                        <CustomTextInput
+                            value={moment(userDetails.date).format('YYYY-MM-DD')}
+                            onChangeText={(i) => setUserDetails({
+                                ...userDetails,
+                                country: i,
+                            })}
+                            type={"whiteBc"}
+                            placeholder={"Date of birth"}
+                        />
+                        <FontAwesome name='calendar-o' onPress={showDatepicker} style={{ position: 'absolute', right: 10 }} color={color.black} size={PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get())} />
+                    </View>
 
                     {showDatePicker && (
                         <DateTimePicker
@@ -390,7 +376,7 @@ const Profile = (props) => {
 
 
                     {/* Login btn */}
-                    <CustomButton press={validatefunc}  style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),  }} text="Update" />
+                    <CustomButton press={validatefunc} style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()), }} text="Update" />
                 </View>
                 <CustomBottomSheet getCall="imageSelection" onClose={() => setIsOpen(false)} isOpen={isOpen} data={(item) => getImages(item)} />
                 <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"login"} />
@@ -413,7 +399,7 @@ const styles = StyleSheet.create({
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
         marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
         color: color.black,
-
+        elevation: 0
     },
     phoneInputText: {
         fontSize: 16,
@@ -424,7 +410,7 @@ const styles = StyleSheet.create({
 
     },
     phoneInputCodeText: {
-        fontSize: 16 / PixelRatio.getFontScale(),
+        fontSize: 12 / PixelRatio.getFontScale(),
         color: color.black
 
     },
@@ -435,6 +421,7 @@ const styles = StyleSheet.create({
     phoneInputCodeContainer: {
         color: color.black,
         paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+        fontSize: 12 / PixelRatio.getFontScale(),
 
     },
     imageStyle: {
@@ -451,7 +438,7 @@ const styles = StyleSheet.create({
     textStyles: {
         color: color.black,
         fontFamily: FontFamily.Roboto_Regular,
-        fontSize: 14 / PixelRatio.getFontScale()
+        fontSize: 12 / PixelRatio.getFontScale(),
     },
     btnStyle: {
         backgroundColor: color.white,
