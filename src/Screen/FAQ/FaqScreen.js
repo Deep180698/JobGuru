@@ -12,12 +12,10 @@ const FaqScreen = (props) => {
   const [data, setData] = useState([])
 
   useEffect(() => {
-
     setData(JSONList.FAQData.faq)
   }, [])
 
   const onSelect = (item, index) => {
-
     const newArray = data;
     newArray.map((i) => {
       if (item.id === i.id) {
@@ -26,12 +24,9 @@ const FaqScreen = (props) => {
       }
     })
     setData([...newArray]);
-
   }
   const renderItem = ({ item, index }) => {
-
     return (
-
       <View style={{ marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
         <ExpandableSection
           expanded={item.isSHow}

@@ -141,7 +141,7 @@ const ResetPasswordScreen = (props) => {
                             fontFamily: FontFamily.Roboto_BoldItalic,
                             textAlign: 'center', padding: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())
                         }]}>{"Rest Password"}</Animatable.Text>
-                        <Animatable.View animation={"zoomIn"} duration={1000} style={{
+                        <View  style={{
                             marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
                             backgroundColor: color.white,
                             marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
@@ -183,7 +183,7 @@ const ResetPasswordScreen = (props) => {
                                 <CustomButton press={validatefunc} style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }} text="Reset Password" />
                             </View>
 
-                        </Animatable.View>
+                        </View>
                         <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"login"} />
                     </ScrollView>
                 </ImageBackground>

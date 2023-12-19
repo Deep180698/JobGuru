@@ -1,8 +1,6 @@
 import { StyleSheet, FlatList, View, Text, Image, PixelRatio, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useState, useEffect, useRef } from 'react'
 import Header from '../../Component/Header'
-import JSONList from '../../JSON/JSONList'
-import AntDesign from "react-native-vector-icons/AntDesign";
 import Entypo from "react-native-vector-icons/Entypo";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import color from '../../Utils/Color'
@@ -13,55 +11,72 @@ import * as Animatable from 'react-native-animatable';
 import FontFamily from '../../Utils/FontFamily';
 import apiCall from '../../Utils/apiCall';
 import AppConstants from '../../Storage/AppConstants';
+import { SliderBox } from "react-native-image-slider-box";
 import cacheData from '../../Storage/cacheData';
 
 const HomeScreen = (props, { navigation }) => {
 
   const flatListRef = useRef(null);
-
-
-
   const [isOpen, setIsOpen] = useState(false)
   const [data, setData] = useState([]);
   const [bannerData, setBannerData] = useState([]);
   const [searchText, setSearchText] = useState('')
 
-
-
   const data1 = useSelector((state) => state.reducer)
-
 
   useEffect(() => {
 
     getBannerData()
-    setData(JSONList.DashboardList)
+    getPostData()
   }, [isOpen])
 
 
   const getBannerData = async () => {
 
-    console.log("helloa work");
-    // apiCall.apiGETCall(AppConstants.AsyncKeyLiterals.getField).then((res)=>{
-    //   console.log("res",res);
-    // })
     const result = await apiCall.apiGETCall(AppConstants.AsyncKeyLiterals.getField);
     console.log("result.data", result);
 
     setBannerData(result)
 
   }
-  const onSelectFavourite = (item, index) => {
+  const getPostData = async () => {
+    const headers = {
+      'authorization': await cacheData.getDataFromCachedWithKey(AppConstants.AsyncKeyLiterals.token),
+    }
 
+    const result = await apiCall.apiGETCall(AppConstants.AsyncKeyLiterals.getPost, headers);
+    console.log("result.data", result);
+
+    setData(result)
+
+  }
+  const onSelectFavourite = async (item, index) => {
+
+
+    const headers = {
+      'Content-Type':'application/json',
+      'authorization': await cacheData.getDataFromCachedWithKey(AppConstants.AsyncKeyLiterals.token),
+    }
+    const body = {
+      "postID": item._id,
+      "isFavourite": !item.isFavourite
+
+    }
+    const result = await apiCall.apiPOSTCall(AppConstants.AsyncKeyLiterals.postFavourite, body, headers);
+    console.log("result.data", result);
+
+    
     const newArray = data;
     newArray.map((i) => {
-      if (item.id === i.id) {
+      if (item._id === i._id) {
 
         i.isFavourite = !i.isFavourite
       }
     })
 
-    console.log(newArray);
     setData([...newArray]);
+
+
 
   }
   const onSelectType = (item) => {
@@ -105,6 +120,11 @@ const HomeScreen = (props, { navigation }) => {
   );
   // render list
   const renderItem = ({ item, index }) => {
+    console.log(item);
+    const formattedImages = item.images.map((image) => ({
+      uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + image.name
+    }));
+    console.log(formattedImages);
     return (
       <View style={{ backgroundColor: color.black }}>
         {/* Header of post */}
@@ -114,17 +134,44 @@ const HomeScreen = (props, { navigation }) => {
           flexDirection: 'row',
           alignItems: 'center'
         }}>
-          <Image source={{ uri: item.useData.profilePic }} style={styles.profileStyle} />
-          <Text style={[styles.textStyle, { flex: 1, fontSize: 14 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Regular, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{item.useData.Name}</Text>
+          <Image source={{ uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + item.profileImage }} style={styles.profileStyle} />
+          <Text style={[styles.textStyle, { flex: 1, fontSize: 14 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Regular, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{item.firstName} {item.lastName}</Text>
 
           <TouchableOpacity activeOpacity={0.6} onPress={() => setIsOpen(true)}>
             <Entypo name={'dots-three-vertical'} color={color.white} size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} />
           </TouchableOpacity>
         </View>
+
         {/* Body od post */}
         <View>
-          <Image source={{ uri: item.images }} style={styles.imageStyle} />
-
+          <SliderBox
+            images={formattedImages}
+            dotColor={color.black}
+            inactiveDotColor={color.gray}
+            paginationBoxVerticalPadding={20}
+            resizeMethod={'resize'}
+            resizeMode={'cover'}
+            paginationBoxStyle={{
+              position: "absolute",
+              bottom: 0,
+              padding: 0,
+              alignItems: "center",
+              alignSelf: "center",
+              justifyContent: "center",
+              paddingVertical: 10
+            }}
+            dotStyle={{
+              width: 5,
+              height: 5,
+              borderRadius: 5,
+              marginHorizontal: 0,
+              padding: 0,
+              margin: 0,
+              backgroundColor: "rgba(128, 128, 128, 0.92)"
+            }}
+            ImageComponentStyle={styles.imageStyle}
+            imageLoadingColor={color.white}
+          />
           <TouchableOpacity style={styles.heartPositionStyle} onPress={() => onSelectFavourite(item, index)}>
             <Animatable.View
               animation={'bounceIn'}
@@ -132,7 +179,7 @@ const HomeScreen = (props, { navigation }) => {
               <FontAwesome
                 name={'heart'}
                 size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())}
-                color={item.isFavourite ? color.white : color.white}
+                color={item.isFavourite ? color.golden : color.white}
               />
             </Animatable.View>
           </TouchableOpacity>
@@ -140,12 +187,19 @@ const HomeScreen = (props, { navigation }) => {
 
         {/* description */}
         <View style={{
-          marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-          marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-
+          width: '100%',
+          paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+          paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+          bottom: 0,
         }}>
-          <Text style={[styles.textStyle]}>{item.Title}</Text>
-          <Text style={[styles.textStyle, { fontSize: 12 / PixelRatio.getFontScale() }]}>{item.Description}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={[styles.textStyle]}>{'Job Name - '}</Text>
+            <Text style={[styles.textStyle]}>{item.title}</Text>
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={[styles.textStyle]}>{'Job Description - '}</Text>
+            <Text style={[styles.textStyle, { fontSize: 12 / PixelRatio.getFontScale() }]}>{item.additionalNote}</Text>
+          </View>
         </View>
       </View>
     )
@@ -215,8 +269,8 @@ const styles = StyleSheet.create({
   heartPositionStyle: {
     position: 'absolute',
     right: 0,
-    marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-    marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
+    marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
+    marginVertical: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())
   },
   textStyle: {
     fontSize: 12 / PixelRatio.getFontScale(),

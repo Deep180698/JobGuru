@@ -14,42 +14,23 @@ import CustomAutoComplate from '../../Component/CustomAutoComplate'
 import CustomAddress from '../../Component/CustomAddress'
 import cacheData from '../../Storage/cacheData';
 import AppConstants from '../../Storage/AppConstants';
-
+import apiCall from '../../Utils/apiCall';
 const PostScreen = (props) => {
 
-    // const [imageList, setImageList] = useState([])
-    // const [firstName, setFirstName] = useState('')
-    // const [lastName, setLastName] = useState('')
-    // const [profileImage, setProfileImage] = useState('')
-    // const [title, setTitle] = useState('')
-    // const [address, setAddress] = useState('')
-    // const [type, setType] = useState('')
-    // const [additionalNote, setAdditionalNote] = useState('')
-    // const [texts, setTexts] = useState([]);
-    // const [isNext, setIsNext] = useState('1')
-    // const [description, setDescription] = useState('')
-    // const [salary, setSalary] = useState('')
-    // const [selectedType, setSelectedType] = useState([]);
-    // const [isOpen, setIsOpen] = useState(false);
-    // const [skillsOpen, setSkillsOpen] = useState(false);
-    // const [addresOpen, setAddresOpen] = useState(false);
-    // const [isVisible, setIsVisible] = useState(false);
-    // const [activeIndex, setActiveIndex] = useState(0);
-    // const [completedStepIndex, setCompletedStepIndex] = useState();
 
     const [state, setState] = useState({
         imageList: [],
         firstName: '',
         lastName: '',
         profileImage: '',
-        title: '',
-        address: '',
+        title: 'IT JOBS',
+        address: '5981 sidmouth street',
         type: '',
-        additionalNote: '',
+        additionalNote: 'please apply as sson as possible',
         texts: [],
         isNext: '1',
-        description: '',
-        salary: '',
+        description: 'Fullstack developer',
+        salary: '30000',
         selectedType: [],
         isOpen: false,
         skillsOpen: false,
@@ -60,8 +41,8 @@ const PostScreen = (props) => {
     });
 
     useEffect(async () => {
-        // setImageList(JSONList.Imagelist)
         const data = await cacheData.getDataFromCachedWithKey(AppConstants.AsyncKeyLiterals.IS_AUTH)
+        console.log(data);
         setState({
             ...state,
             firstName: data?.data?.userData?.firstName,
@@ -76,10 +57,9 @@ const PostScreen = (props) => {
         const isSelected = state.selectedType.includes(jobType);
 
         const updatedjobTypes = isSelected
-            ? selectedType.filter((item) => item !== jobType)
+            ? state.selectedType.filter((item) => item !== jobType)
             : [...state.selectedType, jobType];
 
-        setSelectedType(updatedjobTypes);
 
         setState({
             ...state,
@@ -106,30 +86,72 @@ const PostScreen = (props) => {
     };
 
     const nextItem = (item) => {
-
         switch (item) {
             case '1':
                 setState({
                     ...state,
                     isNext: '2',
-                    activeIndex:1
+                    activeIndex: 1
                 });
                 break;
             case '2':
                 setState({
                     ...state,
                     isNext: '1',
-                    activeIndex:0
+                    activeIndex: 0
                 });
                 break;
             case 'Next':
-                props.navigation.navigate('HomeScreen')
-                break;
 
+                createPost();
+                break;
             default:
                 break;
         }
     };
+    const createPost = async () => {
+
+
+        const formData = new FormData();
+
+        state.imageList.forEach((image, index) => {
+            const pathSegments = image.path.split('/');
+
+            const imageName = pathSegments[pathSegments.length - 1];
+            formData.append("images", {
+                uri: image.path,
+                type: image.mime,
+                name: imageName,
+            });
+        });
+        formData.append("title", state.title)
+        formData.append("firstName", state.firstName)
+        formData.append("lastName", state.lastName)
+        formData.append('profileImage', state.profileImage);
+        formData.append("description", state.description)
+        formData.append("salary", state.salary)
+        formData.append("skills", state.texts.join(', '))
+        formData.append("jobType", state.selectedType.join(', '))
+        formData.append("additionalNote", state.additionalNote)
+        formData.append("address", state.address)
+
+        console.log(JSON.stringify(formData));
+        const headers = {
+            'authorization': await cacheData.getDataFromCachedWithKey(AppConstants.AsyncKeyLiterals.token),
+            'Content-Type': 'multipart/form-data'
+        }
+
+        await apiCall.apiPOSTCall(AppConstants.AsyncKeyLiterals.CreatPost, formData, headers)
+            .then(response => {
+                // Handle success
+                console.log(response);
+                props.navigation.replace('HomeScreen')
+            })
+            .catch(error => {
+                console.error('Axios Error:', error);
+                // Handle error
+            });
+    }
 
     const getStepState = (index) => {
         const state1 = Wizard.States.DISABLED;
@@ -138,7 +160,6 @@ const PostScreen = (props) => {
         } else if (state.activeIndex === index || state.completedStepIndex === index - 1) {
             state1 = Wizard.States.ENABLED;
         }
-
         return state1;
     }
     const renderSkillsItem = ({ item, index }) => (
@@ -147,13 +168,13 @@ const PostScreen = (props) => {
                 <Text style={[styles.textStyles, { color: color.white }]}>{item}</Text>
             </View>
             <TouchableOpacity activeOpacity={0.6} onPress={() => handleItemPress(index)} style={{ position: 'absolute', right: 0, top: 0, zIndex: 2, backgroundColor: color.white, borderRadius: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }} >
-                <AntDesign name='closecircle' color={color.red} size={PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get())} />
+                <AntDesign name='closecircle' color={color``.red} size={PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get())} />
             </TouchableOpacity>
         </View>
     );
     const renderItem = ({ item, index }) => {
         return (
-            <View style={[styles.item, { paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
+            <View style={[styles.imageListStyel, { paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
                 <TouchableOpacity activeOpacity={0.6} onPress={() => removeImage(item, index)} style={{ position: 'absolute', right: 0, top: 0, zIndex: 2, backgroundColor: color.white, borderRadius: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }} >
                     <AntDesign name='closecircle' color={color.red} size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} />
                 </TouchableOpacity>
@@ -205,7 +226,7 @@ const PostScreen = (props) => {
                     <View style={{ flex: 1 }}>
                         <CustomAddress press={(texts) => setState({
                             ...state,
-                            texts: texts,
+                            address: texts,
                             addresOpen: false
                         })}
                             title={"Find Location"} />
@@ -234,7 +255,7 @@ const PostScreen = (props) => {
                             }}>
                                 <Image
                                     style={styles.ProfileImage}
-                                    source={{ uri: state.profileImage ? AppConstants.AsyncKeyLiterals.Base_URL + state.profileImage : 'https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?size=626&ext=jpg&ga=GA1.1.2062017442.1699557938&semt=sph' }} />
+                                    source={{ uri: state.profileImage ? AppConstants.AsyncKeyLiterals.Base_URL + '/'+state.profileImage : 'https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?size=626&ext=jpg&ga=GA1.1.2062017442.1699557938&semt=sph' }} />
                                 <View style={{ flexDirection: 'row', marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
                                     <Text style={[styles.textStyles, { fontSize: 16 / PixelRatio.getFontScale(), color: color.black, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{state.firstName}</Text>
                                     <Text style={[styles.textStyles, { fontSize: 16 / PixelRatio.getFontScale(), color: color.black, marginLeft: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }]}>{state.lastName}</Text>
@@ -249,11 +270,12 @@ const PostScreen = (props) => {
                                     value={state.title}
                                     onChangeText={(i) => setState({
                                         ...state,
-                                        title: i
+                                        title: i,
                                     })}
                                     type={"whiteBc"}
                                     placeholder={"Title"}
                                 />
+
 
                                 {/* Description */}
                                 <CustomTextInput
@@ -321,6 +343,36 @@ const PostScreen = (props) => {
                                                 status={state.selectedType.includes('Contract') ? 'checked' : 'unchecked'}
                                                 onPress={() => handleCheckboxChange('Contract')}
                                             />
+                                            <Checkbox.Item
+                                                label="Freelance"
+                                                labelStyle={styles.textStyles}
+                                                status={state.selectedType.includes('Freelance') ? 'checked' : 'unchecked'}
+                                                onPress={() => handleCheckboxChange('Freelance')}
+                                            />
+                                            <Checkbox.Item
+                                                label="Internship"
+                                                labelStyle={styles.textStyles}
+                                                status={state.selectedType.includes('Internship') ? 'checked' : 'unchecked'}
+                                                onPress={() => handleCheckboxChange('Internship')}
+                                            />
+                                            <Checkbox.Item
+                                                label="Temporary"
+                                                labelStyle={styles.textStyles}
+                                                status={state.selectedType.includes('Temporary') ? 'checked' : 'unchecked'}
+                                                onPress={() => handleCheckboxChange('Temporary')}
+                                            />
+                                            <Checkbox.Item
+                                                label="Remote"
+                                                labelStyle={styles.textStyles}
+                                                status={state.selectedType.includes('Remote') ? 'checked' : 'unchecked'}
+                                                onPress={() => handleCheckboxChange('Remote')}
+                                            />
+                                            <Checkbox.Item
+                                                label="Other"
+                                                labelStyle={styles.textStyles}
+                                                status={state.selectedType.includes('Other') ? 'checked' : 'unchecked'}
+                                                onPress={() => handleCheckboxChange('Other')}
+                                            />
                                         </View> : null}
                                         {/* Skills */}
                                         <TouchableOpacity onPress={() => setState({
@@ -362,7 +414,7 @@ const PostScreen = (props) => {
                                             <TouchableOpacity onPress={() => setState({
                                                 ...state,
                                                 addresOpen: true,
-                                                skillsOpen:false
+                                                skillsOpen: false
                                             })}
                                                 style={{ position: 'absolute', right: 10 }}>
                                                 <Ionicons name='location-sharp' color={color.black} size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} />
@@ -383,7 +435,7 @@ const PostScreen = (props) => {
                                 <Text style={[styles.textStyles, { color: color.white }]}>{"Back"}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => nextItem('Next')} activeOpacity={0.6} style={[styles.floatBtnStyle, { left: 0 }]}>
-                                <Text style={[styles.textStyles, { color: color.white }]}>{"Next"}</Text>
+                                <Text style={[styles.textStyles, { color: color.white }]}>{"Upload"}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -395,31 +447,26 @@ const PostScreen = (props) => {
     return (
         <View style={styles.container}>
 
+            <Header screenName={"normal"} title={'Post'} onPress={() => props.navigation.goBack()} />
+            <Wizard activeIndex={state.activeIndex} onActiveIndexChanged={() => { }}>
+                <Wizard.Step state={() => getStepState(0)} label={'Image Selection'} />
+                <Wizard.Step state={() => getStepState(1)} label={'Post details'} />
+            </Wizard>
+
+            <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
+
+                {/*  page */}
+                {state.isNext === '1' ? ImagePickerItem() : null}
+                {state.isNext === '2' ? DescriptionItem() : null}
 
 
-            <View style={{ flex: 1 }}>
-                <Header screenName={"normal"} title={'Post'} onPress={() => props.navigation.goBack()} />
-                <Wizard activeIndex={state.activeIndex} onActiveIndexChanged={() => { }}>
-                    <Wizard.Step state={() => getStepState(0)} label={'Image Selection'} />
-                    <Wizard.Step state={() => getStepState(1)} label={'Post details'} />
-                </Wizard>
+                <CustomBottomSheet getCall={state.type} onClose={() => setState({
+                    ...state,
+                    isOpen: false
+                })} isOpen={state.isOpen} data={(item) => getImages(item)} />
 
-                <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ flex: 1 }}>
-                    <View style={{ flex: 1, backgroundColor: color.white, paddingTop: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }}>
+            </ScrollView>
 
-                        {/*  page */}
-                        {state.isNext === '1' ? <ImagePickerItem /> : null}
-                        {state.isNext === '2' ? <DescriptionItem /> : null}
-
-                    </View>
-                    <CustomBottomSheet getCall={state.type} onClose={() => setState({
-                        ...state,
-                        isOpen: false
-                    })} isOpen={state.isOpen} data={(item) => getImages(item)} />
-
-                </ScrollView>
-
-            </View>
 
         </View >
     )
@@ -430,7 +477,7 @@ export default PostScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.black
+        backgroundColor: color.white
     },
     btnStyles: {
         backgroundColor: color.black,
@@ -444,7 +491,7 @@ const styles = StyleSheet.create({
         fontFamily: FontFamily.Roboto_Regular
 
     },
-    item: {
+    imageListStyel: {
         aspectRatio: 1,
 
     },

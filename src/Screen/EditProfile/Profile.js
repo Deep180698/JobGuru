@@ -69,6 +69,7 @@ const Profile = (props) => {
 
         apiCall.apiGETCall(AppConstants.AsyncKeyLiterals.getProfile, headers).then((response) => {
 
+            console.log(response.mobileNumber);
             setUserDetails({
                 ...userDetails,
                 firstName: response.firstName,
@@ -265,7 +266,7 @@ const Profile = (props) => {
 
                 <View style={{ backgroundColor: color.white, paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), paddingBottom: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
 
-                    <PhoneInput
+                    {/* <PhoneInput
                         value={userDetails.phoneNumber}
                         defaultValue={userDetails.phoneNumber}
                         defaultCode={userDetails.countryCode}
@@ -295,8 +296,16 @@ const Profile = (props) => {
                         flagButtonStyle={styles.phoneInputFlagButton}
                         codeContainerStyle={styles.phoneInputCodeContainer}
                         countryPickerButtonStyle={{ backgroundColor: color.white }}
+                    /> */}
+                    <CustomTextInput
+                        value={userDetails.phoneNumber}
+                        onChangeText={(i) => setUserDetails({
+                            ...userDetails,
+                            city: i,
+                        })}
+                        type={"whiteBc"}
+                        placeholder={"Mobile Number"}
                     />
-
 
                     <CustomTextInput
                         value={userDetails.address}

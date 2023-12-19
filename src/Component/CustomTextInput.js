@@ -66,7 +66,7 @@ const CustomTextInput = ({ placeholder, type, value, leftIcon, RightIcon, onVisi
                     outlineStyle={{ borderColor: color.black }}
                     style={[styles.TextInputStyle]}
                     contentStyle={{ width: width - PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }}
-                    onChangeText={(i) => [onChangeText(i)]}
+                    onChangeText={(i) =>onChangeText(i)}
                     cursorColor={color.black}
                     label={placeholder}
                 />
