@@ -17,6 +17,12 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
 import cacheData from '../../Storage/cacheData'
 import AppConstants from '../../Storage/AppConstants'
+import PhoneNumberInput from '../../Component/PhoneNumberInput'
+import { useSelector, useDispatch } from 'react-redux';
+import { authFunc } from '../../Storage/Action'
+
+import { updatePhoneNumber, updateCountryCode } from '../../Storage/Action'
+import axios from 'axios'
 
 const Profile = (props) => {
     const [userDetails, setUserDetails] = useState({
@@ -31,7 +37,6 @@ const Profile = (props) => {
         country: '',
         countryCode: '',
         phoneNumber: '',
-        formattedValue: '',
         date: new Date()
     });
     const [message, setMessage] = useState('');
@@ -40,6 +45,8 @@ const Profile = (props) => {
     const [isVisible, setIsVisible] = useState(true)
     const [alertVisible, setAlertVisible] = useState(false)
     const [isSucess, setIsSucess] = useState(false)
+    const { authData } = useSelector((state) => state.reducer);
+    const dispatch = useDispatch();
 
     // const [date, setDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -57,47 +64,29 @@ const Profile = (props) => {
         setShowDatePicker(true);
     };
     useEffect(() => {
-        getProfileData()
-    }, [])
+        getProfileData();
+    }, [authData])
+
 
     const getProfileData = async () => {
-
-        const token = await cacheData.getDataFromCachedWithKey(AppConstants.AsyncKeyLiterals.token)
-        const headers = {
-            'authorization': token
-        }
-
-        apiCall.apiGETCall(AppConstants.AsyncKeyLiterals.getProfile, headers).then((response) => {
-
-            console.log(response.mobileNumber);
-            setUserDetails({
-                ...userDetails,
-                firstName: response.firstName,
-                lastName: response.lastName,
-                profileImage: response.profileImage,
-                address: response.address,
-                city: response.city,
-                zipcode: response.zipcode,
-                province: response.province,
-                country: response.country,
-                countryCode: response.countryCode,
-                phoneNumber: response.mobileNumber,
-                date: moment(response.DOB).toDate()
-            });
-
-        })
-
-    }
-    const handleOnChangeText = (text) => {
+        console.log(authData);
         setUserDetails({
             ...userDetails,
-            phoneNumber: text,
+            firstName: authData.data.userData.firstName,
+            lastName: authData.data.userData.lastName,
+            profileImage: authData.data.userData.profileImage,
+            address: authData.data.userData.address,
+            city: authData.data.userData.city,
+            zipcode: authData.data.userData.zipcode,
+            province: authData.data.userData.province,
+            country: authData.data.userData.country,
+            countryCode: authData.data.userData.countryCode,
+            phoneNumber: authData.data.userData.mobileNumber,
+            date: moment(authData.data.userData.DOB).toDate()
         });
 
-    };
-
+    }
     const getImages = (item) => {
-        console.log("item", item);
         setIsOpen(false)
         setUserDetails({
             ...userDetails,
@@ -117,7 +106,7 @@ const Profile = (props) => {
     };
 
     const validatefunc = async () => {
-
+        console.log("userDetails", userDetails);
         if (!userDetails.firstName) {
             setMessage('Enter first name');
             showAlert()
@@ -128,11 +117,7 @@ const Profile = (props) => {
             showAlert()
             return;
         }
-        else if (!userDetails.formattedValue) {
-            setMessage('Enter phone number');
-            showAlert()
-            return;
-        }
+
         else if (!userDetails.address) {
             setMessage('Enter Addrees');
             showAlert()
@@ -177,6 +162,7 @@ const Profile = (props) => {
     const fetchData = async () => {
 
         const formData = new FormData();
+
         formData.append("firstName", userDetails.firstName)
         formData.append("lastName", userDetails.lastName)
         formData.append("countryCode", userDetails.countryCode)
@@ -195,26 +181,36 @@ const Profile = (props) => {
         }
 
         formData.append("address", userDetails.address)
-        formData.append("DOB", userDetails.date)
+        formData.append("DOB", moment(userDetails.date).toISOString())
         formData.append("city", userDetails.city)
+        formData.append("country", userDetails.country)
         formData.append("province", userDetails.province)
         formData.append("zipcode", userDetails.zipcode)
 
         console.log(formData);
         const headers = {
+            accept: 'application/json',
+            'content-type': 'multipart/form-data',
             'authorization': await cacheData.getDataFromCachedWithKey(AppConstants.AsyncKeyLiterals.token),
-            'Content-Type': 'multipart/form-data'
         }
-        await apiCall.apiPOSTCall('/update-profile', formData, headers)
-            .then(response => {
-                // Handle success
-                console.log(response);
-            })
-            .catch(error => {
-                console.error('Axios Error:', error);
-                // Handle error
-            });
 
+        await axios({
+            method: 'PUT',
+            url: AppConstants.AsyncKeyLiterals.Base_URL + AppConstants.AsyncKeyLiterals.update_profile,
+            data: formData,
+            headers: headers
+        }).then(response => {
+
+            authData.data.userData = response.data.userData
+
+            console.log(authData);
+            const asyncItem = AppConstants.AsyncKeyLiterals;
+
+            cacheData.saveDataToCachedWithKey(asyncItem.IS_AUTH, authData);
+
+            dispatch(authFunc(authData))
+
+        });
     }
     return (
         <View style={{ flex: 1, backgroundColor: color.white }}>
@@ -266,47 +262,17 @@ const Profile = (props) => {
 
                 <View style={{ backgroundColor: color.white, paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), paddingBottom: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
 
-                    {/* <PhoneInput
-                        value={userDetails.phoneNumber}
-                        defaultValue={userDetails.phoneNumber}
-                        defaultCode={userDetails.countryCode}
-                        textContainerStyle={{
-                            borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-                            backgroundColor: color.white,
-                            paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-                        }}
-                        layout="first"
-                        onChangeText={(text) => handleOnChangeText(text)}
-                        onEndEditing={() => handleOnEndEditing()}
-
-                        onChangeFormattedText={(text) => setUserDetails({
+                    <PhoneNumberInput mobileNumber={(i) => {
+                        setUserDetails({
                             ...userDetails,
-                            formattedValue: text,
-                        })}
-                        onChangeCountry={(text) => setUserDetails({
+                            phoneNumber: i,
+                        })
+                    }} countryCode={(i) => {
+                        setUserDetails({
                             ...userDetails,
-
-                            countryCode: (text.cca2),
-                        })}
-                        withDarkTheme
-                        withShadow
-                        containerStyle={styles.phoneInputContainer}
-                        textInputStyle={styles.phoneInputText}
-                        codeTextStyle={styles.phoneInputCodeText}
-                        flagButtonStyle={styles.phoneInputFlagButton}
-                        codeContainerStyle={styles.phoneInputCodeContainer}
-                        countryPickerButtonStyle={{ backgroundColor: color.white }}
-                    /> */}
-                    <CustomTextInput
-                        value={userDetails.phoneNumber}
-                        onChangeText={(i) => setUserDetails({
-                            ...userDetails,
-                            city: i,
-                        })}
-                        type={"whiteBc"}
-                        placeholder={"Mobile Number"}
-                    />
-
+                            countryCode: i,
+                        })
+                    }} />
                     <CustomTextInput
                         value={userDetails.address}
                         onChangeText={(i) => setUserDetails({
@@ -314,7 +280,7 @@ const Profile = (props) => {
                             address: i,
                         })}
                         type={"Address"}
-                        placeholder={"address"}
+                        placeholder={"Address"}
                     />
 
                     <CustomTextInput
@@ -334,7 +300,7 @@ const Profile = (props) => {
                             province: i,
                         })}
                         type={"whiteBc"}
-                        placeholder={"province"}
+                        placeholder={"Province"}
                     />
 
 
@@ -345,10 +311,11 @@ const Profile = (props) => {
                             country: i,
                         })}
                         type={"whiteBc"}
-                        placeholder={"country"}
+                        placeholder={"Country"}
                     />
                     <View style={{ justifyContent: 'center' }}>
 
+                   
                         <CustomTextInput
                             value={moment(userDetails.date).format('YYYY-MM-DD')}
                             onChangeText={(i) => setUserDetails({

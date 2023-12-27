@@ -18,6 +18,9 @@ import moment from 'moment'
 import cacheData from '../../Storage/cacheData'
 import AppConstants from '../../Storage/AppConstants'
 import { Checkbox } from 'react-native-paper'
+import PhoneNumberInput from '../../Component/PhoneNumberInput'
+import { useSelector } from 'react-redux';
+
 const UserDetails = (props) => {
     const { email, password } = props.route.params
 
@@ -34,7 +37,6 @@ const UserDetails = (props) => {
         country: '',
         countryCode: '',
         phoneNumber: '',
-        formattedValue: '',
         date: new Date(),
         checkTermCon: false
     });
@@ -43,8 +45,6 @@ const UserDetails = (props) => {
     const [isVisible, setIsVisible] = useState(true)
     const [alertVisible, setAlertVisible] = useState(false)
     const [isSucess, setIsSucess] = useState(false)
-
-    // const [date, setDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
 
     const onChange = (event, selectedDate) => {
@@ -56,18 +56,21 @@ const UserDetails = (props) => {
         });
     };
 
+    const countryCode1 = useSelector((state) => state.reducer.countryCode);
+
+
+    useEffect(() => {
+        setUserDetails({
+            ...userDetails,
+            countryCode: countryCode1?.dial_code || '',
+        });
+    }, [countryCode1])
     const showDatepicker = () => {
         setShowDatePicker(true);
     };
-    useEffect(() => {
-    }, [])
 
 
-    const handleOnChangeText = (text) => {
-
-        userDetails.phoneNumber = text
-
-    };
+  
 
     const getImages = (item) => {
         console.log("item", item);
@@ -103,11 +106,7 @@ const UserDetails = (props) => {
             showAlert()
             return;
         }
-        else if (!userDetails.formattedValue) {
-            setMessage('Enter phone number');
-            showAlert()
-            return;
-        }
+
         else if (!userDetails.address) {
             setMessage('Enter Addrees');
             showAlert()
@@ -133,7 +132,6 @@ const UserDetails = (props) => {
             showAlert()
             return;
         }
-
 
         else if (!userDetails.country) {
             setMessage('Enter country');
@@ -187,6 +185,7 @@ const UserDetails = (props) => {
             accept: 'application/json',
             'content-type': 'multipart/form-data'
         }
+        console.log(formData);
         await apiCall.apiPOSTCall('/signup', formData, headers)
             .then(response => {
                 // Handle success
@@ -247,38 +246,13 @@ const UserDetails = (props) => {
 
                 <View style={{ backgroundColor: color.white, paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), paddingBottom: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
 
-                    <PhoneInput
-                        value={userDetails.phoneNumber}
-                        defaultValue={userDetails.phoneNumber}
-                        defaultCode={userDetails.countryCode}
-                        textContainerStyle={{
-                            borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-                            backgroundColor: color.white,
-                            paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-                            
-                        }}
-                        layout="first"
-                        onChangeText={(text) => handleOnChangeText(text)}
-                        onEndEditing={() => handleOnEndEditing()}
-
-                        onChangeFormattedText={(text) => setUserDetails({
-                            ...userDetails,
-                            formattedValue: text,
-                        })}
-                        onChangeCountry={(text) => setUserDetails({
-                            ...userDetails,
-
-                            countryCode: (text.cca2),
-                        })}
-                        withDarkTheme
-                        withShadow
-                        containerStyle={styles.phoneInputContainer}
-                        textInputStyle={styles.phoneInputText}
-                        codeTextStyle={styles.phoneInputCodeText}
-                        flagButtonStyle={styles.phoneInputFlagButton}
-                        codeContainerStyle={styles.phoneInputCodeContainer}
-                        countryPickerButtonStyle={{ backgroundColor: color.white }}
-                    />
+                    <PhoneNumberInput countryCode={(i) => setUserDetails({
+                        ...userDetails,
+                        countryCode: i,
+                    })} phoneNumber={(i) => setUserDetails({
+                        ...userDetails,
+                        phoneNumber: i,
+                    })} />
 
 
                     <CustomTextInput
@@ -389,10 +363,10 @@ const styles = StyleSheet.create({
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
         marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
         color: color.black,
-        elevation:0
+        elevation: 0
     },
     phoneInputText: {
-        fontSize:12/PixelRatio.getFontScale(),
+        fontSize: 12 / PixelRatio.getFontScale(),
         backgroundColor: color.white,
         padding: PixelRatio.getPixelSizeForLayoutSize(0 / PixelRatio.get()),
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
@@ -400,7 +374,7 @@ const styles = StyleSheet.create({
 
     },
     phoneInputCodeText: {
-        fontSize:12/PixelRatio.getFontScale(),
+        fontSize: 12 / PixelRatio.getFontScale(),
         color: color.black
 
     },
@@ -409,7 +383,7 @@ const styles = StyleSheet.create({
 
     },
     phoneInputCodeContainer: {
-        fontSize:12/PixelRatio.getFontScale(),
+        fontSize: 12 / PixelRatio.getFontScale(),
         color: color.black,
         paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
 
@@ -428,7 +402,7 @@ const styles = StyleSheet.create({
     textStyles: {
         color: color.black,
         fontFamily: FontFamily.Roboto_Regular,
-        fontSize:12/PixelRatio.getFontScale()
+        fontSize: 12 / PixelRatio.getFontScale()
     },
     btnStyle: {
         backgroundColor: color.white,

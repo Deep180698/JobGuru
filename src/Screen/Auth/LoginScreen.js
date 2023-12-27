@@ -1,16 +1,12 @@
-import { View, Text, StyleSheet, PixelRatio, Image, TouchableOpacity, KeyboardAvoidingView, ImageBackground, Dimensions } from 'react-native'
+import { View, Text, StyleSheet, PixelRatio, Image, TouchableOpacity, ImageBackground, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import color from '../../Utils/Color'
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { TextInput } from 'react-native-gesture-handler';
 import CustomButton from '../../Component/CustomButton';
 import CustomAlert from '../../Component/CustomAlert';
 import { authFunc } from '../../Storage/Action'
+import { useDispatch } from 'react-redux'
 import AppConstants from '../../Storage/AppConstants';
 import cacheData from '../../Storage/cacheData'
-import { useDispatch } from 'react-redux'
 import * as Animatable from 'react-native-animatable';
 import FontFamily from '../../Utils/FontFamily';
 import apiCall from '../../Utils/apiCall';

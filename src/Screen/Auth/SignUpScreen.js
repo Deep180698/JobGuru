@@ -7,6 +7,7 @@ import CustomAlert from '../../Component/CustomAlert';
 import FontFamily from '../../Utils/FontFamily';
 import apiCall from '../../Utils/apiCall';
 import CustomTextInput from '../../Component/CustomTextInput';
+import AppConstants from '../../Storage/AppConstants';
 
 const SignUpScreen = (props) => {
     const [countryImage, setCountryImage] = useState('https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_the_Taliban.svg')
@@ -95,17 +96,13 @@ const SignUpScreen = (props) => {
         try {
 
             const data = {
-
                 "email": email,
-
             }
-
             const Header = {
                 'Content-Type': 'application/json',
             }
-            const result = await apiCall.apiPOSTCall('/check_user', data, Header);
+          const result =   await apiCall.apiPOSTCall(AppConstants.AsyncKeyLiterals.check_user, data, Header)
 
-            console.log(result);
 
             if (!result.exists) {
                 props.navigation.navigate("UserDetails", {
@@ -208,8 +205,7 @@ const SignUpScreen = (props) => {
                                 elevation: 5,
                             }}>
 
-                            <InputBlock />
-
+                            {InputBlock()}
 
                         </View>
                     </View>

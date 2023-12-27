@@ -1,18 +1,41 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, StyleSheet, PixelRatio, PermissionsAndroid, Platform } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, StyleSheet, PixelRatio, PermissionsAndroid, Platform, Dimensions, FlatList } from 'react-native';
 import color from '../Utils/Color';
 import Entypo from 'react-native-vector-icons/Entypo'
 import ImagePicker from 'react-native-image-crop-picker';
 import FontFamily from '../Utils/FontFamily';
-
-
-const CustomBottomSheet = ({ isOpen, onClose, getCall, data, type }) => {
-  const [images, setImages] = useState(null);
+import Header from './Header';
+import { Searchbar } from 'react-native-paper';
+const { height, width } = Dimensions.get('screen');
+import AppConstants from '../Storage/AppConstants'
+import { updateCountryCode } from '../Storage/Action'
+import { useDispatch } from 'react-redux'
+import apiCall from '../Utils/apiCall';
+const CustomBottomSheet = ({ isOpen, onClose, getCall, data }) => {
+  const [countryList, setCountryList] = useState();
+  const [filterData, setFilterData] = useState();
+  const [searchText, setSearchText] = useState('');
+  const dispatch = useDispatch();
 
   useEffect(() => {
-
+    getCountryData()
     requestPermissions();
   }, []);
+
+
+  const getCountryData = async () => {
+
+    const headers = {
+    }
+
+    apiCall.apiGETCall(AppConstants.AsyncKeyLiterals.getCountry, headers).then((response) => {
+
+      setCountryList(response)
+      setFilterData(response)
+
+    })
+
+  }
 
 
   const requestCameraPermission = async () => {
@@ -80,6 +103,27 @@ const CustomBottomSheet = ({ isOpen, onClose, getCall, data, type }) => {
     }
   };
 
+  const onSelect = (countryCode) => {
+
+    data(countryCode)
+    onClose()
+
+  }
+
+  const renderItem = ({ item, index }) => {
+    return (
+      <TouchableOpacity onPress={() => onSelect(item.dial_code)} activeOpacity={0.6} style={{
+        paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+        paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+        borderBottomWidth: PixelRatio.getPixelSizeForLayoutSize(1 / PixelRatio.get()),
+        borderColor: color.gray,
+        flexDirection: 'row'
+      }}>
+        <Text style={[styles.textStyle, { flex: 0.2, marginRight: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{`( ${item.dial_code} )`}</Text>
+        <Text style={[styles.textStyle, { flex: 0.8 }]}>{item.name}</Text>
+      </TouchableOpacity >
+    )
+  }
   return (
     <View style={styles.container}>
       <Modal
@@ -88,10 +132,40 @@ const CustomBottomSheet = ({ isOpen, onClose, getCall, data, type }) => {
         visible={isOpen}
         onRequestClose={isOpen}
       >
-        <View style={styles.modalContainer}>
-          <View style={styles.bottomSheet}>
-            {/* Content of your bottom sheet */}
-            {getCall == "imageSelection" ?
+
+        {getCall == "countryPicker" ?
+
+          <View style={[{ flex: 1, backgroundColor: color.white, }]}>
+            <Header onPress={onClose} screenName={'normal'} title={'Select Country'} />
+            <Searchbar
+              style={styles.searchbarStyle}
+              value={searchText}
+              inputStyle={styles.textStyle}
+              textAlignVertical='top'
+              onClearIconPress={() => { setCountryList(filterData) }}
+              onChangeText={(i) => {
+                setSearchText(i)
+                const filtered = filterData.filter(
+                  (item) =>
+                    item.name.toLowerCase().includes(searchText.toLowerCase()) ||
+                    item.dial_code.includes(searchText) ||
+                    item.code.toLowerCase().includes(searchText.toLowerCase())
+                );
+                setCountryList(filtered)
+              }}
+              placeholder='search Country'
+            />
+            <FlatList
+              data={countryList}
+              renderItem={renderItem}
+            />
+          </View>
+          : null}
+        {getCall == "imageSelection" ?
+          <View style={styles.modalContainer}>
+            <View style={styles.bottomSheet}>
+              {/* Content of your bottom sheet */}
+
 
               <View>
                 <TouchableOpacity activeOpacity={0.6} onPress={() => openCamaraPicker()} style={styles.btnStyle}>
@@ -106,11 +180,9 @@ const CustomBottomSheet = ({ isOpen, onClose, getCall, data, type }) => {
                   <Text style={[styles.textStyle]}>{"Cancel"}</Text>
                 </TouchableOpacity>
               </View>
-              : null}
-
-          
+            </View>
           </View>
-        </View>
+          : null}
       </Modal>
     </View>
   );
@@ -150,6 +222,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
+  },
+  searchbarStyle: {
+    marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+    marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    height: 40,
+    borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    backgroundColor: color.white
   }
 });
 
