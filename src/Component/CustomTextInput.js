@@ -17,6 +17,7 @@ const CustomTextInput = ({ placeholder, type, value, leftIcon, RightIcon, onVisi
                 <TextInput
                     mode='outlined'
                     value={value}
+                   
                     textColor={color.black}
                     outlineStyle={{ borderColor: color.black }}
                     placeholderTextColor={color.white}
@@ -31,6 +32,7 @@ const CustomTextInput = ({ placeholder, type, value, leftIcon, RightIcon, onVisi
 
             {type === 'normal' ?
                 <TextInput
+               
                     mode='outlined'
                     value={value}
                     textColor={color.white}

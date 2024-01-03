@@ -61,37 +61,36 @@ function CustomDrawerContent() {
         <TouchableOpacity activeOpacity={0.6} onPress={() => navigateToScreen("HomeScreen")} style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
           <Entypo name='home' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
           <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"Dashboard"}</Text>
-          <AntDesign name='right' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
+          
         </TouchableOpacity>
         {/* Favourite */}
         <TouchableOpacity activeOpacity={0.6} onPress={() => navigateToScreen("FavouriteScreen")} style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
           <MaterialIcons name='favorite' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
           <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"Favourite"}</Text>
-          <AntDesign name='right' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
+          
         </TouchableOpacity>
         {/* Edit profile */}
         <TouchableOpacity activeOpacity={0.6} onPress={() => navigateToScreen("Profile")} style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
           <MaterialCommunityIcons name='account' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
           <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"Profile"}</Text>
-          <AntDesign name='right' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
+          
         </TouchableOpacity>
         {/* FAQ */}
         <TouchableOpacity activeOpacity={0.6} onPress={() => navigateToScreen("FaqScreen")} style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
           <MaterialCommunityIcons name='message-question' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
           <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"FAQ"}</Text>
-          <AntDesign name='right' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
+          
         </TouchableOpacity>
         {/* report */}
         <TouchableOpacity activeOpacity={0.6} onPress={() => navigateToScreen("ReportScreen")} style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
           <MaterialIcons name='report' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
           <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"Report"}</Text>
-          <AntDesign name='right' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
+          
         </TouchableOpacity>
         {/* Setting */}
         <TouchableOpacity activeOpacity={0.6} onPress={() => navigateToScreen("SettingScreen")} style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
           <Fontisto name='player-settings' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
           <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"Settings and Privacy"}</Text>
-          <AntDesign name='right' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
         </TouchableOpacity>
       </View>
       {/* Logout */}

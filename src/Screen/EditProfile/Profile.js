@@ -214,8 +214,8 @@ const Profile = (props) => {
     }
     return (
         <View style={{ flex: 1, backgroundColor: color.white }}>
+            <Header title={"Profile Details"} screenName={"normal"} onPress={() => props.navigation.goBack()} />
             <ScrollView>
-                <Header title={"Profile Details"} screenName={"normal"} onPress={() => props.navigation.goBack()} />
 
                 <View style={{ flexDirection: 'row', backgroundColor: color.white }}>
                     <View style={{
@@ -315,7 +315,7 @@ const Profile = (props) => {
                     />
                     <View style={{ justifyContent: 'center' }}>
 
-                   
+
                         <CustomTextInput
                             value={moment(userDetails.date).format('YYYY-MM-DD')}
                             onChangeText={(i) => setUserDetails({
@@ -354,7 +354,7 @@ const Profile = (props) => {
                     {/* Login btn */}
                     <CustomButton press={validatefunc} style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()), }} text="Update" />
                 </View>
-                <CustomBottomSheet getCall="imageSelection" onClose={() => setIsOpen(false)} isOpen={isOpen} data={(item) => getImages(item)} />
+                <CustomBottomSheet multiple={false} getCall="imageSelection" onClose={() => setIsOpen(false)} isOpen={isOpen} data={(item) => getImages(item)} />
                 <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"login"} />
 
             </ScrollView>

@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     tab: {
         flex: 1,
         backgroundColor: color.black,
-        borderTopWidth: 0.5,
+        borderTopWidth: 0.2,
         borderColor: color.white,
         justifyContent: 'center',
         alignItems: 'center',

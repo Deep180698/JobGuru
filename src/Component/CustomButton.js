@@ -25,6 +25,6 @@ const styles = StyleSheet.create({
     fontSize: 14 / PixelRatio.getFontScale(),
     textAlign: 'center',
     fontFamily: FontFamily.Roboto_Regular
-
+    
   }
 })

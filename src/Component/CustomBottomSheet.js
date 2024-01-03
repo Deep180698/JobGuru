@@ -11,7 +11,7 @@ import AppConstants from '../Storage/AppConstants'
 import { updateCountryCode } from '../Storage/Action'
 import { useDispatch } from 'react-redux'
 import apiCall from '../Utils/apiCall';
-const CustomBottomSheet = ({ isOpen, onClose, getCall, data }) => {
+const CustomBottomSheet = ({ isOpen, onClose, getCall, data,multiple }) => {
   const [countryList, setCountryList] = useState();
   const [filterData, setFilterData] = useState();
   const [searchText, setSearchText] = useState('');
@@ -76,8 +76,8 @@ const CustomBottomSheet = ({ isOpen, onClose, getCall, data }) => {
         width: 300,
         height: 400,
         cropping: false,
+        multiple:multiple
       });
-
       data(result)
 
 
@@ -106,6 +106,8 @@ const CustomBottomSheet = ({ isOpen, onClose, getCall, data }) => {
   const onSelect = (countryCode) => {
 
     data(countryCode)
+    setSearchText('')
+    setCountryList(filterData)
     onClose()
 
   }
@@ -135,7 +137,7 @@ const CustomBottomSheet = ({ isOpen, onClose, getCall, data }) => {
 
         {getCall == "countryPicker" ?
 
-          <View style={[{ flex: 1, backgroundColor: color.white, }]}>
+          <View style={[{ flex: 1, backgroundColor: color.black, }]}>
             <Header onPress={onClose} screenName={'normal'} title={'Select Country'} />
             <Searchbar
               style={styles.searchbarStyle}
@@ -158,6 +160,7 @@ const CustomBottomSheet = ({ isOpen, onClose, getCall, data }) => {
             <FlatList
               data={countryList}
               renderItem={renderItem}
+              style={{backgroundColor:color.white}}
             />
           </View>
           : null}
@@ -176,8 +179,8 @@ const CustomBottomSheet = ({ isOpen, onClose, getCall, data }) => {
                   <Entypo name='folder-images' color={color.black} size={PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get())} />
                   <Text style={[styles.textStyle, { marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"Upload from Gallery"}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity activeOpacity={0.6} onPress={onClose} style={[styles.btnStyle, { backgroundColor: color.golden, marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
-                  <Text style={[styles.textStyle]}>{"Cancel"}</Text>
+                <TouchableOpacity activeOpacity={0.6} onPress={onClose} style={[styles.btnStyle, { backgroundColor: color.black, marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
+                  <Text style={[styles.textStyle,{color:color.white}]}>{"Cancel"}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -219,9 +222,10 @@ const styles = StyleSheet.create({
   },
   btnStyle: {
     justifyContent: 'center',
-    alignItems: 'center',
+    alignSelf: 'center',
     flexDirection: 'row',
-    marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
+    marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
   },
   searchbarStyle: {
     marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),

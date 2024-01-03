@@ -50,19 +50,7 @@ const LoginScreen = (props) => {
             cacheData.saveDataToCachedWithKey(asyncItem.isLoggedIn, true);
             cacheData.saveDataToCachedWithKey(asyncItem.IS_AUTH, result);
             cacheData.token(asyncItem.token, result.token);
-            setIsSucess(true)
-            showAlert()
-        } catch (error) {
-        } finally {
-        }
-    };
 
-    const showAlert = () => {
-        setAlertVisible(true);
-    };
-
-    const closeAlert = () => {
-        if (isSucess) {
             props.navigation.reset({
                 index: 0,
                 routes: [
@@ -72,11 +60,36 @@ const LoginScreen = (props) => {
                 ],
             });
 
-            setAlertVisible(false)
-        } else {
+            // setIsSucess(true)
+            // showAlert()
+        } catch (error) {
+
+            setMessage("somthing went wrong")
+            showAlert()
+        } finally {
+        }
+    };
+
+    const showAlert = () => {
+        setAlertVisible(true);
+    };
+
+    const closeAlert = () => {
+        // if (isSucess) {
+        //     props.navigation.reset({
+        //         index: 0,
+        //         routes: [
+        //             {
+        //                 name: "BottomNavigator",
+        //             },
+        //         ],
+        //     });
+
+        //     setAlertVisible(false)
+        // } else {
             setAlertVisible(false);
 
-        }
+        // }
     };
 
     const validatefunc = () => {

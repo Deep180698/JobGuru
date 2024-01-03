@@ -5,6 +5,9 @@ import AppConstants from '../Storage/AppConstants';
 const apiPOSTCall = async (endpoint, data = null,headers) => {
     try {
         const apiUrl = AppConstants.AsyncKeyLiterals.Base_URL + endpoint;
+        console.log(apiUrl);
+        console.log(data);
+        console.log(headers);
         const response = await axios.post(apiUrl, data, headers);
         return response.data
         // Handle the response data as needed

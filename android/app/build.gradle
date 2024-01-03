@@ -107,6 +107,15 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
+    
+    implementation 'com.facebook.fresco:fresco:1.+'
+
+    // For animated GIF support
+    implementation 'com.facebook.fresco:animated-gif:1.+'
+
+    // For WebP support, including animated WebP
+    implementation 'com.facebook.fresco:animated-webp:1.+'
+    implementation 'com.facebook.fresco:webpsupport:1.+' 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
         exclude group:'com.squareup.okhttp3', module:'okhttp'

@@ -17,6 +17,7 @@ import FavouriteScreen from '../Screen/Favourite/FavouriteScreen';
 import EditProfileScreen from '../Screen/EditProfile/EditProfileScreen';
 import Profile from '../Screen/EditProfile/Profile';
 import PostScreen from '../Screen/Post/PostScreen';
+import DetailsPostScreen from '../Screen/Post/DetailsPostScreen';
 import SettingScreen from '../Screen/Setting/SettingScreen';
 import DynamicLinkHandler from '../Utils/DynamicLinkHandler';
 import {Animated} from 'react-native'
@@ -81,6 +82,7 @@ const AuthStackNavigator = () => {
       <Stack.Screen name="SettingScreen" component={SettingScreen} />
       <Stack.Screen name="PostScreen" component={PostScreen} />
       <Stack.Screen name="UserDetails" component={UserDetails} />
+      <Stack.Screen name="DetailsPostScreen" component={DetailsPostScreen} />
     </Stack.Navigator>
   )
 }

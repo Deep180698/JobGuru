@@ -1,7 +1,8 @@
-import { StyleSheet, FlatList, View, Text, Image, PixelRatio, TouchableOpacity, ScrollView } from 'react-native'
+import { StyleSheet, FlatList, View, RefreshControl, Text, Image, PixelRatio, TouchableOpacity, ScrollView, Dimensions } from 'react-native'
 import React, { useState, useEffect, useRef } from 'react'
 import Header from '../../Component/Header'
 import Entypo from "react-native-vector-icons/Entypo";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import color from '../../Utils/Color'
 import { Searchbar } from 'react-native-paper';
@@ -13,7 +14,12 @@ import apiCall from '../../Utils/apiCall';
 import AppConstants from '../../Storage/AppConstants';
 import { SliderBox } from "react-native-image-slider-box";
 import cacheData from '../../Storage/cacheData';
+import axios from 'axios';
+import ImageCarousel from '../../Component/ImageCarousel';
+import CustomButton from '../../Component/CustomButton';
+import CustomLoader from '../../Component/CustomLoader';
 
+const { width, height } = Dimensions.get('screen')
 const HomeScreen = (props, { navigation }) => {
 
   const flatListRef = useRef(null);
@@ -21,6 +27,7 @@ const HomeScreen = (props, { navigation }) => {
   const [data, setData] = useState([]);
   const [bannerData, setBannerData] = useState([]);
   const [searchText, setSearchText] = useState('')
+  const [refreshing, setRefreshing] = useState(false);
 
   const data1 = useSelector((state) => state.reducer)
 
@@ -46,15 +53,14 @@ const HomeScreen = (props, { navigation }) => {
 
     const result = await apiCall.apiGETCall(AppConstants.AsyncKeyLiterals.getPost, headers);
     console.log("result.data", result);
-
+    setRefreshing(false)
     setData(result)
 
   }
   const onSelectFavourite = async (item, index) => {
 
-
     const headers = {
-      'Content-Type':'application/json',
+      'Content-Type': 'application/json',
       'authorization': await cacheData.getDataFromCachedWithKey(AppConstants.AsyncKeyLiterals.token),
     }
     const body = {
@@ -62,21 +68,23 @@ const HomeScreen = (props, { navigation }) => {
       "isFavourite": !item.isFavourite
 
     }
-    const result = await apiCall.apiPOSTCall(AppConstants.AsyncKeyLiterals.postFavourite, body, headers);
-    console.log("result.data", result);
+    await axios({
+      method: 'POST',
+      url: AppConstants.AsyncKeyLiterals.Base_URL + AppConstants.AsyncKeyLiterals.postFavourite,
+      data: body,
+      headers: headers
+    }).then(response => {
 
-    
-    const newArray = data;
-    newArray.map((i) => {
-      if (item._id === i._id) {
+      const newArray = data;
+      newArray.map((i) => {
+        if (item._id === i._id) {
 
-        i.isFavourite = !i.isFavourite
-      }
-    })
+          i.isFavourite = !i.isFavourite
+        }
+      })
 
-    setData([...newArray]);
-
-
+      setData([...newArray]);
+    });
 
   }
   const onSelectType = (item) => {
@@ -118,15 +126,20 @@ const HomeScreen = (props, { navigation }) => {
       <Text style={styles.bannerText}>{item.typeName}</Text>
     </TouchableOpacity>
   );
+  const renderImageItem = (item) => {
+    return (
+      <Image style={styles.imageStyle} source={{ uri: item.uri }} />
+    )
+  }
   // render list
   const renderItem = ({ item, index }) => {
-    console.log(item);
     const formattedImages = item.images.map((image) => ({
       uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + image.name
     }));
-    console.log(formattedImages);
+
+    console.log(item.isFavourite);
     return (
-      <View style={{ backgroundColor: color.black }}>
+      <View Vstyle={{ backgroundColor: color.black }}>
         {/* Header of post */}
         <View style={{
           marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
@@ -136,81 +149,60 @@ const HomeScreen = (props, { navigation }) => {
         }}>
           <Image source={{ uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + item.profileImage }} style={styles.profileStyle} />
           <Text style={[styles.textStyle, { flex: 1, fontSize: 14 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Regular, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{item.firstName} {item.lastName}</Text>
-
           <TouchableOpacity activeOpacity={0.6} onPress={() => setIsOpen(true)}>
-            <Entypo name={'dots-three-vertical'} color={color.white} size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} />
+            <Entypo name={'dots-three-vertical'} color={color.white} size={PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get())} />
           </TouchableOpacity>
         </View>
-
         {/* Body od post */}
-        <View>
-          <SliderBox
-            images={formattedImages}
-            dotColor={color.black}
-            inactiveDotColor={color.gray}
-            paginationBoxVerticalPadding={20}
-            resizeMethod={'resize'}
-            resizeMode={'cover'}
-            paginationBoxStyle={{
-              position: "absolute",
-              bottom: 0,
-              padding: 0,
-              alignItems: "center",
-              alignSelf: "center",
-              justifyContent: "center",
-              paddingVertical: 10
-            }}
-            dotStyle={{
-              width: 5,
-              height: 5,
-              borderRadius: 5,
-              marginHorizontal: 0,
-              padding: 0,
-              margin: 0,
-              backgroundColor: "rgba(128, 128, 128, 0.92)"
-            }}
-            ImageComponentStyle={styles.imageStyle}
-            imageLoadingColor={color.white}
-          />
-          <TouchableOpacity style={styles.heartPositionStyle} onPress={() => onSelectFavourite(item, index)}>
-            <Animatable.View
-              animation={'bounceIn'}
-            >
-              <FontAwesome
-                name={'heart'}
-                size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())}
-                color={item.isFavourite ? color.golden : color.white}
-              />
-            </Animatable.View>
-          </TouchableOpacity>
-        </View>
+        <View activeOpacity={0.8}>
+          <View style={{ flex: 1 }}>
+            <ImageCarousel paginationStyle={{ position: 'relative' }} images={formattedImages} />
+          </View>
 
+          <View style={styles.buttonPositionStyle}>
+            <CustomButton press={() => props.navigation.navigate('DetailsPostScreen', { postData: item })} text={"View Job"} style={{ backgroundColor: color.white, paddingVertical: 5 }} textStyle={{ color: color.black }} />
+          </View>
+        </View>
         {/* description */}
-        <View style={{
-          width: '100%',
-          paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-          paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-          bottom: 0,
-        }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={[styles.textStyle]}>{'Job Name - '}</Text>
-            <Text style={[styles.textStyle]}>{item.title}</Text>
+        <View style={{ flexDirection: 'row',flex:1}}>
+          <View style={{
+            flex:1,
+            paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+            paddingLeft: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+          }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={[styles.textStyle, { color: color.white }]}>{item.title}</Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={[styles.textStyle, { color: color.white, fontSize: 12 / PixelRatio.getFontScale() }]}>{item.additionalNote}</Text>
+            </View>
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={[styles.textStyle]}>{'Job Description - '}</Text>
-            <Text style={[styles.textStyle, { fontSize: 12 / PixelRatio.getFontScale() }]}>{item.additionalNote}</Text>
-          </View>
+            <TouchableOpacity style={{marginHorizontal:PixelRatio.getPixelSizeForLayoutSize(10/PixelRatio.get())}}onPress={() => onSelectFavourite(item, index)}>
+              <Animatable.View animation={item.isFavourite ? 'bounceIn' : null}>
+                <MaterialCommunityIcons
+                  name={item.isFavourite ? 'bookmark' : 'bookmark-outline'}
+                  size={PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get())}
+                  color={color.white}
+                />
+              </Animatable.View>
+            </TouchableOpacity>
         </View>
       </View>
     )
   }
   return (
     <View style={{ flex: 1, backgroundColor: color.black }}>
-
-
       {/* Header */}
       <Header screenName={'Home'} title={"Dashboard"} onNavigate={(item) => onNavigateScreen(item)} onPress={() => props.navigation.openDrawer()} />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={() => {
+            setRefreshing(true);
+            getPostData();
+          }}
+        />
+      } showsVerticalScrollIndicator={false}>
 
         {/* Searchbar */}
         <Searchbar
@@ -222,8 +214,8 @@ const HomeScreen = (props, { navigation }) => {
           placeholder='search job'
         />
         {/* banner */}
-        <Animatable.View animation={"fadeInUpBig"}>
-          <FlatList
+        <Animatable.View duration={1000} animation={"slideInUp"}>
+          {/* <FlatList
             data={bannerData}
             keyExtractor={(item) => item.id}
             renderItem={renderItem1}
@@ -231,7 +223,8 @@ const HomeScreen = (props, { navigation }) => {
             style={{ height: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()) }}
             horizontal
             showsHorizontalScrollIndicator={false}
-          />
+
+          /> */}
 
           {/* List Data */}
 
@@ -252,11 +245,12 @@ export default HomeScreen
 const styles = StyleSheet.create({
 
   imageStyle: {
+    width: width,
     height: PixelRatio.getPixelSizeForLayoutSize(250 / PixelRatio.get()),
   },
   profileStyle: {
-    height: PixelRatio.getPixelSizeForLayoutSize(50 / PixelRatio.get()),
-    width: PixelRatio.getPixelSizeForLayoutSize(50 / PixelRatio.get()),
+    height: PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get()),
+    width: PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get()),
     borderRadius: PixelRatio.getPixelSizeForLayoutSize(200 / PixelRatio.get()),
     resizeMode: "contain"
   },
@@ -266,11 +260,14 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
 
   },
-  heartPositionStyle: {
+
+  buttonPositionStyle: {
     position: 'absolute',
     right: 0,
-    marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
-    marginVertical: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())
+    bottom: 0,
+    marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    marginVertical: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
+    marginBottom: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get())
   },
   textStyle: {
     fontSize: 12 / PixelRatio.getFontScale(),
