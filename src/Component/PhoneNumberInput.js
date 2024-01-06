@@ -1,11 +1,11 @@
 import { PixelRatio, StyleSheet, Dimensions, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { TextInput } from 'react-native-paper'
 import color from '../Utils/Color'
 import FontFamily from '../Utils/FontFamily'
-import CustomBottomSheet from './CustomBottomSheet'
 import { useSelector, useDispatch } from 'react-redux';
 import { updateCountryCode, updatePhoneNumber } from '../Storage/Action'
+import CustomRBottomSheet from './CustomRBottomSheet'
 const { height, width } = Dimensions.get('screen')
 
 const PhoneNumberInput = ({ countryCode, mobileNumber }) => {
@@ -15,15 +15,19 @@ const PhoneNumberInput = ({ countryCode, mobileNumber }) => {
     const { authData } = useSelector((state) => state.reducer);
     const dispatch = useDispatch();
 
+    const bottomSheetRef = useRef();
 
+    const openBottomSheet = () => {
+        bottomSheetRef.current.open();
+    };
+    const closeBottomSheet = () => {
+        bottomSheetRef.current.close();
+    };
     useEffect(() => {
-        setcountry_Code(authData.data.userData.countryCode || '')
-        setPhone_Number(authData.data.userData.mobileNumber || '')
+        setcountry_Code(authData?.data?.userData?.countryCode || '')
+        setPhone_Number(authData?.data?.userData?.mobileNumber || '')
     }, [authData])
 
-    const submitClose = () => {
-        setIsOpen(false)
-    }
 
     return (
         <View style={{ flexDirection: 'row', flex: 1 }}>
@@ -32,9 +36,9 @@ const PhoneNumberInput = ({ countryCode, mobileNumber }) => {
                 mode='outlined'
                 value={country_Code}
                 textColor={color.black}
-                onFocus={() => { setIsOpen(true) }}
+                onFocus={() => { openBottomSheet() }}
                 outlineStyle={{ borderColor: color.black }}
-                style={[styles.TextInputStyle, { flex:0.3,marginRight: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}
+                style={[styles.TextInputStyle, { flex: 0.3, marginRight: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}
                 onChangeText={(i) => [dispatch(updateCountryCode(i)), setcountry_Code(i)]}
                 cursorColor={color.black}
                 label={'Code'}
@@ -46,13 +50,13 @@ const PhoneNumberInput = ({ countryCode, mobileNumber }) => {
                 textColor={color.black}
                 outlineStyle={{ borderColor: color.black, }}
                 style={[styles.TextInputStyle]}
-                onChangeText={(i) => [mobileNumber(i), setPhone_Number(i)]}
+                onChangeText={(i) => [setPhone_Number(i),mobileNumber(i)]}
                 cursorColor={color.black}
                 label={'Mobile Number'}
-            
-            />
+                keyboardType='number-pad'
 
-            <CustomBottomSheet isOpen={isOpen} data={(i) => { setcountry_Code(i), countryCode(i) }} onClose={submitClose} getCall={'countryPicker'} style={{}} />
+            />
+            <CustomRBottomSheet Height={height} getCall={'countryPicker'} refBottomSheet={bottomSheetRef} data={(i) => { setcountry_Code(i), countryCode(i),closeBottomSheet() }}/>
         </View>
     )
 }

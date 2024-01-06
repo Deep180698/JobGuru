@@ -40,8 +40,8 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                         {options.tabBarIcon == 'home' ?
                             <Entypo name={"home"} size={24} color={isFocused ? color.golden : color.white} />
                             : null}
-                        {options.tabBarIcon == 'plussquare' ?
-                            <AntDesign name={"plussquare"} size={24} color={isFocused ? color.golden : color.white} />
+                        {options.tabBarIcon == 'Chat' ?
+                            <MaterialIcons name={"chat-bubble"} size={24} color={isFocused ? color.golden : color.white} />
                             : null}
 
                     </TouchableOpacity>

@@ -1,11 +1,10 @@
 import { PixelRatio, StyleSheet, ScrollView, Text, TouchableOpacity, View, FlatList, Dimensions, Image } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import color from '../../Utils/Color'
 import Header from '../../Component/Header'
 const screenWidth = Dimensions.get('window').width;
 // import { Checkbox } from 'react-native-paper';
 import { Checkbox } from 'react-native-paper'
-import CustomBottomSheet from '../../Component/CustomBottomSheet'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import FontFamily from '../../Utils/FontFamily'
@@ -15,9 +14,11 @@ import CustomAutoComplate from '../../Component/CustomAutoComplate'
 import CustomAddress from '../../Component/CustomAddress'
 import cacheData from '../../Storage/cacheData';
 import AppConstants from '../../Storage/AppConstants';
-import apiCall from '../../Utils/apiCall';
 import * as Animatable from 'react-native-animatable';
 import axios from 'axios';
+import CustomRBottomSheet from '../../Component/CustomRBottomSheet';
+import CustomNormalRBottomSheet from '../../Component/CustomNormalRBottomSheet';
+import CustomAlert from '../../Component/CustomAlert';
 const checkboxItems = [
     'FullTime', 'PartTime', 'Seasonal',
     'Contract', 'Freelance', 'Internship',
@@ -25,7 +26,23 @@ const checkboxItems = [
 ];
 const PostScreen = (props) => {
 
+    const bottomSheetRef = useRef();
+    const bottomSheetRef1 = useRef();
 
+    const openBottomSheet = () => {
+
+        bottomSheetRef.current.open();
+    };
+    const closeBottomSheet = () => {
+        bottomSheetRef.current.close();
+    };
+    const openBottomSheet1 = () => {
+
+        bottomSheetRef1.current.open();
+    };
+    const closeBottomSheet1 = () => {
+        bottomSheetRef1.current.close();
+    };
     const [state, setState] = useState({
         imageList: [],
         firstName: '',
@@ -38,6 +55,7 @@ const PostScreen = (props) => {
         texts: [],
         isNext: '1',
         description: '',
+        message: '',
         salary: '',
         selectedType: [],
         isOpen: false,
@@ -45,6 +63,7 @@ const PostScreen = (props) => {
         multiple: true,
         addresOpen: false,
         isVisible: false,
+        isAlert: false,
         activeIndex: 0,
         completedStepIndex: null,
     });
@@ -86,26 +105,24 @@ const PostScreen = (props) => {
                 state.imageList.push(i)
             }
         })
-
-
         setState({
             ...state,
             isOpen: false,
         });
+        closeBottomSheet()
     };
     const getImagesCamera = (item) => {
 
         if (item.path) {
             state.imageList.push(item)
         }
-
-
-
         setState({
             ...state,
             isOpen: false,
         });
+        closeBottomSheet()
     };
+
     const removeImage = (item, index) => {
         const newArray = [...state.imageList];
         newArray.splice(index, 1); // Remove 1 element at the specified index
@@ -155,9 +172,6 @@ const PostScreen = (props) => {
             });
         });
         formData.append("title", state.title)
-        formData.append("firstName", state.firstName)
-        formData.append("lastName", state.lastName)
-        formData.append('profileImage', state.profileImage);
         formData.append("description", state.description)
         formData.append("salary", state.salary)
         formData.append("skills", state.texts.join(', '))
@@ -176,12 +190,40 @@ const PostScreen = (props) => {
             data: formData,
             headers: headers
         }).then(response => {
-            props.navigation.replace('HomeScreen')
-            console.log(response);
-        });
+            console.log("status", response.status);
 
+            // props.navigation.replace('HomeScreen')
+        }).catch(error => {
+            if (error.response.status === 401) {
+                setState({
+                    ...state, message: error.response.data.error, isAlert: true
+                })
+            } else {
+                setState({
+                    ...state, message: error.message, isAlert: true
+                })
+            }
+        });
     }
 
+    const getCall = (item) => {
+
+        if (state.type == 'AddSkills') {
+            console.log("item", item);
+            setState({
+                ...state,
+                texts: item
+            })
+            closeBottomSheet()
+        } else if (state.type == 'imageSelection') {
+
+            if (item.length > 0) {
+                getImagesGallary(item)
+            } else {
+                getImagesCamera(item)
+            }
+        }
+    }
     const getStepState = (index) => {
         const state1 = Wizard.States.DISABLED;
         if (state.completedStepIndex && state.completedStepIndex > index - 1) {
@@ -191,6 +233,20 @@ const PostScreen = (props) => {
         }
         return state1;
     }
+    const handleItemPress = (index) => {
+        // Create a copy of the array
+        const updatedTexts = [...state.texts];
+
+        // Remove the item at the specified index
+        updatedTexts.splice(index, 1);
+
+        // Update the state with the new array
+        setState({
+            ...state,
+            texts: updatedTexts
+        })
+    };
+
     const renderSkillsItem = ({ item, index }) => (
         <View>
             <View style={styles.item}>
@@ -243,11 +299,11 @@ const PostScreen = (props) => {
                     marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
                     marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
                 }}>
-                    <TouchableOpacity onPress={() => setState({
+                    <TouchableOpacity onPress={() => [setState({
                         ...state,
                         type: 'imageSelection',
-                        isOpen: true
-                    })}
+                    }), openBottomSheet1()]}
+
                         activeOpacity={0.6} style={[{ width: '100%', marginVertical: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()), paddingVertical: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()), justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: color.gray, borderStyle: 'dashed' }]}>
                         <AntDesign name='plus' size={PixelRatio.getPixelSizeForLayoutSize(50 / PixelRatio.get())} color={color.gray} />
                     </TouchableOpacity>
@@ -257,7 +313,6 @@ const PostScreen = (props) => {
                         keyExtractor={(item) => item.id}
                         numColumns={3}
                     />
-
                 </View>
                 {/* Next btn */}
                 <TouchableOpacity
@@ -268,6 +323,7 @@ const PostScreen = (props) => {
             </View>
         )
     }
+
     const DescriptionItem = () => {
         return (
             <View style={{ flex: 1 }}>
@@ -302,8 +358,6 @@ const PostScreen = (props) => {
                                 type={"whiteBc"}
                                 placeholder={"Title"}
                             />
-
-
                             {/* Description */}
                             <CustomTextInput
                                 value={state.description}
@@ -311,12 +365,10 @@ const PostScreen = (props) => {
                                     ...state,
                                     description: i
                                 })}
-                                type={"whiteBc"}
+                                type={"Address"}
                                 placeholder={"Description"}
                             />
-
                             {/* Salary */}
-
                             <View style={{ justifyContent: 'center' }}>
                                 <CustomTextInput
                                     value={state.salary}
@@ -342,12 +394,9 @@ const PostScreen = (props) => {
                                     }))}>
                                     <Text style={[styles.textStyles, { flex: 1, color: color.black, fontSize: 12 / PixelRatio.getFontScale() }]} >{"Job Type"}</Text>
                                     <AntDesign name={state.isVisible ? 'down' : 'right'} size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.black} />
-
                                 </TouchableOpacity>
                                 <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }}>
                                     {state.isVisible ?
-
-
                                         <Animatable.View duration={1000} animation={"slideInUp"}>
                                             <FlatList
                                                 data={checkboxItems}
@@ -356,13 +405,13 @@ const PostScreen = (props) => {
                                                 numColumns={2}
                                             />
                                         </Animatable.View>
-
                                         : null}
                                     {/* Skills */}
-                                    <TouchableOpacity onPress={() => setState({
+                                    <TouchableOpacity onPress={() => [setState({
                                         ...state,
-                                        skillsOpen: true
-                                    })}
+                                        // skillsOpen: true,
+                                        type: 'AddSkills',
+                                    }), openBottomSheet()]}
                                         style={[styles.blockStyle, { marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
                                         <Text style={styles.textStyles}>{'Add Skills'}</Text>
                                     </TouchableOpacity>
@@ -404,13 +453,8 @@ const PostScreen = (props) => {
                                             <Ionicons name='location-sharp' color={color.black} size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} />
                                         </TouchableOpacity>
                                     </View>
-
-
                                 </View>
                             </ View>
-
-
-
                         </View>
                     </View>
                     {/* Next btn */}
@@ -440,18 +484,7 @@ const PostScreen = (props) => {
                         title={"Find Location"} />
                 </View>
                 : null}
-            {state.skillsOpen && !state.addresOpen ?
-                <View style={{ flex: 1 }}>
-                    <CustomAutoComplate
-                        press={(texts) =>
-                            setState({
-                                ...state,
-                                texts: texts,
-                                skillsOpen: false
-                            })}
-                        title={"Add skills"} />
-                </View>
-                : null}
+
             {!state.skillsOpen && !state.addresOpen ?
                 <View style={styles.container}>
                     <Header screenName={"normal"} title={'Post'} onPress={() => props.navigation.goBack()} />
@@ -466,12 +499,9 @@ const PostScreen = (props) => {
                         {state.isNext === '1' ? ImagePickerItem() : null}
                         {state.isNext === '2' ? DescriptionItem() : null}
 
-
-                        <CustomBottomSheet multiple={state.multiple} getCall={state.type} onClose={() => setState({
-                            ...state,
-                            isOpen: false
-                        })} isOpen={state.isOpen} data={(item) => item.length > 0 ? getImagesGallary(item) : getImagesCamera(item)} />
-
+                        <CustomRBottomSheet multiple={state.multiple} getCall={state.type} refBottomSheet={bottomSheetRef} data={(item) => getCall(item)} />
+                        <CustomNormalRBottomSheet multiple={state.multiple} getCall={state.type} refBottomSheet={bottomSheetRef1} data={(item) => getCall(item)} />
+                        <CustomAlert onClose={() => setState({ ...state, isAlert: false })} visible={state.isAlert} alert={'normal'} message={state.message} />
                     </ScrollView>
                 </View >
                 : null}

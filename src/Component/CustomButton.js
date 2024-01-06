@@ -6,7 +6,7 @@ import FontFamily from '../Utils/FontFamily'
 
 const CustomButton = ({ style, text, press, textStyle }) => {
   return (
-    <TouchableOpacity activeOpacity={0.6} onPress={press} style={[styles.btnStyles, style]}>
+    <TouchableOpacity activeOpacity={0.6} onPress={(press)} style={[styles.btnStyles, style]}>
       <Text style={[styles.textStyles, textStyle]}>{text}</Text>
     </TouchableOpacity>
   )

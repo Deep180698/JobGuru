@@ -61,31 +61,36 @@ function CustomDrawerContent() {
         <TouchableOpacity activeOpacity={0.6} onPress={() => navigateToScreen("HomeScreen")} style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
           <Entypo name='home' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
           <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"Dashboard"}</Text>
-          
+
         </TouchableOpacity>
         {/* Favourite */}
         <TouchableOpacity activeOpacity={0.6} onPress={() => navigateToScreen("FavouriteScreen")} style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-          <MaterialIcons name='favorite' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
+          {/* <MaterialIcons name='favorite' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} /> */}
+          <MaterialCommunityIcons
+            name={'bookmark'}
+            size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())}
+            color={color.white}
+          />
           <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"Favourite"}</Text>
-          
+
         </TouchableOpacity>
         {/* Edit profile */}
         <TouchableOpacity activeOpacity={0.6} onPress={() => navigateToScreen("Profile")} style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
           <MaterialCommunityIcons name='account' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
           <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"Profile"}</Text>
-          
+
         </TouchableOpacity>
         {/* FAQ */}
         <TouchableOpacity activeOpacity={0.6} onPress={() => navigateToScreen("FaqScreen")} style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
           <MaterialCommunityIcons name='message-question' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
           <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"FAQ"}</Text>
-          
+
         </TouchableOpacity>
         {/* report */}
         <TouchableOpacity activeOpacity={0.6} onPress={() => navigateToScreen("ReportScreen")} style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
           <MaterialIcons name='report' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
           <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"Report"}</Text>
-          
+
         </TouchableOpacity>
         {/* Setting */}
         <TouchableOpacity activeOpacity={0.6} onPress={() => navigateToScreen("SettingScreen")} style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>

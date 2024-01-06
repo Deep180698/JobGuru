@@ -12,7 +12,7 @@ const CustomAlert = ({ visible, message, onClose, alert, onSucess }) => {
       <Modal visible={visible} onDismiss={onClose}>
         <Animatable.View animation={"zoomIn"}
           style={styles.container}>
-          {alert == 'login' ?
+          {alert == 'normal' ?
             <View style={{
               paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
 

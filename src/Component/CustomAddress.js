@@ -7,11 +7,11 @@ import CustomButton from './CustomButton'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 const { width, height } = Dimensions.get('screen')
 
-const CustomAddress = ({ title, press}) => {
+const CustomAddress = ({ title, press }) => {
     const [data, setData] = useState('')
     const [texts, setTexts] = useState([]);
     useEffect(() => {
-     
+
     }, [])
     // Render item for FlatList
     const renderItem = ({ item, index }) => (
@@ -24,37 +24,33 @@ const CustomAddress = ({ title, press}) => {
             </TouchableOpacity>
         </View>
     );
-  return (
-    <View style={styles.container}>
-          
-                <View style={{ marginHorizontal: 10, flex: 1 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <CustomTextInput
-                            value={data}
-                            onChangeText={(i) => setData(i)}
-                            type={"whiteBc"}
-                            placeholder={title}
-                        />
-                       
-                    </View>
-
-                    <View style={{
-                        borderBottomWidth: 1,
-                        borderColor: color.black,
-                        marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
-                    }} />
-                    <View style={{ flex: 1 }}>
-                        <FlatList
-                            data={texts}
-                            renderItem={renderItem}
-                            keyExtractor={(item, index) => index.toString()}
-                        />
-                    </View>
-                
-
+    return (
+        <View style={styles.container}>
+            <View style={{ marginHorizontal: 10, flex: 1 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <CustomTextInput
+                        value={data}
+                        onChangeText={(i) => setData(i)}
+                        type={"whiteBc"}
+                        style={{ width: width - PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }}
+                        placeholder={title}
+                    />
                 </View>
+                <View style={{
+                    borderBottomWidth: 1,
+                    borderColor: color.black,
+                    marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
+                }} />
+                <View style={{ flex: 1 }}>
+                    <FlatList
+                        data={texts}
+                        renderItem={renderItem}
+                        keyExtractor={(item, index) => index.toString()}
+                    />
+                </View>
+            </View>
         </View>
-  )
+    )
 }
 
 export default CustomAddress

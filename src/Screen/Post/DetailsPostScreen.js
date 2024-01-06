@@ -87,13 +87,14 @@ const DetailsPostScreen = (props) => {
                 <ImageCarousel images={formattedImages} />
 
             </View>
-            <View style={{
-                flex: 1, backgroundColor: color.white,
-                borderTopLeftRadius: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()),
-                borderTopRightRadius: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()),
-                marginTop: PixelRatio.getPixelSizeForLayoutSize(-40 / PixelRatio.get())
+            <Animatable.View duration={300} animation={"slideInUp"}
+                style={{
+                    flex: 1, backgroundColor: color.white,
+                    borderTopLeftRadius: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()),
+                    borderTopRightRadius: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()),
+                    marginTop: PixelRatio.getPixelSizeForLayoutSize(-40 / PixelRatio.get())
 
-            }}>
+                }}>
                 <View style={{
                     marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
                     marginTop: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get())
@@ -130,7 +131,7 @@ const DetailsPostScreen = (props) => {
                         <Text style={[styles.textStyle]}>{postData.address}</Text>
                     </View>
                 </View>
-            </View>
+            </Animatable.View>
 
             {/* call and message container */}
             <View style={styles.btnContainer}>
@@ -142,7 +143,7 @@ const DetailsPostScreen = (props) => {
                         <Text style={[styles.textStyle, { color: color.white, fontSize: 16 / PixelRatio.getFontScale() }]}>{'Message'}</Text>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity activeOpacity={0.6} style={[styles.btnStyle,{flex:0,marginVertical:PixelRatio.getPixelSizeForLayoutSize(10/PixelRatio.get())}]}>
+                <TouchableOpacity activeOpacity={0.6} style={[styles.btnStyle, { flex: 0, marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
                     <Text style={[styles.textStyle, { color: color.white, fontSize: 16 / PixelRatio.getFontScale() }]}>{'Apply Now'}</Text>
                 </TouchableOpacity>
             </View>
@@ -155,7 +156,7 @@ export default DetailsPostScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.white
+        backgroundColor: color.black
     },
     heartPositionStyle: {
         position: 'absolute',
@@ -177,7 +178,7 @@ const styles = StyleSheet.create({
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
     },
     btnContainer: {
-
+        backgroundColor:color.white,
         marginBottom: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
     }
 })

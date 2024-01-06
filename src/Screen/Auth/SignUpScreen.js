@@ -5,33 +5,23 @@ const { height, width } = Dimensions.get('window');
 import CustomButton from '../../Component/CustomButton';
 import CustomAlert from '../../Component/CustomAlert';
 import FontFamily from '../../Utils/FontFamily';
-import apiCall from '../../Utils/apiCall';
 import CustomTextInput from '../../Component/CustomTextInput';
 import AppConstants from '../../Storage/AppConstants';
+import axios from 'axios';
 
 const SignUpScreen = (props) => {
-    const [countryImage, setCountryImage] = useState('https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_the_Taliban.svg')
     const [firstName, setFirstName] = useState('Deep')
     const [lasttName, setLastName] = useState('Patel')
-
     const [email, setEmail] = useState('pateldeep0989@gmail.com')
     const [password, setPassword] = useState('Deep0909@')
     const [confirmPassword, setconfirmPassword] = useState('Deep0909@')
     const [message, setMessage] = useState('')
     const [isVisible, setIsVisible] = useState(true)
-    const [isVisible1, setIsVisible1] = useState(true)
     const [alertVisible, setAlertVisible] = useState(false)
     const [isSucess, setIsSucess] = useState(false)
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [formattedValue, setFormattedValue] = useState('');
-
-
-    const handleOnEndEditing = () => {
-    };
 
 
     useEffect(() => {
-
     }, [])
 
 
@@ -83,9 +73,7 @@ const SignUpScreen = (props) => {
             showAlert()
             return;
         }
-
         else {
-
             fetchData()
         }
 
@@ -93,35 +81,38 @@ const SignUpScreen = (props) => {
 
 
     const fetchData = async () => {
-        try {
 
-            const data = {
-                "email": email,
-            }
-            const Header = {
-                'Content-Type': 'application/json',
-            }
-          const result =   await apiCall.apiPOSTCall(AppConstants.AsyncKeyLiterals.check_user, data, Header)
+        const data = {
+            "email": email,
+        }
+        const headers = {
+            'Content-Type': 'application/json',
+        }
+        await axios({
+            method: 'POST',
+            url: AppConstants.AsyncKeyLiterals.Base_URL + AppConstants.AsyncKeyLiterals.check_user,
+            data: data,
+            headers: headers
+        }).then(response => {
+            if (response.status === 200) {
 
-
-            if (!result.exists) {
                 props.navigation.navigate("UserDetails", {
                     "firstName": firstName,
                     "lastName": lasttName,
                     "email": email,
                     "password": password,
                 })
-
-            } else {
-                setMessage(result.message);
-                setIsSucess(true)
-                showAlert()
             }
 
-
-        } catch (error) {
-        } finally {
-        }
+        }).catch(error => {
+            if (error.response.status === 401) {
+                setMessage(error.response.data.error)
+                setAlertVisible(true)
+            } else {
+                setMessage(error.message)
+                setAlertVisible(true)
+            }
+        });
     };
 
 
@@ -190,7 +181,7 @@ const SignUpScreen = (props) => {
                         </View>
                         <View
                             style={{
-                                marginTop: height/9.5,
+                                marginTop: height / 9.5,
                                 backgroundColor: color.white,
                                 paddingBottom: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
                                 marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
@@ -209,7 +200,7 @@ const SignUpScreen = (props) => {
 
                         </View>
                     </View>
-                    <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"login"} />
+                    <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"normal"} />
                 </ScrollView>
             </ImageBackground>
         </View >

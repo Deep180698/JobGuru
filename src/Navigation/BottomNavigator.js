@@ -3,12 +3,8 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import CustomTabBar from './CustomTabBar';
 import HomeScreen from '../Screen/Dashboard/HomeScreen';
-import FavouriteScreen from '../Screen/Favourite/FavouriteScreen';
-import EditProfileScreen from '../Screen/EditProfile/EditProfileScreen';
+import ChatScreen from '../Screen/Chat/ChatScreen';
 import color from '../Utils/Color';
-import PostScreen from '../Screen/Post/PostScreen';
-
-
 
 const Tab = createBottomTabNavigator();
 
@@ -23,13 +19,13 @@ const App = () => {
           tabBarIcon: 'home',
         }}
       />
-      {/* <Tab.Screen
-        name="PostScreen"
-        component={PostScreen}
+      <Tab.Screen
+        name="Chat"
+        component={ChatScreen}
         options={{
-          tabBarIcon: 'plussquare',
+          tabBarIcon: 'Chat',
         }}
-      /> */}
+      />
       
     </Tab.Navigator>
   );

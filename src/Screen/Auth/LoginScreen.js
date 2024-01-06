@@ -9,9 +9,9 @@ import AppConstants from '../../Storage/AppConstants';
 import cacheData from '../../Storage/cacheData'
 import * as Animatable from 'react-native-animatable';
 import FontFamily from '../../Utils/FontFamily';
-import apiCall from '../../Utils/apiCall';
 import { ScrollView } from 'react-native';
 import CustomTextInput from '../../Component/CustomTextInput';
+import axios from 'axios';
 
 
 const LoginScreen = (props) => {
@@ -31,43 +31,50 @@ const LoginScreen = (props) => {
     }, [])
 
     const fetchData = async () => {
-        try {
-            const headers = {
-                "Content-type": "application/json"
-            }
-            const data = {
-                'email': email,
-                'password': password
-            }
-            const result = await apiCall.apiPOSTCall(AppConstants.AsyncKeyLiterals.getLogin, data, headers);
 
-            console.log(result);
-
-            setMessage(result.message);
-            dispatch(authFunc(result))
-
-            const asyncItem = AppConstants.AsyncKeyLiterals;
-            cacheData.saveDataToCachedWithKey(asyncItem.isLoggedIn, true);
-            cacheData.saveDataToCachedWithKey(asyncItem.IS_AUTH, result);
-            cacheData.token(asyncItem.token, result.token);
-
-            props.navigation.reset({
-                index: 0,
-                routes: [
-                    {
-                        name: "BottomNavigator",
-                    },
-                ],
-            });
-
-            // setIsSucess(true)
-            // showAlert()
-        } catch (error) {
-
-            setMessage("somthing went wrong")
-            showAlert()
-        } finally {
+        
+        const headers = {
+            "Content-type": "application/json"
         }
+        const data = {
+            'email': email,
+            'password': password
+        }
+
+        await axios({
+            method: 'POST',
+            url: AppConstants.AsyncKeyLiterals.Base_URL + AppConstants.AsyncKeyLiterals.getLogin,
+            data: data,
+            headers: headers
+        }).then(response => {
+            if (response.status === 200) {
+
+                dispatch(authFunc(response.data))
+
+                const asyncItem = AppConstants.AsyncKeyLiterals;
+                cacheData.saveDataToCachedWithKey(asyncItem.isLoggedIn, true);
+                cacheData.saveDataToCachedWithKey(asyncItem.IS_AUTH, response.data);
+                cacheData.token(asyncItem.token, response.data.token);
+
+                props.navigation.reset({
+                    index: 0,
+                    routes: [
+                        {
+                            name: "BottomNavigator",
+                        },
+                    ],
+                });
+            }
+
+        }).catch(error => {
+            if (error.response.status === 401) {
+                setMessage(error.response.data.error)
+                setAlertVisible(true)
+            } else {
+                setMessage(error.message)
+                setAlertVisible(true)
+            }
+        });
     };
 
     const showAlert = () => {
@@ -75,21 +82,7 @@ const LoginScreen = (props) => {
     };
 
     const closeAlert = () => {
-        // if (isSucess) {
-        //     props.navigation.reset({
-        //         index: 0,
-        //         routes: [
-        //             {
-        //                 name: "BottomNavigator",
-        //             },
-        //         ],
-        //     });
-
-        //     setAlertVisible(false)
-        // } else {
-            setAlertVisible(false);
-
-        // }
+        setAlertVisible(false);
     };
 
     const validatefunc = () => {
@@ -125,7 +118,7 @@ const LoginScreen = (props) => {
 
                     <View style={{ flex: 1 }}>
                         <View style={{
-                            
+
                             marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
                             backgroundColor: color.white,
                             marginTop: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()),
@@ -177,13 +170,13 @@ const LoginScreen = (props) => {
 
                         </View>
                     </View>
-                    <View style={{ flexDirection: 'row',justifyContent:'center',marginBottom:PixelRatio.getPixelSizeForLayoutSize(30/PixelRatio.get()) }}>
+                    <View style={{ flexDirection: 'row', alignSelf: 'center', marginBottom: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()) }}>
                         <Text style={styles.textStyles}>{"Don't you have account? "}</Text>
-                        <TouchableOpacity activeOpacity={0.6} style={{}} onPress={() => props.navigation.navigate('SignUpScreen')}>
-                            <Text style={[styles.textStyles, { color: color.golden, fontFamily: FontFamily.Roboto_Bold,fontSize:14/PixelRatio.getFontScale() }]}>{"Register Here"}</Text>
+                        <TouchableOpacity activeOpacity={0.6} onPress={() => props.navigation.navigate('SignUpScreen')}>
+                            <Text style={[styles.textStyles, { color: color.golden, fontFamily: FontFamily.Roboto_Bold, fontSize: 12 / PixelRatio.getFontScale() }]}>{"Register Here"}</Text>
                         </TouchableOpacity>
                     </View>
-                    <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"login"} />
+                    <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"normal"} />
                 </ScrollView>
             </ImageBackground>
         </View>

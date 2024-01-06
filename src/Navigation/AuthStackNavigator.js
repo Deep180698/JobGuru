@@ -14,11 +14,11 @@ import HomeScreen from '../Screen/Dashboard/HomeScreen';
 import FaqScreen from '../Screen/FAQ/FaqScreen';
 import ReportScreen from '../Screen/Report/ReportScreen';
 import FavouriteScreen from '../Screen/Favourite/FavouriteScreen';
-import EditProfileScreen from '../Screen/EditProfile/EditProfileScreen';
 import Profile from '../Screen/EditProfile/Profile';
 import PostScreen from '../Screen/Post/PostScreen';
 import DetailsPostScreen from '../Screen/Post/DetailsPostScreen';
 import SettingScreen from '../Screen/Setting/SettingScreen';
+import ChatScreen from '../Screen/Chat/ChatScreen';
 import DynamicLinkHandler from '../Utils/DynamicLinkHandler';
 import {Animated} from 'react-native'
 
@@ -77,12 +77,12 @@ const AuthStackNavigator = () => {
       <Stack.Screen name="FaqScreen" component={FaqScreen} />
       <Stack.Screen name="ReportScreen" component={ReportScreen} />
       <Stack.Screen name="FavouriteScreen" component={FavouriteScreen} />
-      <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="SettingScreen" component={SettingScreen} />
       <Stack.Screen name="PostScreen" component={PostScreen} />
       <Stack.Screen name="UserDetails" component={UserDetails} />
       <Stack.Screen name="DetailsPostScreen" component={DetailsPostScreen} />
+      <Stack.Screen name="ChatScreen" component={ChatScreen} />
     </Stack.Navigator>
   )
 }

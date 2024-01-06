@@ -1,18 +1,15 @@
 import { StyleSheet, Text, View, PixelRatio, ScrollView, TouchableOpacity } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Header from '../../Component/Header'
 import color from '../../Utils/Color'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import CustomTextInput from '../../Component/CustomTextInput'
-import PhoneInput from 'react-native-phone-number-input';
 import FontFamily from '../../Utils/FontFamily';
 import CustomButton from '../../Component/CustomButton';
 import CustomAlert from '../../Component/CustomAlert';
-import CustomBottomSheet from '../../Component/CustomBottomSheet'
 import { Image } from 'react-native-animatable'
-import apiCall from '../../Utils/apiCall'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
 import cacheData from '../../Storage/cacheData'
@@ -21,8 +18,9 @@ import PhoneNumberInput from '../../Component/PhoneNumberInput'
 import { useSelector, useDispatch } from 'react-redux';
 import { authFunc } from '../../Storage/Action'
 
-import { updatePhoneNumber, updateCountryCode } from '../../Storage/Action'
 import axios from 'axios'
+import CustomRBottomSheet from '../../Component/CustomRBottomSheet'
+import CustomNormalRBottomSheet from '../../Component/CustomNormalRBottomSheet'
 
 const Profile = (props) => {
     const [userDetails, setUserDetails] = useState({
@@ -40,14 +38,19 @@ const Profile = (props) => {
         date: new Date()
     });
     const [message, setMessage] = useState('');
-    const [checkTermCon, setCheckTermCon] = useState(false)
-    const [isOpen, setIsOpen] = useState(false)
-    const [isVisible, setIsVisible] = useState(true)
     const [alertVisible, setAlertVisible] = useState(false)
     const [isSucess, setIsSucess] = useState(false)
     const { authData } = useSelector((state) => state.reducer);
     const dispatch = useDispatch();
+    const bottomSheetRef = useRef();
 
+    const openBottomSheet = () => {
+
+        bottomSheetRef.current.open();
+    };
+    const closeBottomSheet = () => {
+        bottomSheetRef.current.close();
+    };
     // const [date, setDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -87,11 +90,11 @@ const Profile = (props) => {
 
     }
     const getImages = (item) => {
-        setIsOpen(false)
         setUserDetails({
             ...userDetails,
             profileImage: item,
         });
+        closeBottomSheet()
     }
     const closeAlert = () => {
         if (isSucess) {
@@ -227,12 +230,12 @@ const Profile = (props) => {
                         <Text style={[styles.textStyles, { marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), fontSize: 16 / PixelRatio.getFontScale(), color: color.black }]}>{"Profile"}</Text>
                         {userDetails.profileImage ?
                             <View>
-                                <MaterialIcons onPress={() => { setIsOpen(true) }} name='edit' color={color.black} style={{ position: 'absolute', right: 0, bottom: 0, zIndex: 2, fontSize: PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get()), backgroundColor: color.white, borderRadius: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()), padding: PixelRatio.getPixelSizeForLayoutSize(2 / PixelRatio.get()), marginRight: PixelRatio.getPixelSizeForLayoutSize(-5 / PixelRatio.get()) }} />
+                                <MaterialIcons onPress={() => openBottomSheet()} name='edit' color={color.black} style={{ position: 'absolute', right: 0, bottom: 0, zIndex: 2, fontSize: PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get()), backgroundColor: color.white, borderRadius: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()), padding: PixelRatio.getPixelSizeForLayoutSize(2 / PixelRatio.get()), marginRight: PixelRatio.getPixelSizeForLayoutSize(-5 / PixelRatio.get()) }} />
                                 <Image source={{ uri: userDetails.profileImage.path ? userDetails.profileImage.path : AppConstants.AsyncKeyLiterals.Base_URL + '/' + userDetails.profileImage }} style={userDetails.profileImage.path ? [styles.imageStyle, { borderWidth: 0, resizeMode: 'contain' }] : [styles.imageStyle]} />
                             </View>
                             :
 
-                            <TouchableOpacity activeOpacity={0.6} onPress={() => { setIsOpen(true) }} style={styles.imageStyle}>
+                            <TouchableOpacity activeOpacity={0.6} onPress={() => openBottomSheet()} style={styles.imageStyle}>
                                 <AntDesign name='plus' color={color.black} size={PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get())} />
                             </TouchableOpacity>}
                     </View>
@@ -354,7 +357,7 @@ const Profile = (props) => {
                     {/* Login btn */}
                     <CustomButton press={validatefunc} style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()), }} text="Update" />
                 </View>
-                <CustomBottomSheet multiple={false} getCall="imageSelection" onClose={() => setIsOpen(false)} isOpen={isOpen} data={(item) => getImages(item)} />
+                <CustomNormalRBottomSheet Height={120} refBottomSheet={bottomSheetRef} multiple={false} getCall="imageSelection" data={(item) => getImages(item)} />
                 <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"login"} />
 
             </ScrollView>

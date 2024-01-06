@@ -1,4 +1,4 @@
-import { PixelRatio, StyleSheet, Text, TouchableOpacity, View, FlatList, Dimensions, Modal } from 'react-native'
+import { PixelRatio, StyleSheet, Text, TouchableOpacity, View, FlatList, Dimensions, Modal, Button } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import color from '../Utils/Color'
 import CustomTextInput from './CustomTextInput'
@@ -51,6 +51,7 @@ const CustomAutoComplate = ({ title, press}) => {
                             value={data}
                             onChangeText={(i) => setData(i)}
                             type={"whiteBc"}
+                            style={{ width: width - PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()) }}
                             placeholder={title}
                         />
                         <TouchableOpacity onPress={handleAddText} style={[styles.item, {
@@ -74,9 +75,9 @@ const CustomAutoComplate = ({ title, press}) => {
                             numColumns={3}
                         />
                     </View>
-                    <View style={{ marginBottom: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }}>
-                        <CustomButton press={()=>press(texts)} text={"Done"} />
-                    </View>
+                    <TouchableOpacity onPress={()=>press(texts)} style={[styles.btnStyles,{ marginBottom: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()) }]}>
+                        <Text style={styles.btnTextStyles}>{'Done'}</Text>
+                    </TouchableOpacity>
 
                 </View>
         </View>
@@ -103,5 +104,18 @@ const styles = StyleSheet.create({
         paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
         marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
-    }
+    },
+        btnStyles: {
+          backgroundColor: color.black,
+          padding: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+          marginBottom: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+          borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
+        },
+        btnTextStyles: {
+          color: color.white,
+          fontSize: 14 / PixelRatio.getFontScale(),
+          textAlign: 'center',
+          fontFamily: FontFamily.Roboto_Regular
+          
+        }
 })
