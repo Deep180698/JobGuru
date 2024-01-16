@@ -64,7 +64,6 @@ const AuthStackNavigator = () => {
     <Stack.Navigator initialRouteName={"SplashScreen"}  screenOptions={{
       headerShown:false,
       cardStyleInterpolator: SlideFromRight,
-
     }} >
       <Stack.Screen name="SplashScreen" component={SplashScreen} />
       <Stack.Screen name="AuthScreen" component={AuthScreen} />
@@ -72,7 +71,7 @@ const AuthStackNavigator = () => {
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
       <Stack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />
-      <Stack.Screen name="BottomNavigator" component={BottomNavigator} />
+      <Stack.Screen name="BottomNavigator"  component={BottomNavigator} />
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="FaqScreen" component={FaqScreen} />
       <Stack.Screen name="ReportScreen" component={ReportScreen} />

@@ -21,6 +21,7 @@ import { authFunc } from '../../Storage/Action'
 import axios from 'axios'
 import CustomRBottomSheet from '../../Component/CustomRBottomSheet'
 import CustomNormalRBottomSheet from '../../Component/CustomNormalRBottomSheet'
+import CustomLoader from '../../Component/CustomLoader'
 
 const Profile = (props) => {
     const [userDetails, setUserDetails] = useState({
@@ -40,6 +41,7 @@ const Profile = (props) => {
     const [message, setMessage] = useState('');
     const [alertVisible, setAlertVisible] = useState(false)
     const [isSucess, setIsSucess] = useState(false)
+    const [isVisible, setIsVisible] = useState(false)
     const { authData } = useSelector((state) => state.reducer);
     const dispatch = useDispatch();
     const bottomSheetRef = useRef();
@@ -67,6 +69,7 @@ const Profile = (props) => {
         setShowDatePicker(true);
     };
     useEffect(() => {
+
         getProfileData();
     }, [authData])
 
@@ -109,13 +112,15 @@ const Profile = (props) => {
     };
 
     const validatefunc = async () => {
-        console.log("userDetails", userDetails);
+
         if (!userDetails.firstName) {
+
             setMessage('Enter first name');
             showAlert()
             return;
         }
         else if (!userDetails.lastName) {
+
             setMessage('Enter last name');
             showAlert()
             return;
@@ -157,6 +162,7 @@ const Profile = (props) => {
             return;
         }
         else {
+
             fetchData()
         }
 
@@ -164,6 +170,7 @@ const Profile = (props) => {
 
     const fetchData = async () => {
 
+        setIsVisible(true)
         const formData = new FormData();
 
         formData.append("firstName", userDetails.firstName)
@@ -206,28 +213,33 @@ const Profile = (props) => {
 
             authData.data.userData = response.data.userData
 
-            console.log(authData);
             const asyncItem = AppConstants.AsyncKeyLiterals;
 
             cacheData.saveDataToCachedWithKey(asyncItem.IS_AUTH, authData);
 
             dispatch(authFunc(authData))
+            setIsVisible(false)
 
-        });
+        }).catch(() => {
+            setIsVisible(false)
+
+        })
     }
     return (
         <View style={{ flex: 1, backgroundColor: color.white }}>
+            <CustomLoader isVisible={isVisible} />
             <Header title={"Profile Details"} screenName={"normal"} onPress={() => props.navigation.goBack()} />
             <ScrollView>
 
-                <View style={{ flexDirection: 'row', backgroundColor: color.white }}>
+                <View style={{
+                    flexDirection: 'row', backgroundColor: color.white, marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+                }}>
                     <View style={{
                         flex: 0.6,
                         backgroundColor: color.white,
                         marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
 
                     }}>
-                        <Text style={[styles.textStyles, { marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), fontSize: 16 / PixelRatio.getFontScale(), color: color.black }]}>{"Profile"}</Text>
                         {userDetails.profileImage ?
                             <View>
                                 <MaterialIcons onPress={() => openBottomSheet()} name='edit' color={color.black} style={{ position: 'absolute', right: 0, bottom: 0, zIndex: 2, fontSize: PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get()), backgroundColor: color.white, borderRadius: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()), padding: PixelRatio.getPixelSizeForLayoutSize(2 / PixelRatio.get()), marginRight: PixelRatio.getPixelSizeForLayoutSize(-5 / PixelRatio.get()) }} />
@@ -239,7 +251,7 @@ const Profile = (props) => {
                                 <AntDesign name='plus' color={color.black} size={PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get())} />
                             </TouchableOpacity>}
                     </View>
-                    <View style={{ flex: 1, paddingHorizontal: 10, alignSelf: 'center', backgroundColor: color.white, marginTop: PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get()), }}>
+                    <View style={{ flex: 1, paddingHorizontal: 10, alignSelf: 'center', backgroundColor: color.white }}>
                         <View style={{ flex: 1 }}>
                             <CustomTextInput
                                 value={userDetails.firstName}
@@ -358,7 +370,7 @@ const Profile = (props) => {
                     <CustomButton press={validatefunc} style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()), }} text="Update" />
                 </View>
                 <CustomNormalRBottomSheet Height={120} refBottomSheet={bottomSheetRef} multiple={false} getCall="imageSelection" data={(item) => getImages(item)} />
-                <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"login"} />
+                <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"normal"} />
 
             </ScrollView>
         </View>

@@ -10,15 +10,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import FontFamily from '../../Utils/FontFamily'
 import { Wizard } from 'react-native-ui-lib';
 import CustomTextInput from '../../Component/CustomTextInput'
-import CustomAutoComplate from '../../Component/CustomAutoComplate'
 import CustomAddress from '../../Component/CustomAddress'
 import cacheData from '../../Storage/cacheData';
 import AppConstants from '../../Storage/AppConstants';
-import * as Animatable from 'react-native-animatable';
 import axios from 'axios';
 import CustomRBottomSheet from '../../Component/CustomRBottomSheet';
 import CustomNormalRBottomSheet from '../../Component/CustomNormalRBottomSheet';
 import CustomAlert from '../../Component/CustomAlert';
+import CustomLoader from '../../Component/CustomLoader';
 const checkboxItems = [
     'FullTime', 'PartTime', 'Seasonal',
     'Contract', 'Freelance', 'Internship',
@@ -67,6 +66,8 @@ const PostScreen = (props) => {
         activeIndex: 0,
         completedStepIndex: null,
     });
+    const [isVisible, setIsVisible] = useState(false)
+
 
     useEffect(() => {
         getData()
@@ -158,6 +159,7 @@ const PostScreen = (props) => {
     };
     const createPost = async () => {
 
+        setIsVisible(true)
 
         const formData = new FormData();
 
@@ -191,14 +193,20 @@ const PostScreen = (props) => {
             headers: headers
         }).then(response => {
             console.log("status", response.status);
+            setIsVisible(false)
 
-            // props.navigation.replace('HomeScreen')
+            props.navigation.replace('BottomNavigator')
         }).catch(error => {
             if (error.response.status === 401) {
+                setIsVisible(false)
+
                 setState({
                     ...state, message: error.response.data.error, isAlert: true
                 })
+
             } else {
+                setIsVisible(false)
+
                 setState({
                     ...state, message: error.message, isAlert: true
                 })
@@ -222,6 +230,7 @@ const PostScreen = (props) => {
             } else {
                 getImagesCamera(item)
             }
+            closeBottomSheet1()
         }
     }
     const getStepState = (index) => {
@@ -387,25 +396,27 @@ const PostScreen = (props) => {
 
                             {/* Job type */}
                             <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                                <TouchableOpacity style={styles.blockStyle}
+                                <Text style={[styles.textStyles, { flex: 1, color: color.black, fontSize: 12 / PixelRatio.getFontScale() }]} >{"Job Type"}</Text>
+
+                                {/* <TouchableOpacity style={styles.blockStyle}
                                     onPress={() => setState(prevState => ({
                                         ...prevState,
                                         isVisible: !prevState.isVisible,
                                     }))}>
                                     <Text style={[styles.textStyles, { flex: 1, color: color.black, fontSize: 12 / PixelRatio.getFontScale() }]} >{"Job Type"}</Text>
                                     <AntDesign name={state.isVisible ? 'down' : 'right'} size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.black} />
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                                 <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }}>
-                                    {state.isVisible ?
-                                        <Animatable.View duration={1000} animation={"slideInUp"}>
-                                            <FlatList
-                                                data={checkboxItems}
-                                                renderItem={renderCheckItem}
-                                                keyExtractor={(item, index) => index.toString()}
-                                                numColumns={2}
-                                            />
-                                        </Animatable.View>
-                                        : null}
+
+
+                                    <FlatList
+                                        data={checkboxItems}
+                                        renderItem={renderCheckItem}
+                                        keyExtractor={(item, index) => index.toString()}
+                                        numColumns={2}
+                                    />
+
+
                                     {/* Skills */}
                                     <TouchableOpacity onPress={() => [setState({
                                         ...state,
@@ -473,6 +484,7 @@ const PostScreen = (props) => {
     }
     return (
         <View style={styles.container}>
+            <CustomLoader isVisible={isVisible} />
 
             {state.addresOpen && !state.skillsOpen ?
                 <View style={{ flex: 1 }}>

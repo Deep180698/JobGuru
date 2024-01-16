@@ -17,6 +17,7 @@ import CustomButton from '../../Component/CustomButton';
 import CustomLoader from '../../Component/CustomLoader';
 import NoRecordFound from '../../Component/NoRecordFound';
 import CustomRBottomSheet from '../../Component/CustomRBottomSheet';
+import CustomNormalRBottomSheet from '../../Component/CustomNormalRBottomSheet';
 const { width, height } = Dimensions.get('screen')
 const HomeScreen = (props, { navigation }) => {
 
@@ -141,7 +142,6 @@ const HomeScreen = (props, { navigation }) => {
       uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + image.name
     }));
 
-    console.log(item.isFavourite);
     return (
       <View Vstyle={{ backgroundColor: color.black }}>
         {/* Header of post */}
@@ -248,7 +248,7 @@ const HomeScreen = (props, { navigation }) => {
             }}
           />
         </Animatable.View>
-        <CustomRBottomSheet Height={100} onClose={()=>closeBottomSheet()} getCall={'postContainer'} refBottomSheet={bottomSheetRef} />
+        <CustomNormalRBottomSheet Height={100} onClose={()=>closeBottomSheet()} getCall={'postContainer'} refBottomSheet={bottomSheetRef} />
       </ScrollView>
     </View>
   )

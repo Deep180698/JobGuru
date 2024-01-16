@@ -55,8 +55,6 @@ const CustomTextInput = ({ style, placeholder, type, value, leftIcon, RightIcon,
                     onChangeText={(i) => [onChangeText(i)]}
                     label={placeholder}
                     contentStyle={{width:width}}
-
-
                 />
                 : null}
 

@@ -1,9 +1,7 @@
 // CustomTabBar.js
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet, PixelRatio } from 'react-native';
-import Entypo from 'react-native-vector-icons/Entypo';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import color from '../Utils/Color';
 
 const CustomTabBar = ({ state, descriptors, navigation }) => {
@@ -12,7 +10,6 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
         <View style={styles.tabContainer}>
             {state.routes.map((route, index) => {
                 const { options } = descriptors[route.key];
-
                 const isFocused = state.index === index;
 
                 const onPress = () => {
@@ -29,7 +26,6 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                     }
                 };
                 return (
-
                     <TouchableOpacity
                         key={index}
                         activeOpacity={1}
@@ -38,12 +34,11 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                     >
                         {console.log(options.tabBarIcon)}
                         {options.tabBarIcon == 'home' ?
-                            <Entypo name={"home"} size={24} color={isFocused ? color.golden : color.white} />
+                            <Ionicons name={isFocused ? "home" : 'home-outline'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.black} />
                             : null}
                         {options.tabBarIcon == 'Chat' ?
-                            <MaterialIcons name={"chat-bubble"} size={24} color={isFocused ? color.golden : color.white} />
+                            <Ionicons name={isFocused ? "chatbox" : 'chatbox-outline'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.black} />
                             : null}
-
                     </TouchableOpacity>
                 );
             })}
@@ -53,27 +48,18 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
 
 const styles = StyleSheet.create({
     tabContainer: {
+        backgroundColor: color.white,
+        borderRadius: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
+        marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+        marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
         flexDirection: 'row',
-        height: 50,
-        elevation: 8,
-
+        alignItems: 'center',
+       
     },
     tab: {
         flex: 1,
-        backgroundColor: color.black,
-        borderTopWidth: 0.2,
-        borderColor: color.white,
-        justifyContent: 'center',
         alignItems: 'center',
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-
-        elevation: 5,
+        paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     },
 });
 

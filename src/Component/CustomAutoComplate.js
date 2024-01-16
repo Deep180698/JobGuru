@@ -1,4 +1,4 @@
-import { PixelRatio, StyleSheet, Text, TouchableOpacity, View, FlatList, Dimensions, Modal, Button } from 'react-native'
+import { PixelRatio, StyleSheet, Text, TouchableOpacity, View, FlatList, Dimensions, Modal, Button, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import color from '../Utils/Color'
 import CustomTextInput from './CustomTextInput'
@@ -6,13 +6,13 @@ import FontFamily from '../Utils/FontFamily'
 import CustomButton from './CustomButton'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 const { width, height } = Dimensions.get('screen')
-const CustomAutoComplate = ({ title, press}) => {
+const CustomAutoComplate = ({ title, press }) => {
     const [data, setData] = useState('')
     const [texts, setTexts] = useState([]);
     useEffect(() => {
-     
+
     }, [])
-    
+
     const handleAddText = () => {
         if (data) {
             setTexts([...texts, data]);
@@ -44,7 +44,7 @@ const CustomAutoComplate = ({ title, press}) => {
 
     return (
         <View style={styles.container}>
-          
+            <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
                 <View style={{ marginHorizontal: 10, flex: 1 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <CustomTextInput
@@ -75,11 +75,11 @@ const CustomAutoComplate = ({ title, press}) => {
                             numColumns={3}
                         />
                     </View>
-                    <TouchableOpacity onPress={()=>press(texts)} style={[styles.btnStyles,{ marginBottom: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()) }]}>
+                    <TouchableOpacity onPress={() => press(texts)} style={[styles.btnStyles, { marginBottom: PixelRatio.getPixelSizeForLayoutSize(50 / PixelRatio.get()) }]}>
                         <Text style={styles.btnTextStyles}>{'Done'}</Text>
                     </TouchableOpacity>
-
                 </View>
+            </ScrollView>
         </View>
     )
 }
@@ -105,17 +105,17 @@ const styles = StyleSheet.create({
         marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
     },
-        btnStyles: {
-          backgroundColor: color.black,
-          padding: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-          marginBottom: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-          borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
-        },
-        btnTextStyles: {
-          color: color.white,
-          fontSize: 14 / PixelRatio.getFontScale(),
-          textAlign: 'center',
-          fontFamily: FontFamily.Roboto_Regular
-          
-        }
+    btnStyles: {
+        backgroundColor: color.black,
+        padding: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+        marginBottom: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+        borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
+    },
+    btnTextStyles: {
+        color: color.white,
+        fontSize: 14 / PixelRatio.getFontScale(),
+        textAlign: 'center',
+        fontFamily: FontFamily.Roboto_Regular
+
+    }
 })

@@ -1,4 +1,4 @@
-import { PixelRatio, StyleSheet, Text, View, TouchableOpacity, Linking } from 'react-native'
+import { PixelRatio, StyleSheet, Text, View, TouchableOpacity, Linking, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import color from '../../Utils/Color'
 import Header from '../../Component/Header'
@@ -10,9 +10,13 @@ import FontFamily from '../../Utils/FontFamily'
 import CustomButton from '../../Component/CustomButton'
 import cacheData from '../../Storage/cacheData'
 import axios from 'axios'
+import ParallaxScrollView from 'react-native-parallax-scroll-view';
+import CustomTextInput from '../../Component/CustomTextInput'
+
 
 const DetailsPostScreen = (props) => {
     // const { postData } = props.route.params
+    const [message, setMessage] = useState('')
     const [postData, setPostData] = useState({
 
         "_id": props.route.params.postData._id,
@@ -28,13 +32,14 @@ const DetailsPostScreen = (props) => {
         "profileImage": props.route.params.postData.profileImage,
         "salary": props.route.params.postData.salary,
         "skills": props.route.params.postData.skills,
-        "title": props.route.params.postData.title
+        "title": props.route.params.postData.title,
+        "mobileNumber": props.route.params.postData.mobileNumber
     })
     const formattedImages = postData.images.map((image) => ({
         uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + image.name
     }));
     useEffect(() => {
-        console.log(postData);
+        console.log(props.route.params.postData);
     }, [])
 
     const onSelectFavourite = async () => {
@@ -65,88 +70,119 @@ const DetailsPostScreen = (props) => {
     }
 
     const handleDialPress = () => {
-        const phoneNumberToDial = `tel:${'7059757158'}`;
+        const phoneNumberToDial = `tel:${postData.mobileNumber}`;
         Linking.openURL(phoneNumberToDial);
     }
 
     return (
         <View style={styles.container}>
-            <Header onPress={() => props.navigation.goBack()} title={"Post"} screenName={"normal"} />
-            <View style={{
-                shadowColor: "#000",
-                shadowOffset: {
-                    width: 0,
-                    height: 2,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-                elevation: 5,
-                borderBottomWidth: 1,
-                borderColor: color.black
-            }}>
-                <ImageCarousel images={formattedImages} />
 
-            </View>
-            <Animatable.View duration={300} animation={"slideInUp"}
-                style={{
-                    flex: 1, backgroundColor: color.white,
-                    borderTopLeftRadius: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()),
-                    borderTopRightRadius: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()),
-                    marginTop: PixelRatio.getPixelSizeForLayoutSize(-40 / PixelRatio.get())
+            <ParallaxScrollView
+                backgroundColor={color.black}
+                contentBackgroundColor={color.white}
+                parallaxHeaderHeight={PixelRatio.getPixelSizeForLayoutSize(250 / PixelRatio.get())}
+                stickyHeaderHeight={50} // Adjust as needed
+                renderFixedHeader={() => (
+                    <View style={{}}>
+                        <Header
+                            onPress={() => props.navigation.goBack()}
+                            title={'Post'}
+                            screenName={'normal'}
+                        />
+                    </View>
+                )}
+                showsVerticalScrollIndicator={false}
+                renderForeground={() => (
+                    <View style={{}}>
+                        <ImageCarousel images={formattedImages} />
+                    </View>
+                )}
 
-                }}>
-                <View style={{
-                    marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-                    marginTop: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get())
-                }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <View style={{ flex: 1 }}>
-                            <Text style={[styles.textStyle, { fontFamily: FontFamily.Roboto_black, fontSize: 14 / PixelRatio.getFontScale() }]}>{postData.title}</Text>
-                            <Text style={[styles.textStyle, { marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }]}>{postData.description}</Text>
+            >
+
+                <Animatable.View duration={1000} animation={"slideInUp"} style={[{ flex: 1, backgroundColor: color.white, borderRadius: 15 }]}>
+                    <View style={{
+                        marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+                        marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())
+                    }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flex: 1 }}>
+                                <Text style={[styles.textStyle, { fontFamily: FontFamily.Roboto_black, fontSize: 14 / PixelRatio.getFontScale() }]}>{postData.title}</Text>
+                                <Text style={[styles.textStyle, { marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }]}>{postData.description}</Text>
+                            </View>
+                            <TouchableOpacity onPress={() => onSelectFavourite()}>
+                                <Animatable.View animation={postData.isFavourite ? 'bounceIn' : null}>
+                                    <MaterialCommunityIcons
+                                        name={postData.isFavourite ? 'bookmark' : 'bookmark-outline'}
+                                        size={PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get())}
+                                        color={color.black}
+                                    />
+                                </Animatable.View>
+                            </TouchableOpacity>
                         </View>
-                        <TouchableOpacity onPress={() => onSelectFavourite()}>
-                            <Animatable.View animation={postData.isFavourite ? 'bounceIn' : null}>
-                                <MaterialCommunityIcons
-                                    name={postData.isFavourite ? 'bookmark' : 'bookmark-outline'}
-                                    size={PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get())}
-                                    color={color.black}
-                                />
-                            </Animatable.View>
+                        <View style={{ marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+                            <Text style={[styles.textStyle, { fontSize: 14 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_black }]}>{'Additional information'}</Text>
+                            <Text style={[styles.textStyle]}>{postData.additionalNote}</Text>
+                        </View>
+                        <View style={{ marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+                            <Text style={[styles.textStyle, { fontSize: 14 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_black }]}>{'skills'}</Text>
+                            <Text style={[styles.textStyle]}>{postData.skills}</Text>
+                        </View>
+                        <View style={{ marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+                            <Text style={[styles.textStyle, { fontSize: 14 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_black }]}>{'Job Type'}</Text>
+                            <Text style={[styles.textStyle]}>{postData.jobType}</Text>
+                        </View>
+                        <View style={{ marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+                            <Text style={[styles.textStyle, { fontSize: 14 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_black }]}>{'Job Address'}</Text>
+                            <Text style={[styles.textStyle]}>{postData.address}</Text>
+                        </View>
+                        
+                    </View>
+                    
+
+                    <View style={styles.btnContainer}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <TouchableOpacity
+                                onPress={handleDialPress}
+                                activeOpacity={0.6}
+                                style={styles.btnStyle}
+                            >
+                                <Text
+                                    style={[
+                                        styles.textStyle,
+                                        { color: color.white, fontSize: 16 / PixelRatio.getFontScale() },
+                                    ]}
+                                >
+                                    {'Call'}
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity activeOpacity={0.6} style={styles.btnStyle}>
+                                <Text
+                                    style={[
+                                        styles.textStyle,
+                                        { color: color.white, fontSize: 16 / PixelRatio.getFontScale() },
+                                    ]}
+                                >
+                                    {'Message'}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity
+                            activeOpacity={0.6}
+                            style={[styles.btnStyle, { flex: 0, marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}
+                        >
+                            <Text
+                                style={[
+                                    styles.textStyle,
+                                    { color: color.white, fontSize: 16 / PixelRatio.getFontScale() },
+                                ]}
+                            >
+                                {'Apply Now'}
+                            </Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={{ marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                        <Text style={[styles.textStyle, { fontSize: 14 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_black }]}>{'Additional information'}</Text>
-                        <Text style={[styles.textStyle]}>{postData.additionalNote}</Text>
-                    </View>
-                    <View style={{ marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                        <Text style={[styles.textStyle, { fontSize: 14 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_black }]}>{'skills'}</Text>
-                        <Text style={[styles.textStyle]}>{postData.skills}</Text>
-                    </View>
-                    <View style={{ marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                        <Text style={[styles.textStyle, { fontSize: 14 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_black }]}>{'Job Type'}</Text>
-                        <Text style={[styles.textStyle]}>{postData.jobType}</Text>
-                    </View>
-                    <View style={{ marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                        <Text style={[styles.textStyle, { fontSize: 14 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_black }]}>{'Job Address'}</Text>
-                        <Text style={[styles.textStyle]}>{postData.address}</Text>
-                    </View>
-                </View>
-            </Animatable.View>
-
-            {/* call and message container */}
-            <View style={styles.btnContainer}>
-                <View style={{ flexDirection: 'row' }}>
-                    <TouchableOpacity onPress={handleDialPress} activeOpacity={0.6} style={styles.btnStyle}>
-                        <Text style={[styles.textStyle, { color: color.white, fontSize: 16 / PixelRatio.getFontScale() }]}>{'Call'}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity activeOpacity={0.6} style={styles.btnStyle}>
-                        <Text style={[styles.textStyle, { color: color.white, fontSize: 16 / PixelRatio.getFontScale() }]}>{'Message'}</Text>
-                    </TouchableOpacity>
-                </View>
-                <TouchableOpacity activeOpacity={0.6} style={[styles.btnStyle, { flex: 0, marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
-                    <Text style={[styles.textStyle, { color: color.white, fontSize: 16 / PixelRatio.getFontScale() }]}>{'Apply Now'}</Text>
-                </TouchableOpacity>
-            </View>
+                </Animatable.View >
+            </ParallaxScrollView>
         </View>
     )
 }
@@ -156,14 +192,8 @@ export default DetailsPostScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.black
     },
-    heartPositionStyle: {
-        position: 'absolute',
-        right: 0,
-        marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
-        marginVertical: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())
-    },
+
     textStyle: {
         fontSize: 12 / PixelRatio.getFontScale(),
         color: color.black,
@@ -178,7 +208,7 @@ const styles = StyleSheet.create({
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
     },
     btnContainer: {
-        backgroundColor:color.white,
-        marginBottom: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
+        backgroundColor: color.white,
+        marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
     }
 })

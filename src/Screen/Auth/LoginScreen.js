@@ -12,6 +12,7 @@ import FontFamily from '../../Utils/FontFamily';
 import { ScrollView } from 'react-native';
 import CustomTextInput from '../../Component/CustomTextInput';
 import axios from 'axios';
+import CustomLoader from '../../Component/CustomLoader';
 
 
 const LoginScreen = (props) => {
@@ -19,7 +20,7 @@ const LoginScreen = (props) => {
 
     const [email, setEmail] = useState('pateldeep0989@gmail.com')
     const [password, setPassword] = useState('Deep0909@')
-    const [isVisible, setIsVisible] = useState(true)
+    const [isVisible, setIsVisible] = useState(false)
     const [alertVisible, setAlertVisible] = useState(false)
     const [isSucess, setIsSucess] = useState(false)
     const [message, setMessage] = useState('')
@@ -32,6 +33,7 @@ const LoginScreen = (props) => {
 
     const fetchData = async () => {
 
+        setIsVisible(true)
         
         const headers = {
             "Content-type": "application/json"
@@ -41,6 +43,7 @@ const LoginScreen = (props) => {
             'password': password
         }
 
+        console.log(AppConstants.AsyncKeyLiterals.Base_URL + AppConstants.AsyncKeyLiterals.getLogin);
         await axios({
             method: 'POST',
             url: AppConstants.AsyncKeyLiterals.Base_URL + AppConstants.AsyncKeyLiterals.getLogin,
@@ -55,6 +58,7 @@ const LoginScreen = (props) => {
                 cacheData.saveDataToCachedWithKey(asyncItem.isLoggedIn, true);
                 cacheData.saveDataToCachedWithKey(asyncItem.IS_AUTH, response.data);
                 cacheData.token(asyncItem.token, response.data.token);
+                setIsVisible(false)
 
                 props.navigation.reset({
                     index: 0,
@@ -70,11 +74,18 @@ const LoginScreen = (props) => {
             if (error.response.status === 401) {
                 setMessage(error.response.data.error)
                 setAlertVisible(true)
+                setIsVisible(false)
+
             } else {
                 setMessage(error.message)
                 setAlertVisible(true)
+                setIsVisible(false)
+
             }
-        });
+        }).finally(()=>{
+            setIsVisible(false)
+
+        })
     };
 
     const showAlert = () => {
@@ -104,6 +115,7 @@ const LoginScreen = (props) => {
 
     return (
         <View style={styles.container}>
+            <CustomLoader isVisible={isVisible}/>
             <ImageBackground source={require('../../assets/BackGround.png')} style={{ width: width, height: height }}>
 
                 <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
