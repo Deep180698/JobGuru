@@ -16,13 +16,13 @@ import ImageCarousel from '../../Component/ImageCarousel';
 import CustomButton from '../../Component/CustomButton';
 import CustomLoader from '../../Component/CustomLoader';
 import NoRecordFound from '../../Component/NoRecordFound';
-import CustomRBottomSheet from '../../Component/CustomRBottomSheet';
 import CustomNormalRBottomSheet from '../../Component/CustomNormalRBottomSheet';
 const { width, height } = Dimensions.get('screen')
 const HomeScreen = (props, { navigation }) => {
 
   const flatListRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false)
+  const [isConnected, setIsConnected] = useState(false)
   const [data, setData] = useState([]);
   const [bannerData, setBannerData] = useState([]);
   const [searchText, setSearchText] = useState('')
@@ -36,7 +36,7 @@ const HomeScreen = (props, { navigation }) => {
   };
   const closeBottomSheet = () => {
     bottomSheetRef.current.close();
-};
+  };
   useEffect(() => {
 
     getBannerData()
@@ -122,7 +122,7 @@ const HomeScreen = (props, { navigation }) => {
   const renderItem1 = ({ item }) => (
     <TouchableOpacity activeOpacity={0.9} onPress={() => onSelectType(item)} style={styles.bannerItem}>
       <View style={{
-        backgroundColor: item.isShow ? color.golden : color.white,
+        backgroundColor: color.white,
         padding: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
       }}>
@@ -138,12 +138,35 @@ const HomeScreen = (props, { navigation }) => {
   }
   // render list
   const renderItem = ({ item, index }) => {
-    const formattedImages = item.images.map((image) => ({
-      uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + image.name
+    const formattedImages = item?.images.map((image) => ({
+      uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + image?.name
     }));
 
+    console.log(item);
     return (
-      <View Vstyle={{ backgroundColor: color.black }}>
+
+      <View style={{
+        
+        backgroundColor: color.white,
+        borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+        paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+        marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+        paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+        marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+        alignItems: 'center',
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+        shadowOpacity: 0.20,
+        shadowRadius: 1.41,
+
+        elevation: 2,
+        marginBottom: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+        borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+      }}>
+        
         {/* Header of post */}
         <View style={{
           marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
@@ -151,14 +174,14 @@ const HomeScreen = (props, { navigation }) => {
           flexDirection: 'row',
           alignItems: 'center'
         }}>
-          <Image source={{ uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + item.profileImage }} style={styles.profileStyle} />
-          <Text style={[styles.textStyle, { flex: 1, fontSize: 14 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Regular, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{item.firstName} {item.lastName}</Text>
+          <Image source={{ uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + item.UserData.profileImage }} style={styles.profileStyle} />
+          <Text style={[styles.textStyle, { flex: 1, fontSize: 14 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Regular, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{item.UserData.firstName} {item.UserData.lastName}</Text>
           <TouchableOpacity activeOpacity={0.6} onPress={() => openBottomSheet()}>
-            <Entypo name={'dots-three-vertical'} color={color.white} size={PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get())} />
+            <Entypo name={'dots-three-vertical'} color={color.black} size={PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get())} />
           </TouchableOpacity>
         </View>
         {/* Body od post */}
-        <View activeOpacity={0.8}>
+        <View activeOpacity={0.8} style={{flex:1}}>
           <View style={{ flex: 1 }}>
             <ImageCarousel paginationStyle={{ position: 'relative' }} images={formattedImages} />
           </View>
@@ -166,27 +189,30 @@ const HomeScreen = (props, { navigation }) => {
           <View style={styles.buttonPositionStyle}>
             <CustomButton press={() => props.navigation.navigate('DetailsPostScreen', { postData: item })} text={"Apply"} style={{ backgroundColor: color.black, paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), borderRadius: PixelRatio.getPixelSizeForLayoutSize(0 / PixelRatio.get()) }} textStyle={{ color: color.white }} />
           </View>
+          
         </View>
+        <View style={{width:'100%',borderWidth:0.5,borderColor:color.offWhite}}/>
         {/* description */}
-        <View style={{ flexDirection: 'row', flex: 1 }}>
+      
+        <View style={{ flexDirection: 'row', alignItems:'center' }}>
           <View style={{
             flex: 1,
             paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
             paddingLeft: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
           }}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={[styles.textStyle, { color: color.white }]}>{item.title}</Text>
+              <Text style={[styles.textStyle]}>{item.title}</Text>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={[styles.textStyle, { color: color.white, fontSize: 12 / PixelRatio.getFontScale() }]}>{item.additionalNote}</Text>
+              <Text style={[styles.textStyle, { fontSize: 12 / PixelRatio.getFontScale() }]}>{item.additionalNote}</Text>
             </View>
           </View>
-          <TouchableOpacity style={{ marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }} onPress={() => onSelectFavourite(item, index)}>
+          <TouchableOpacity style={{ marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())}} onPress={() => onSelectFavourite(item, index)}>
             <Animatable.View animation={item.isFavourite ? 'bounceIn' : null}>
               <MaterialCommunityIcons
                 name={item.isFavourite ? 'bookmark' : 'bookmark-outline'}
                 size={PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get())}
-                color={color.white}
+                color={color.black}
               />
             </Animatable.View>
           </TouchableOpacity>
@@ -197,13 +223,15 @@ const HomeScreen = (props, { navigation }) => {
 
 
 
+
   return (
-    <View style={{ flex: 1, backgroundColor: color.black }}>
+
+
+    <View style={{ flex: 1, backgroundColor: color.bgWhite }}>
       {/* Header */}
-    
       <CustomLoader isVisible={false} />
       <Header screenName={'Home'} title={"Dashboard"} onNavigate={(item) => onNavigateScreen(item)} onPress={() => props.navigation.openDrawer()} />
-      <ScrollView refreshControl={
+      <ScrollView style={{ backgroundColor: color.bgWhite, flex: 1 }} refreshControl={
         <RefreshControl
           refreshing={refreshing}
           onRefresh={() => {
@@ -214,25 +242,29 @@ const HomeScreen = (props, { navigation }) => {
       } showsVerticalScrollIndicator={false}>
 
         {/* Searchbar */}
-        <Searchbar
-          style={styles.searchbarStyle}
-          value={searchText}
-          inputStyle={styles.textStyle}
-          textAlignVertical='top'
-          onChangeText={(i) => setSearchText(i)}
-          placeholder='search job'
-        />
+        <View style={{ backgroundColor: color.black, paddingBottom: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }}>
+          <Searchbar
+            style={styles.searchbarStyle}
+            value={searchText}
+            inputStyle={styles.textStyle}
+            textAlignVertical='top'
+            onChangeText={(i) => setSearchText(i)}
+            placeholder='search job'
+          />
+        </View>
         {/* banner */}
-        <Animatable.View duration={1000} animation={"slideInUp"}>
+        <Animatable.View style={{ backgroundColor: color.bgWhite, flex: 1 }} duration={1000} animation={"slideInUp"}>
           <FlatList
             data={bannerData}
             keyExtractor={(item) => item.id}
             renderItem={renderItem1}
             contentContainerStyle={{ marginBottom: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), }}
-            style={{ height: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()) }}
+            // style={{ height: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()) }}
             horizontal
             showsHorizontalScrollIndicator={false}
+            style={{
 
+            }}
           />
 
           {/* List Data */}
@@ -240,6 +272,10 @@ const HomeScreen = (props, { navigation }) => {
           <FlatList
             ref={flatListRef}
             data={data}
+            style={{
+             
+
+            }}
             renderItem={renderItem}
             ListEmptyComponent={() => {
               return (
@@ -248,7 +284,7 @@ const HomeScreen = (props, { navigation }) => {
             }}
           />
         </Animatable.View>
-        <CustomNormalRBottomSheet Height={100} onClose={()=>closeBottomSheet()} getCall={'postContainer'} refBottomSheet={bottomSheetRef} />
+        <CustomNormalRBottomSheet Height={100} onClose={() => closeBottomSheet()} getCall={'postContainer'} refBottomSheet={bottomSheetRef} />
       </ScrollView>
     </View>
   )
@@ -276,24 +312,35 @@ const styles = StyleSheet.create({
   buttonPositionStyle: {
     position: 'absolute',
     right: 0,
-    bottom: 0,
     marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-    marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
     marginBottom: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get())
   },
   textStyle: {
     fontSize: 12 / PixelRatio.getFontScale(),
-    color: color.white,
+    color: color.black,
     fontFamily: FontFamily.Roboto_Light
   },
   bannerItem: {
     width: PixelRatio.getPixelSizeForLayoutSize(200 / PixelRatio.get()), // Set the width of each banner item
     backgroundColor: color.white,
+    marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
     paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
     borderTopLeftRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     borderTopRightRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.20,
+    shadowRadius: 1.41,
+
+    elevation: 2,
+    marginBottom: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+    borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    height: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get())
   },
   bannerText: {
     color: color.black,

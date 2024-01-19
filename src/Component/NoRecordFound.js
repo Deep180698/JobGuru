@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     },
     textStyle: {
         fontSize: 16 / PixelRatio.getFontScale(),
-        color: color.white,
+        color: color.black,
         fontFamily: FontFamily.Roboto_black
     },
 })

@@ -34,10 +34,10 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                     >
                         {console.log(options.tabBarIcon)}
                         {options.tabBarIcon == 'home' ?
-                            <Ionicons name={isFocused ? "home" : 'home-outline'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.black} />
+                            <Ionicons name={isFocused ? "home" : 'home-outline'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
                             : null}
                         {options.tabBarIcon == 'Chat' ?
-                            <Ionicons name={isFocused ? "chatbox" : 'chatbox-outline'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.black} />
+                            <Ionicons name={isFocused ? "chatbox" : 'chatbox-outline'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
                             : null}
                     </TouchableOpacity>
                 );
@@ -48,13 +48,22 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
 
 const styles = StyleSheet.create({
     tabContainer: {
-        backgroundColor: color.white,
+        backgroundColor: color.black,
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
-        marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-        marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+        marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+        marginBottom: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
+        marginTop: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
         flexDirection: 'row',
         alignItems: 'center',
-       
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        
+        elevation: 5,
     },
     tab: {
         flex: 1,

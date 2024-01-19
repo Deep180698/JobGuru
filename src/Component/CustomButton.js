@@ -18,7 +18,16 @@ const styles = StyleSheet.create({
   btnStyles: {
     backgroundColor: color.black,
     padding: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-    borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
+    borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.20,
+    shadowRadius: 1.41,
+
+    elevation: 2,
   },
   textStyles: {
     color: color.white,

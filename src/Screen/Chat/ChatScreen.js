@@ -37,6 +37,7 @@ const ChatScreen = () => {
   renderItem = ({ item }) => {
     return (
       <SwipeableItem
+
         item={item}
         onSwipeLeft={() => handleSwipeLeft(item.id)}
         onSwipeRight={() =>handleSwipeRight(item.id)}
@@ -48,6 +49,7 @@ const ChatScreen = () => {
   };
   return (
     <View style={styles.container}>
+      
       <FlatList
       refreshControl={
         <RefreshControl
@@ -73,7 +75,7 @@ export default ChatScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.black
+    backgroundColor: color.bgWhite
   },
   textStyle: {
     fontSize: 12 / PixelRatio.getFontScale(),

@@ -60,28 +60,29 @@ const FavouriteScreen = (props) => {
       headers: headers
     }).then(response => {
       console.log(response.data);
-      const newArray = data;
-      newArray.map((i) => {
-        if (item._id === i._id) {
+      // const newArray = data;
+      // newArray.map((i) => {
+      //   if (item._id === i._id) {
 
-          i.isFavourite = !i.isFavourite
-        }
-      })
+      //     i.isFavourite = !i.isFavourite
+      //   }
+      // })
 
-      setData([...newArray]);
+      // setData([...newArray]);
     });
 
 
   }
   // render list
   const renderItem = ({ item, index }) => {
-    const formattedImages = item.images.map((image) => ({
-      uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + image.name
-    }));
+    
+    const formattedImages = item?.images.map((image) => ({
+      uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + image?.name
+    })) ;
 
-    console.log(item.isFavourite);
+
     return (
-      <View style={{ flex:1 }}>
+      <View style={{backgroundColor:color.white}}>
         {/* Header of post */}
         <View style={{
           marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
@@ -89,10 +90,10 @@ const FavouriteScreen = (props) => {
           flexDirection: 'row',
           alignItems: 'center'
         }}>
-          <Image source={{ uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + item.profileImage }} style={styles.profileStyle} />
-          <Text style={[styles.textStyle, { flex: 1, fontSize: 14 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Regular, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{item.firstName} {item.lastName}</Text>
-          <TouchableOpacity activeOpacity={0.6} onPress={() => setIsOpen(true)}>
-            <Entypo name={'dots-three-vertical'} color={color.white} size={PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get())} />
+          <Image source={{ uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + item.UserData.profileImage }} style={styles.profileStyle} />
+          <Text style={[styles.textStyle, { flex: 1, fontSize: 14 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Regular, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{item.UserData.firstName} {item.UserData.lastName}</Text>
+          <TouchableOpacity activeOpacity={0.6} onPress={() => openBottomSheet()}>
+            <Entypo name={'dots-three-vertical'} color={color.black} size={PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get())} />
           </TouchableOpacity>
         </View>
         {/* Body od post */}
@@ -102,32 +103,32 @@ const FavouriteScreen = (props) => {
           </View>
 
           <View style={styles.buttonPositionStyle}>
-            <CustomButton press={() => props.navigation.navigate('DetailsPostScreen', { postData: item })} text={"Apply"} style={{ backgroundColor: color.black, paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5/PixelRatio.get()) ,borderRadius:PixelRatio.getPixelSizeForLayoutSize(0/PixelRatio.get())}} textStyle={{ color: color.white }} />
+            <CustomButton press={() => props.navigation.navigate('DetailsPostScreen', { postData: item })} text={"Apply"} style={{ backgroundColor: color.black, paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), borderRadius: PixelRatio.getPixelSizeForLayoutSize(0 / PixelRatio.get()) }} textStyle={{ color: color.white }} />
           </View>
         </View>
         {/* description */}
-        <View style={{ flexDirection: 'row',flex:1}}>
+        <View style={{ flexDirection: 'row', flex: 1 }}>
           <View style={{
-            flex:1,
+            flex: 1,
             paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
             paddingLeft: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
           }}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={[styles.textStyle, { color: color.white }]}>{item.title}</Text>
+              <Text style={[styles.textStyle]}>{item.title}</Text>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={[styles.textStyle, { color: color.white, fontSize: 12 / PixelRatio.getFontScale() }]}>{item.additionalNote}</Text>
+              <Text style={[styles.textStyle, { fontSize: 12 / PixelRatio.getFontScale() }]}>{item.additionalNote}</Text>
             </View>
           </View>
-            <TouchableOpacity style={{marginHorizontal:PixelRatio.getPixelSizeForLayoutSize(10/PixelRatio.get())}}onPress={() => onSelectFavourite(item, index)}>
-              <Animatable.View animation={item.isFavourite ? 'bounceIn' : null}>
-                <MaterialCommunityIcons
-                  name={item.isFavourite ? 'bookmark' : 'bookmark-outline'}
-                  size={PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get())}
-                  color={color.white}
-                />
-              </Animatable.View>
-            </TouchableOpacity>
+          <TouchableOpacity style={{ marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }} onPress={() => onSelectFavourite(item, index)}>
+            <Animatable.View animation={item.isFavourite ? 'bounceIn' : null}>
+              <MaterialCommunityIcons
+                name={item.isFavourite ? 'bookmark' : 'bookmark-outline'}
+                size={PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get())}
+                color={color.black}
+              />
+            </Animatable.View>
+          </TouchableOpacity>
         </View>
       </View>
     )

@@ -6,6 +6,8 @@ import store from './src/Storage/Store';
 import DynamicLinkHandler from './src/Utils/DynamicLinkHandler';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import color from './src/Utils/Color';
+import InternetConnectivity from './src/Component/InternetConnectivity';
+import { StatusBar } from 'react-native';
 
 const App = () => {
   const theme = {
@@ -20,6 +22,8 @@ const App = () => {
     <Provider store={store}>
       <PaperProvider theme={theme}>
         <NavigationContainer>
+        <StatusBar backgroundColor={color.black}/>
+          <InternetConnectivity />
           <DynamicLinkHandler />
           <DrawerNavigatior />
         </NavigationContainer>

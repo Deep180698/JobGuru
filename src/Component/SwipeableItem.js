@@ -110,7 +110,7 @@ const SwipeableItem = (props) => {
                 activeOpacity={1}
                 style={{
                     paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
-                    backgroundColor: color.black,
+                    backgroundColor: color.bgWhite,
                     flexDirection: 'row',
                     alignItems: 'center',
                     paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
@@ -168,7 +168,7 @@ const SwipeableItem = (props) => {
                         numberOfLines={1}
                         style={[
                             styles.textStyle,
-                            { color: color.white, marginRight: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) },
+                            { marginRight: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) },
                         ]}
                     >
                         {props.item.Decription}
@@ -178,7 +178,7 @@ const SwipeableItem = (props) => {
                     name="right"
                     style={{ textAlign: 'right' }}
                     size={20 / PixelRatio.getFontScale()}
-                    color={color.white}
+                    color={color.black}
                 />
             </TouchableOpacity>
         </Swipeable>
@@ -188,7 +188,7 @@ const SwipeableItem = (props) => {
 const styles = StyleSheet.create({
     textStyle: {
         fontSize: 12 / PixelRatio.getFontScale(),
-        color: color.white,
+        color: color.black,
         fontFamily: FontFamily.Roboto_Light
     },
     leftAction: {

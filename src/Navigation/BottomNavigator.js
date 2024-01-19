@@ -12,7 +12,7 @@ const Tab = createBottomTabNavigator();
 
 const App = () => {
   return (
-    <View style={{flex:1,backgroundColor:color.black,}}>
+    <View style={{flex:1,backgroundColor:color.bgWhite,}}>
       <Tab.Navigator screenOptions={{ headerShown: false }} tabBar={(props) => <CustomTabBar {...props} />}>
         <Tab.Screen
           name="HomeScreen"

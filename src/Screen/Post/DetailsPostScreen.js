@@ -79,7 +79,7 @@ const DetailsPostScreen = (props) => {
 
             <ParallaxScrollView
                 backgroundColor={color.black}
-                contentBackgroundColor={color.white}
+                contentBackgroundColor={color.bgWhite}
                 parallaxHeaderHeight={PixelRatio.getPixelSizeForLayoutSize(250 / PixelRatio.get())}
                 stickyHeaderHeight={50} // Adjust as needed
                 renderFixedHeader={() => (
@@ -96,11 +96,8 @@ const DetailsPostScreen = (props) => {
                     <View style={{}}>
                         <ImageCarousel images={formattedImages} />
                     </View>
-                )}
-
-            >
-
-                <Animatable.View duration={1000} animation={"slideInUp"} style={[{ flex: 1, backgroundColor: color.white, borderRadius: 15 }]}>
+                )}>
+                <Animatable.View duration={1000} animation={"slideInUp"} style={[{ flex: 1, backgroundColor: color.bgWhite, borderRadius: 15 }]}>
                     <View style={{
                         marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
                         marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())
@@ -138,7 +135,7 @@ const DetailsPostScreen = (props) => {
                         </View>
                         
                     </View>
-                    
+
 
                     <View style={styles.btnContainer}>
                         <View style={{ flexDirection: 'row' }}>
@@ -192,6 +189,7 @@ export default DetailsPostScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor:color.bgWhite
     },
 
     textStyle: {
@@ -208,7 +206,7 @@ const styles = StyleSheet.create({
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
     },
     btnContainer: {
-        backgroundColor: color.white,
+        backgroundColor: color.bgWhite,
         marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
     }
 })
