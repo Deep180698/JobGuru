@@ -2,9 +2,19 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet, PixelRatio } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import color from '../Utils/Color';
 
 const CustomTabBar = ({ state, descriptors, navigation }) => {
+    const currentRouteName = state.routes[state.index].name;
+
+    if (currentRouteName === 'ImageSelection') {
+        return null; // Hide the custom tab bar for PostScreen
+    }
+    if (currentRouteName === 'Profile') {
+        return null; // Hide the custom tab bar for PostScreen
+    }
 
     return (
         <View style={styles.tabContainer}>
@@ -14,7 +24,6 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
 
                 const onPress = () => {
 
-                    console.log('Navigating to:', route.name);
                     const event = navigation.emit({
                         type: 'tabPress',
                         target: route.key,
@@ -22,6 +31,8 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                     });
 
                     if (!isFocused && !event.defaultPrevented) {
+
+
                         navigation.navigate(route.name);
                     }
                 };
@@ -38,6 +49,12 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                             : null}
                         {options.tabBarIcon == 'Chat' ?
                             <Ionicons name={isFocused ? "chatbox" : 'chatbox-outline'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
+                            : null}
+                        {options.tabBarIcon == 'Plus' ?
+                            <AntDesign name={isFocused ? "plussquare" : 'plussquareo'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
+                            : null}
+                        {options.tabBarIcon == 'user' ?
+                            <FontAwesome name={isFocused ? "user" : 'user-o'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
                             : null}
                     </TouchableOpacity>
                 );
@@ -62,7 +79,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        
+
         elevation: 5,
     },
     tab: {

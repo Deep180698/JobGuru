@@ -5,6 +5,7 @@ import { View, Text, Modal, TouchableOpacity, StyleSheet, PixelRatio, Permission
 import color from '../Utils/Color';
 import Entypo from 'react-native-vector-icons/Entypo'
 import Octicons from 'react-native-vector-icons/Octicons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import ImagePicker from 'react-native-image-crop-picker';
 import FontFamily from '../Utils/FontFamily';
 
@@ -118,7 +119,9 @@ const CustomNormalRBottomSheet = ({ refBottomSheet, onClose, getCall, data, mult
         </View>
 
         : null}
-      {getCall == "postContainer" ?
+      {getCall == "myPostContainer" ?
+
+
         <View style={{}}>
           <TouchableOpacity activeOpacity={0.6} onPress={onClose} style={{ alignItems: 'center', flexDirection: 'row' }}>
             <Entypo name='eye-with-line' color={color.red} style={{ flex: 1, textAlign: 'center' }} size={20 / PixelRatio.getFontScale()} />
@@ -128,9 +131,20 @@ const CustomNormalRBottomSheet = ({ refBottomSheet, onClose, getCall, data, mult
             <Octicons name='report' color={color.red} style={{ flex: 1, textAlign: 'center' }} size={20 / PixelRatio.getFontScale()} />
             <Text style={[styles.textStyle, { flex: 4, color: color.red, fontFamily: FontFamily.Roboto_black }]}>{"Report Post"}</Text>
           </TouchableOpacity>
-        </View>
-        : null}
+        </View> : null}
+      {getCall == "otherPostContainer" ?
 
+        <View style={{}}>
+          <TouchableOpacity activeOpacity={0.6} onPress={onClose} style={{ alignItems: 'center', flexDirection: 'row' }}>
+            <Entypo name='eye-with-line' color={color.red} style={{ flex: 1, textAlign: 'center' }} size={20 / PixelRatio.getFontScale()} />
+            <Text style={[styles.textStyle, { flex: 4, color: color.red, fontFamily: FontFamily.Roboto_black }]}>{"Hide Post"}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.6} onPress={onClose} style={{ alignItems: 'center', flexDirection: 'row', marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+            <MaterialCommunityIcons name='delete' color={color.red} style={{ flex: 1, textAlign: 'center' }} size={20 / PixelRatio.getFontScale()} />
+            <Text style={[styles.textStyle, { flex: 4, color: color.red, fontFamily: FontFamily.Roboto_black }]}>{"Delete Post"}</Text>
+          </TouchableOpacity>
+        </View> : null
+      }
     </BottomSheet>
   );
 };

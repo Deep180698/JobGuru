@@ -18,9 +18,6 @@ const Header = ({ screenName, onPress, onNavigate, title }) => {
                         <Octicons name='three-bars' color={color.white} size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} />
                     </TouchableOpacity>
                     <Appbar.Content titleStyle={[styles.textStyles, { color: color.white }]} title={title} />
-                    <TouchableOpacity activeOpacity={0.6} onPress={() => onNavigate('post')}>
-                        <AntDesign name={"plussquare"} size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
-                    </TouchableOpacity>
                     <TouchableOpacity activeOpacity={0.6} style={{ marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }} onPress={() => onNavigate('notifications')}>
                         <Ionicons name='notifications' color={color.white} size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} />
                     </TouchableOpacity>

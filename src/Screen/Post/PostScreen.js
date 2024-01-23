@@ -28,6 +28,7 @@ const PostScreen = (props) => {
     const bottomSheetRef = useRef();
     const bottomSheetRef1 = useRef();
 
+
     const openBottomSheet = () => {
 
         bottomSheetRef.current.open();
@@ -35,15 +36,9 @@ const PostScreen = (props) => {
     const closeBottomSheet = () => {
         bottomSheetRef.current.close();
     };
-    const openBottomSheet1 = () => {
 
-        bottomSheetRef1.current.open();
-    };
-    const closeBottomSheet1 = () => {
-        bottomSheetRef1.current.close();
-    };
     const [state, setState] = useState({
-        imageList: [],
+        imageList: props.route.params.ImageData || [],
         firstName: '',
         lastName: '',
         profileImage: '',
@@ -52,7 +47,7 @@ const PostScreen = (props) => {
         type: '',
         additionalNote: '',
         texts: [],
-        isNext: '1',
+        isNext: '2',
         description: '',
         message: '',
         salary: '',
@@ -63,7 +58,7 @@ const PostScreen = (props) => {
         addresOpen: false,
         isVisible: false,
         isAlert: false,
-        activeIndex: 0,
+        activeIndex: 1,
         completedStepIndex: null,
     });
     const [isVisible, setIsVisible] = useState(false)
@@ -99,64 +94,7 @@ const PostScreen = (props) => {
             selectedType: updatedjobTypes,
         });
     };
-    const getImagesGallary = (item) => {
-        console.log(item);
-        item.map((i) => {
-            if (i.path) {
-                state.imageList.push(i)
-            }
-        })
-        setState({
-            ...state,
-            isOpen: false,
-        });
-        closeBottomSheet()
-    };
-    const getImagesCamera = (item) => {
 
-        if (item.path) {
-            state.imageList.push(item)
-        }
-        setState({
-            ...state,
-            isOpen: false,
-        });
-        closeBottomSheet()
-    };
-
-    const removeImage = (item, index) => {
-        const newArray = [...state.imageList];
-        newArray.splice(index, 1); // Remove 1 element at the specified index
-        setState({
-            ...state,
-            imageList: newArray,
-        });
-    };
-
-    const nextItem = (item) => {
-        switch (item) {
-            case '1':
-                setState({
-                    ...state,
-                    isNext: '2',
-                    activeIndex: 1
-                });
-                break;
-            case '2':
-                setState({
-                    ...state,
-                    isNext: '1',
-                    activeIndex: 0
-                });
-                break;
-            case 'Next':
-
-                createPost();
-                break;
-            default:
-                break;
-        }
-    };
     const createPost = async () => {
 
         setIsVisible(true)
@@ -223,14 +161,7 @@ const PostScreen = (props) => {
                 texts: item
             })
             closeBottomSheet()
-        } else if (state.type == 'imageSelection') {
 
-            if (item.length > 0) {
-                getImagesGallary(item)
-            } else {
-                getImagesCamera(item)
-            }
-            closeBottomSheet1()
         }
     }
     const getStepState = (index) => {
@@ -286,52 +217,7 @@ const PostScreen = (props) => {
             </View>
         )
     };
-    const renderItem = ({ item, index }) => {
-        return (
-            <View style={[styles.imageListStyel, { paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
-                <TouchableOpacity activeOpacity={0.6} onPress={() => removeImage(item, index)} style={{ position: 'absolute', right: 0, top: 0, zIndex: 2, backgroundColor: color.white, borderRadius: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }} >
-                    <AntDesign name='closecircle' color={color.red} size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} />
-                </TouchableOpacity>
-                <Image source={{ uri: item.path }} style={styles.image} />
-            </View>
-        )
-    };
 
-    const ImagePickerItem = () => {
-        return (
-            <View style={{ flex: 1 }}>
-                <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()), flexDirection: 'row', justifyContent: 'space-around' }}>
-                    <Text style={[styles.textStyles, { color: color.black }]}>{"Please select an image for the post."}</Text>
-                </View>
-                <View style={{
-                    flex: 1,
-                    marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
-                    marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
-                }}>
-                    <TouchableOpacity onPress={() => [setState({
-                        ...state,
-                        type: 'imageSelection',
-                    }), openBottomSheet1()]}
-
-                        activeOpacity={0.6} style={[{ width: '100%', marginVertical: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()), paddingVertical: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()), justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: color.gray, borderStyle: 'dashed' }]}>
-                        <AntDesign name='plus' size={PixelRatio.getPixelSizeForLayoutSize(50 / PixelRatio.get())} color={color.gray} />
-                    </TouchableOpacity>
-                    <FlatList
-                        data={state.imageList}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item.id}
-                        numColumns={3}
-                    />
-                </View>
-                {/* Next btn */}
-                <TouchableOpacity
-                    onPress={() => nextItem('1')}
-                    activeOpacity={0.6} style={styles.floatBtnStyle}>
-                    <Text style={[styles.textStyles, { color: color.white }]}>{"Next"}</Text>
-                </TouchableOpacity>
-            </View>
-        )
-    }
 
     const DescriptionItem = () => {
         return (
@@ -398,14 +284,6 @@ const PostScreen = (props) => {
                             <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
                                 <Text style={[styles.textStyles, { flex: 1, color: color.black, fontSize: 12 / PixelRatio.getFontScale() }]} >{"Job Type"}</Text>
 
-                                {/* <TouchableOpacity style={styles.blockStyle}
-                                    onPress={() => setState(prevState => ({
-                                        ...prevState,
-                                        isVisible: !prevState.isVisible,
-                                    }))}>
-                                    <Text style={[styles.textStyles, { flex: 1, color: color.black, fontSize: 12 / PixelRatio.getFontScale() }]} >{"Job Type"}</Text>
-                                    <AntDesign name={state.isVisible ? 'down' : 'right'} size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.black} />
-                                </TouchableOpacity> */}
                                 <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }}>
 
 
@@ -470,10 +348,10 @@ const PostScreen = (props) => {
                     </View>
                     {/* Next btn */}
                     <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-                        <TouchableOpacity onPress={() => [nextItem('2')]} activeOpacity={0.6} style={styles.floatBtnStyle}>
+                        <TouchableOpacity onPress={() => props.navigation.goBack()} activeOpacity={0.6} style={styles.floatBtnStyle}>
                             <Text style={[styles.textStyles, { color: color.white }]}>{"Back"}</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => nextItem('Next')} activeOpacity={0.6} style={[styles.floatBtnStyle, { left: 0 }]}>
+                        <TouchableOpacity onPress={() => createPost()} activeOpacity={0.6} style={[styles.floatBtnStyle, { left: 0 }]}>
                             <Text style={[styles.textStyles, { color: color.white }]}>{"Upload"}</Text>
                         </TouchableOpacity>
                     </View>
@@ -486,40 +364,28 @@ const PostScreen = (props) => {
         <View style={styles.container}>
             <CustomLoader isVisible={isVisible} />
 
-            {state.addresOpen && !state.skillsOpen ?
-                <View style={{ flex: 1 }}>
-                    <CustomAddress press={(texts) => setState({
-                        ...state,
-                        address: texts,
-                        addresOpen: false
-                    })}
-                        title={"Find Location"} />
-                </View>
-                : null}
 
-            {!state.skillsOpen && !state.addresOpen ?
-                <View style={styles.container}>
-                    <Header screenName={"normal"} title={'Post'} onPress={() => props.navigation.goBack()} />
-                    <Wizard activeIndex={state.activeIndex} onActiveIndexChanged={() => { }}>
-                        <Wizard.Step state={() => getStepState(0)} label={'Image Selection'} />
-                        <Wizard.Step state={() => getStepState(1)} label={'Post details'} />
-                    </Wizard>
+            <View style={styles.container}>
+                <Header screenName={"normal"} title={'Post'} onPress={() => props.navigation.goBack()} />
+                <Wizard activeIndex={state.activeIndex} onActiveIndexChanged={() => { }}>
+                    <Wizard.Step state={() => getStepState(0)} label={'Image Selection'} />
+                    <Wizard.Step state={() => getStepState(1)} label={'Post details'} />
+                </Wizard>
 
-                    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
+                <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
 
-                        {/*  page */}
-                        {state.isNext === '1' ? ImagePickerItem() : null}
-                        {state.isNext === '2' ? DescriptionItem() : null}
+                    {/*  page */}
+                    {state.isNext === '2' ? DescriptionItem() : null}
 
-                        <CustomRBottomSheet multiple={state.multiple} getCall={state.type} refBottomSheet={bottomSheetRef} data={(item) => getCall(item)} />
-                        <CustomNormalRBottomSheet multiple={state.multiple} getCall={state.type} refBottomSheet={bottomSheetRef1} data={(item) => getCall(item)} />
-                        <CustomAlert onClose={() => setState({ ...state, isAlert: false })} visible={state.isAlert} alert={'normal'} message={state.message} />
-                    </ScrollView>
-                </View >
-                : null}
+                    <CustomRBottomSheet multiple={state.multiple} getCall={state.type} refBottomSheet={bottomSheetRef} data={(item) => getCall(item)} />
+                    <CustomAlert onClose={() => setState({ ...state, isAlert: false })} visible={state.isAlert} alert={'normal'} message={state.message} />
+                </ScrollView>
+            </View >
+
         </View>
     )
 }
+
 
 export default PostScreen
 

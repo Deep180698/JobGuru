@@ -52,7 +52,7 @@ const PhoneNumberInput = ({ countryCode, mobileNumber }) => {
                 style={[styles.TextInputStyle]}
                 onChangeText={(i) => [setPhone_Number(i),mobileNumber(i)]}
                 cursorColor={color.black}
-                label={'Mobile Number'}
+                label={'Number'}
                 keyboardType='number-pad'
 
             />
@@ -65,7 +65,7 @@ export default PhoneNumberInput
 
 const styles = StyleSheet.create({
     TextInputStyle: {
-        flex: 1,
+       flex:1,
         backgroundColor: color.white,
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
         marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),

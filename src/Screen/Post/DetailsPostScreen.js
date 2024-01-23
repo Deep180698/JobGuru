@@ -1,4 +1,4 @@
-import { PixelRatio, StyleSheet, Text, View, TouchableOpacity, Linking, ScrollView } from 'react-native'
+import { PixelRatio, StyleSheet, Text, View, TouchableOpacity, Linking, ScrollView, Dimensions, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import color from '../../Utils/Color'
 import Header from '../../Component/Header'
@@ -29,7 +29,7 @@ const DetailsPostScreen = (props) => {
         "isFavourite": props.route.params.postData.isFavourite,
         "jobType": props.route.params.postData.jobType,
         "lastName": props.route.params.postData.lastName,
-        "profileImage": props.route.params.postData.profileImage,
+        "profileImage": props.route.params.postData.UserData.profileImage,
         "salary": props.route.params.postData.salary,
         "skills": props.route.params.postData.skills,
         "title": props.route.params.postData.title,
@@ -76,7 +76,6 @@ const DetailsPostScreen = (props) => {
 
     return (
         <View style={styles.container}>
-
             <ParallaxScrollView
                 backgroundColor={color.black}
                 contentBackgroundColor={color.bgWhite}
@@ -94,10 +93,14 @@ const DetailsPostScreen = (props) => {
                 showsVerticalScrollIndicator={false}
                 renderForeground={() => (
                     <View style={{}}>
-                        <ImageCarousel images={formattedImages} />
+                        <ImageCarousel style={styles.containerImageStyle} images={formattedImages} />
                     </View>
                 )}>
                 <Animatable.View duration={1000} animation={"slideInUp"} style={[{ flex: 1, backgroundColor: color.bgWhite, borderRadius: 15 }]}>
+                    <View style={{marginTop:10}}>
+                        <Image source={{uri:AppConstants.AsyncKeyLiterals.Base_URL+'/'+ postData.profileImage}} style={styles.profileStyle}/>
+                    </View>
+                   
                     <View style={{
                         marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
                         marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())
@@ -133,50 +136,34 @@ const DetailsPostScreen = (props) => {
                             <Text style={[styles.textStyle, { fontSize: 14 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_black }]}>{'Job Address'}</Text>
                             <Text style={[styles.textStyle]}>{postData.address}</Text>
                         </View>
-                        
+
                     </View>
 
 
                     <View style={styles.btnContainer}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <TouchableOpacity
-                                onPress={handleDialPress}
-                                activeOpacity={0.6}
-                                style={styles.btnStyle}
-                            >
-                                <Text
-                                    style={[
-                                        styles.textStyle,
-                                        { color: color.white, fontSize: 16 / PixelRatio.getFontScale() },
-                                    ]}
-                                >
-                                    {'Call'}
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity activeOpacity={0.6} style={styles.btnStyle}>
-                                <Text
-                                    style={[
-                                        styles.textStyle,
-                                        { color: color.white, fontSize: 16 / PixelRatio.getFontScale() },
-                                    ]}
-                                >
-                                    {'Message'}
-                                </Text>
-                            </TouchableOpacity>
+                        <View style={{ flexDirection: 'row', margin: 5 }}>
+                            <View style={{ flex: 1, marginRight: 5 }}>
+                                <CustomButton onPress={handleDialPress}
+                                    text={"Call"}
+                                    style={{ backgroundColor: color.black, paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }}
+                                    textStyle={[{ color: color.white }]}
+                                />
+                            </View>
+                            <View style={{ flex: 1, marginLeft: 5 }}>
+                                <CustomButton press={() => props.navigation.navigate('DetailsPostScreen', { postData: item })}
+                                    text={"Message"}
+                                    style={{ backgroundColor: color.black, paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }}
+                                    textStyle={[{ color: color.white }]}
+                                />
+                            </View>
                         </View>
-                        <TouchableOpacity
-                            activeOpacity={0.6}
-                            style={[styles.btnStyle, { flex: 0, marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}
-                        >
-                            <Text
-                                style={[
-                                    styles.textStyle,
-                                    { color: color.white, fontSize: 16 / PixelRatio.getFontScale() },
-                                ]}
-                            >
-                                {'Apply Now'}
-                            </Text>
-                        </TouchableOpacity>
+                        <View style={{ margin: 5 }}>
+                            <CustomButton
+                                press={() => props.navigation.navigate('DetailsPostScreen', { postData: item })}
+                                text={"Apply Now"} style={{ backgroundColor: color.black, paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }}
+                                textStyle={[{ color: color.white }]}
+                            />
+                        </View>
                     </View>
                 </Animatable.View >
             </ParallaxScrollView>
@@ -189,9 +176,14 @@ export default DetailsPostScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor:color.bgWhite
+        backgroundColor: color.bgWhite
     },
-
+    profileStyle: {
+        height: PixelRatio.getPixelSizeForLayoutSize(80 / PixelRatio.get()),
+        width: PixelRatio.getPixelSizeForLayoutSize(80 / PixelRatio.get()),
+        borderRadius: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
+        resizeMode: "contain"
+      },
     textStyle: {
         fontSize: 12 / PixelRatio.getFontScale(),
         color: color.black,
@@ -208,5 +200,11 @@ const styles = StyleSheet.create({
     btnContainer: {
         backgroundColor: color.bgWhite,
         marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
-    }
+    },
+    containerImageStyle:{
+        backgroundColor: color.white,
+        resizeMode: 'contain',
+        width: Dimensions.get('window').width,
+        height: PixelRatio.getPixelSizeForLayoutSize(250 / PixelRatio.get()), // adjust the height as needed
+      }
 })

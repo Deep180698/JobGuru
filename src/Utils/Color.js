@@ -1,6 +1,7 @@
 import {useColorScheme} from 'react-native'
 
 const color ={
+    primerycolor:'',
     black : '#000',
     golden : '#DECA64',
     white:'#ffffff',

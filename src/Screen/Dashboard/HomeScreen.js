@@ -18,24 +18,29 @@ import CustomLoader from '../../Component/CustomLoader';
 import NoRecordFound from '../../Component/NoRecordFound';
 import CustomNormalRBottomSheet from '../../Component/CustomNormalRBottomSheet';
 const { width, height } = Dimensions.get('screen')
+let isMyPost = false
 const HomeScreen = (props, { navigation }) => {
 
   const flatListRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false)
-  const [isConnected, setIsConnected] = useState(false)
   const [data, setData] = useState([]);
   const [bannerData, setBannerData] = useState([]);
   const [searchText, setSearchText] = useState('')
   const [refreshing, setRefreshing] = useState(false);
 
-  const data1 = useSelector((state) => state.reducer)
   const bottomSheetRef = useRef();
-
-  const openBottomSheet = () => {
+  const bottomSheetRef1 = useRef();
+  const openBottomSheet = async (item) => {
     bottomSheetRef.current.open();
   };
   const closeBottomSheet = () => {
     bottomSheetRef.current.close();
+  };
+  const openBottomSheet1 = async (item) => {
+    bottomSheetRef1.current.open();
+  };
+  const closeBottomSheet1 = () => {
+    bottomSheetRef1.current.close();
   };
   useEffect(() => {
 
@@ -47,7 +52,6 @@ const HomeScreen = (props, { navigation }) => {
   const getBannerData = async () => {
 
     const result = await apiCall.apiGETCall(AppConstants.AsyncKeyLiterals.getField);
-    console.log("result.data", result);
 
     setBannerData(result)
 
@@ -58,7 +62,6 @@ const HomeScreen = (props, { navigation }) => {
     }
 
     const result = await apiCall.apiGETCall(AppConstants.AsyncKeyLiterals.getPost, headers);
-    console.log("result.data", result);
     setRefreshing(false)
     setData(result)
 
@@ -69,8 +72,11 @@ const HomeScreen = (props, { navigation }) => {
       'Content-Type': 'application/json',
       'authorization': await cacheData.getDataFromCachedWithKey(AppConstants.AsyncKeyLiterals.token),
     }
+
+    const data1 = await cacheData.getDataFromCachedWithKey(AppConstants.AsyncKeyLiterals.IS_AUTH)
     const body = {
       "postID": item._id,
+      "UserID": data1.data._id,
       "isFavourite": !item.isFavourite
 
     }
@@ -81,6 +87,7 @@ const HomeScreen = (props, { navigation }) => {
       headers: headers
     }).then(response => {
 
+      console.log(response.data);
       const newArray = data;
       newArray.map((i) => {
         if (item._id === i._id) {
@@ -102,8 +109,6 @@ const HomeScreen = (props, { navigation }) => {
         i.isShow = !i.isShow
       }
     })
-
-    console.log(newArray);
     setData([...newArray]);
 
   }
@@ -123,7 +128,6 @@ const HomeScreen = (props, { navigation }) => {
     <TouchableOpacity activeOpacity={0.9} onPress={() => onSelectType(item)} style={styles.bannerItem}>
       <View style={{
         backgroundColor: color.white,
-        padding: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
       }}>
         <Image source={{ uri: item.icon }} style={styles.iconStyle} />
@@ -138,20 +142,16 @@ const HomeScreen = (props, { navigation }) => {
   }
   // render list
   const renderItem = ({ item, index }) => {
+
     const formattedImages = item?.images.map((image) => ({
       uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + image?.name
     }));
 
-    console.log(item);
     return (
-
       <View style={{
-        
+        width: Dimensions.get('window').width / 2 - PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), // Adjusted width
         backgroundColor: color.white,
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-        paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-        marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-        paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
         marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
         alignItems: 'center',
         shadowColor: "#000",
@@ -161,12 +161,11 @@ const HomeScreen = (props, { navigation }) => {
         },
         shadowOpacity: 0.20,
         shadowRadius: 1.41,
-
         elevation: 2,
         marginBottom: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
       }}>
-        
+
         {/* Header of post */}
         <View style={{
           marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
@@ -181,33 +180,24 @@ const HomeScreen = (props, { navigation }) => {
           </TouchableOpacity>
         </View>
         {/* Body od post */}
-        <View activeOpacity={0.8} style={{flex:1}}>
+        <View activeOpacity={0.8} style={{ flex: 1 }}>
           <View style={{ flex: 1 }}>
-            <ImageCarousel paginationStyle={{ position: 'relative' }} images={formattedImages} />
+            <ImageCarousel paginationStyle={{ position: 'relative' }} style={styles.containerImageStyle} images={formattedImages} />
           </View>
-
-          <View style={styles.buttonPositionStyle}>
-            <CustomButton press={() => props.navigation.navigate('DetailsPostScreen', { postData: item })} text={"Apply"} style={{ backgroundColor: color.black, paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), borderRadius: PixelRatio.getPixelSizeForLayoutSize(0 / PixelRatio.get()) }} textStyle={{ color: color.white }} />
-          </View>
-          
         </View>
-        <View style={{width:'100%',borderWidth:0.5,borderColor:color.offWhite}}/>
         {/* description */}
-      
-        <View style={{ flexDirection: 'row', alignItems:'center' }}>
+
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={{
             flex: 1,
             paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
             paddingLeft: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
           }}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={[styles.textStyle]}>{item.title}</Text>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={[styles.textStyle, { fontSize: 12 / PixelRatio.getFontScale() }]}>{item.additionalNote}</Text>
+              <Text numberOfLines={2} style={[styles.textStyle]}>{item.title}</Text>
             </View>
           </View>
-          <TouchableOpacity style={{ marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())}} onPress={() => onSelectFavourite(item, index)}>
+          <TouchableOpacity style={{ marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }} onPress={() => onSelectFavourite(item, index)}>
             <Animatable.View animation={item.isFavourite ? 'bounceIn' : null}>
               <MaterialCommunityIcons
                 name={item.isFavourite ? 'bookmark' : 'bookmark-outline'}
@@ -217,16 +207,14 @@ const HomeScreen = (props, { navigation }) => {
             </Animatable.View>
           </TouchableOpacity>
         </View>
+        <View style={styles.buttonPositionStyle}>
+          <CustomButton press={() => props.navigation.navigate('DetailsPostScreen', { postData: item })} text={"Apply Now"} style={{ backgroundColor: color.black, paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }} textStyle={{ color: color.white }} />
+        </View>
       </View>
+
     )
   }
-
-
-
-
   return (
-
-
     <View style={{ flex: 1, backgroundColor: color.bgWhite }}>
       {/* Header */}
       <CustomLoader isVisible={false} />
@@ -242,7 +230,7 @@ const HomeScreen = (props, { navigation }) => {
       } showsVerticalScrollIndicator={false}>
 
         {/* Searchbar */}
-        <View style={{ backgroundColor: color.black, paddingBottom: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }}>
+        {/* <View style={{ backgroundColor: color.black, paddingBottom: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }}>
           <Searchbar
             style={styles.searchbarStyle}
             value={searchText}
@@ -251,32 +239,24 @@ const HomeScreen = (props, { navigation }) => {
             onChangeText={(i) => setSearchText(i)}
             placeholder='search job'
           />
-        </View>
+        </View> */}
         {/* banner */}
         <Animatable.View style={{ backgroundColor: color.bgWhite, flex: 1 }} duration={1000} animation={"slideInUp"}>
-          <FlatList
+          {/* <FlatList
             data={bannerData}
             keyExtractor={(item) => item.id}
             renderItem={renderItem1}
-            contentContainerStyle={{ marginBottom: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), }}
-            // style={{ height: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()) }}
             horizontal
             showsHorizontalScrollIndicator={false}
-            style={{
-
-            }}
-          />
-
+           
+          /> */}
           {/* List Data */}
-
           <FlatList
             ref={flatListRef}
             data={data}
-            style={{
-             
-
-            }}
+            numColumns={2}
             renderItem={renderItem}
+            style={{ marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}
             ListEmptyComponent={() => {
               return (
                 <NoRecordFound title={"No Post Found"} />
@@ -284,7 +264,8 @@ const HomeScreen = (props, { navigation }) => {
             }}
           />
         </Animatable.View>
-        <CustomNormalRBottomSheet Height={100} onClose={() => closeBottomSheet()} getCall={'postContainer'} refBottomSheet={bottomSheetRef} />
+        <CustomNormalRBottomSheet Height={100} onClose={() => closeBottomSheet()} getCall={'myPostContainer'} refBottomSheet={bottomSheetRef} />
+        <CustomNormalRBottomSheet Height={100} onClose={() => closeBottomSheet1()} getCall={'otherPostContainer'} refBottomSheet={bottomSheetRef1} />
       </ScrollView>
     </View>
   )
@@ -310,10 +291,9 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   buttonPositionStyle: {
-    position: 'absolute',
-    right: 0,
-    marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-    marginBottom: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get())
+    alignSelf: 'center',
+    margin: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+
   },
   textStyle: {
     fontSize: 12 / PixelRatio.getFontScale(),
@@ -328,6 +308,7 @@ const styles = StyleSheet.create({
     paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
     borderTopLeftRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     borderTopRightRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    justifyContent: 'center',
     alignItems: 'center',
     shadowColor: "#000",
     shadowOffset: {
@@ -336,7 +317,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.20,
     shadowRadius: 1.41,
-
     elevation: 2,
     marginBottom: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
     borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
@@ -354,5 +334,11 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     backgroundColor: color.white
+  },
+  containerImageStyle: {
+    backgroundColor: color.white,
+    resizeMode: 'contain',
+    width: Dimensions.get('window').width/2  - PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    height: PixelRatio.getPixelSizeForLayoutSize(200 / PixelRatio.get()), // adjust the height as needed
   }
 })

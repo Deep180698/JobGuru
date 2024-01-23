@@ -23,6 +23,7 @@ import DynamicLinkHandler from '../Utils/DynamicLinkHandler';
 import { Animated } from 'react-native'
 import InternetConnectivity from '../Component/InternetConnectivity';
 import { View } from 'react-native-animatable';
+import ImageSelection from '../Screen/Post/ImageSelection';
 
 const Stack = createStackNavigator();
 
@@ -87,6 +88,7 @@ const AuthStackNavigator = () => {
           <Stack.Screen name="Profile" component={Profile} />
           <Stack.Screen name="SettingScreen" component={SettingScreen} />
           <Stack.Screen name="PostScreen" component={PostScreen} />
+          <Stack.Screen name="ImageSelection" component={ImageSelection} />
           <Stack.Screen name="UserDetails" component={UserDetails} />
           <Stack.Screen name="DetailsPostScreen" component={DetailsPostScreen} />
           <Stack.Screen name="ChatScreen" component={ChatScreen} />

@@ -58,35 +58,40 @@ const SplashScreen = (props) => {
   }
   const FirstScreen = () => {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1 }}>
 
-        <Animatable.Image duration={2000} animation="zoomIn" resizeMode='contain'
-          source={require('../assets/logo.png')}
-          style={[styles.logoStyle]} />
+        <Animatable.View duration={3000} animation={'fadeIn'} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+
+          <Image resizeMode='contain'
+            source={require('../assets/logo.png')}
+            style={[styles.logoStyle]} />
+        
+        </Animatable.View>
         <FAB
-          icon="chevron-right"
-          color={color.black}
-          rippleColor={color.white}
-          customSize={PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get())}
-          style={styles.fab}
-          onPress={() => screenChange('secondScreen')}
-        />
+            icon="chevron-right"
+            color={color.black}
+            rippleColor={color.white}
+            customSize={PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get())}
+            style={styles.fab}
+            onPress={() => screenChange('secondScreen')}
+          />
       </View>
     )
   }
   const SecondScreen = () => {
     return (
       <View style={{ flex: 1 }}>
+        <Animatable.View duration={3000} animation={'fadeIn'} style={{ flex: 1 }}>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Image resizeMode='contain'
+              source={require('../assets/logo.png')}
+              style={[styles.secondScreenlogoStyle]} />
+            <Text style={[styles.textStyles, { textAlign: 'center', fontSize: 18 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Bold }]}>{'Welcome to JobGuru'}</Text>
+            <Text style={[styles.textStyles, { textAlign: 'center', fontFamily: FontFamily.Roboto_Regular }]}>{'Your Gateway to Career Opportunities'}</Text>
+            <Text style={[styles.textStyles, { textAlign: 'center', fontFamily: FontFamily.Roboto_LightItalic }]}>{'Embark on a journey towards your dream career with JobGuru. Our job search platform is designed to connect you with meaningful employment opportunities tailored to your skills and aspirations.'}</Text>
+          </View>
+        </Animatable.View>
 
-
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Animatable.Image duration={2000} animation="zoomIn" resizeMode='contain'
-            source={require('../assets/logo.png')}
-            style={[styles.secondScreenlogoStyle]} />
-          <Animatable.Text duration={1500} animation={'zoomIn'} style={[styles.textStyles, { textAlign: 'center', fontSize: 18 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Bold }]}>{'Welcome to JobGuru'}</Animatable.Text>
-          <Animatable.Text duration={1500} animation={'zoomIn'} style={[styles.textStyles, { textAlign: 'center', fontFamily: FontFamily.Roboto_Regular }]}>{'Your Gateway to Career Opportunities'}</Animatable.Text>
-          <Animatable.Text duration={1500} animation={'zoomIn'} style={[styles.textStyles, { textAlign: 'center', fontFamily: FontFamily.Roboto_LightItalic }]}>{'Embark on a journey towards your dream career with JobGuru. Our job search platform is designed to connect you with meaningful employment opportunities tailored to your skills and aspirations.'}</Animatable.Text>
-        </View>
         <FAB
           icon="chevron-right"
           color={color.black}
@@ -95,6 +100,7 @@ const SplashScreen = (props) => {
           style={styles.fab}
           onPress={() => screenChange('thirdScreen')}
         />
+
         <FAB
           icon="chevron-left"
           color={color.black}
@@ -110,22 +116,25 @@ const SplashScreen = (props) => {
   const ThirdScreen = () => {
     return (
       <View style={{ flex: 1 }}>
-        <Animatable.Image duration={2000} animation="zoomIn" resizeMode='contain'
-          source={require('../assets/logo.png')}
-          // zoomIn
-          style={[styles.thirdScreenlogoStyle]} />
-        <View style={{ flex: 1, }}>
-          <Animatable.Text duration={1500} animation={'zoomIn'} style={[styles.textStyles, { fontSize: 18 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Bold }]}>{'Effortless Job Discovery'}</Animatable.Text>
-          <Animatable.Text duration={1500} animation={'zoomIn'} style={[styles.textStyles, { fontFamily: FontFamily.Roboto_Regular }]}>{'Explore a vast array of job listings from top companies in various industries'}</Animatable.Text>
-          <Animatable.Text duration={1500} animation={'zoomIn'} style={[styles.textStyles, { fontSize: 18 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Bold }]}>{'Personalized Recommendations'}</Animatable.Text>
-          <Animatable.Text duration={1500} animation={'zoomIn'} style={[styles.textStyles, { fontFamily: FontFamily.Roboto_Regular }]}>{'Receive tailored job suggestions based on your skills, experience, and preferences'}</Animatable.Text>
-          <Animatable.Text duration={1500} animation={'zoomIn'} style={[styles.textStyles, { fontSize: 18 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Bold }]}>{'Seamless Application Process'}</Animatable.Text>
-          <Animatable.Text duration={1500} animation={'zoomIn'} style={[styles.textStyles, { fontFamily: FontFamily.Roboto_Regular }]}>{'Apply to your desired positions with just a few taps, and track your application status effortlessly'}</Animatable.Text>
-          <Animatable.Text duration={1500} animation={'zoomIn'} style={[styles.textStyles, { fontSize: 18 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Bold }]}>{'Networking Opportunities'}</Animatable.Text>
-          <Animatable.Text duration={1500} animation={'zoomIn'} style={[styles.textStyles, { fontFamily: FontFamily.Roboto_Regular }]}>{'Connect with professionals in your field, attend industry events, and expand your professional network'}</Animatable.Text>
-          <Animatable.Text duration={1500} animation={'zoomIn'} style={[styles.textStyles, { fontSize: 18 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Bold }]}>{'Resourceful Career Insights'}</Animatable.Text>
-          <Animatable.Text duration={1500} animation={'zoomIn'} style={[styles.textStyles, { fontFamily: FontFamily.Roboto_Regular }]}>{'Access career resources, interview tips, and industry insights to enhance your job search strategy'}</Animatable.Text>
-        </View>
+        <Animatable.View duration={3000} animation={'fadeIn'} style={{ flex: 1 }}>
+          <Image resizeMode='contain'
+            source={require('../assets/logo.png')}
+            // fadeIn
+            style={[styles.thirdScreenlogoStyle]} />
+          <View style={{ flex: 1, }}>
+            <Text style={[styles.textStyles, { fontSize: 18 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Bold }]}>{'Effortless Job Discovery'}</Text>
+            <Text style={[styles.textStyles, { fontFamily: FontFamily.Roboto_Regular }]}>{'Explore a vast array of job listings from top companies in various industries'}</Text>
+            <Text style={[styles.textStyles, { fontSize: 18 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Bold }]}>{'Personalized Recommendations'}</Text>
+            <Text style={[styles.textStyles, { fontFamily: FontFamily.Roboto_Regular }]}>{'Receive tailored job suggestions based on your skills, experience, and preferences'}</Text>
+            <Text style={[styles.textStyles, { fontSize: 18 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Bold }]}>{'Seamless Application Process'}</Text>
+            <Text style={[styles.textStyles, { fontFamily: FontFamily.Roboto_Regular }]}>{'Apply to your desired positions with just a few taps, and track your application status effortlessly'}</Text>
+            <Text style={[styles.textStyles, { fontSize: 18 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Bold }]}>{'Networking Opportunities'}</Text>
+            <Text style={[styles.textStyles, { fontFamily: FontFamily.Roboto_Regular }]}>{'Connect with professionals in your field, attend industry events, and expand your professional network'}</Text>
+            <Text style={[styles.textStyles, { fontSize: 18 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Bold }]}>{'Resourceful Career Insights'}</Text>
+            <Text style={[styles.textStyles, { fontFamily: FontFamily.Roboto_Regular }]}>{'Access career resources, interview tips, and industry insights to enhance your job search strategy'}</Text>
+          </View>
+        </Animatable.View>
+
         <FAB
           icon="chevron-right"
           color={color.black}
@@ -143,7 +152,6 @@ const SplashScreen = (props) => {
           onPress={() => screenChange('secondScreen')}
         />
       </View>
-
     )
   }
 

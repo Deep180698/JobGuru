@@ -119,9 +119,9 @@ const LoginScreen = (props) => {
             <ImageBackground source={require('../../assets/BackGround.png')} style={{ width: width, height: height }}>
 
                 <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
-                    <Image source={require('../../assets/logo.png')} style={styles.logoStyle} />
+                    <Animatable.Image duration={3000} animation={'fadeIn'} source={require('../../assets/logo.png')} style={styles.logoStyle} />
 
-                    <Animatable.Text animation={"zoomIn"} style={[styles.textStyles, {
+                    <Animatable.Text duration={3000} animation={'fadeIn'} style={[styles.textStyles, {
                         color: color.white,
                         fontSize: 25 / PixelRatio.getFontScale(),
                         fontFamily: FontFamily.Roboto_BoldItalic,

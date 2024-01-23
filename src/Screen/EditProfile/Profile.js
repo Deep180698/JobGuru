@@ -205,12 +205,13 @@ const Profile = (props) => {
         }
 
         await axios({
-            method: 'PUT',
+            method: 'POST',
             url: AppConstants.AsyncKeyLiterals.Base_URL + AppConstants.AsyncKeyLiterals.update_profile,
             data: formData,
             headers: headers
         }).then(response => {
 
+            console.log("responce Data ====> ",response);
             authData.data.userData = response.data.userData
 
             const asyncItem = AppConstants.AsyncKeyLiterals;

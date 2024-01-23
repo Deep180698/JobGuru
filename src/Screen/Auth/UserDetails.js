@@ -207,6 +207,7 @@ const UserDetails = (props) => {
             data: formData,
             headers: headers
         }).then(response => {
+            console.log(response);
             if (response.status === 200) {
 
 
@@ -228,6 +229,7 @@ const UserDetails = (props) => {
             }
 
         }).catch(error => {
+
             if (error.response.status === 401) {
                 setMessage(error.response.data.error)
                 setAlertVisible(true)

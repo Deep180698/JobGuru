@@ -9,10 +9,10 @@ const AuthScreen = (props) => {
 
 
     return (
-        <Animatable.View animation={"slideInRight"} duration={600} style={styles.container}>
+        <View style={styles.container}>
             <View style={{ flex: 1, justifyContent: 'space-between' }}>
                 <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()) }}>
-                    <Animatable.Image animation={"bounceIn"} duration={3000} resizeMode='contain'
+                    <Animatable.Image duration={3000} animation={'fadeIn'}  resizeMode='contain'
                         source={require('../../assets/logo.png')}
                         style={styles.logoStyle} />
                 </View>
@@ -26,7 +26,7 @@ const AuthScreen = (props) => {
 
                 </View>
             </View>
-        </Animatable.View>
+        </View>
     )
 }
 
