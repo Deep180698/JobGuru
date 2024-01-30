@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     flexDirection: 'row',
-    alignSelf: 'center',
   },
 
 });

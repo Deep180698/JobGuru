@@ -44,42 +44,42 @@ const CustomAutoComplate = ({ title, press }) => {
 
     return (
         <View style={styles.container}>
-            <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
-                <View style={{ marginHorizontal: 10, flex: 1 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <CustomTextInput
-                            value={data}
-                            onChangeText={(i) => setData(i)}
-                            type={"whiteBc"}
-                            style={{ width: width - PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()) }}
-                            placeholder={title}
-                        />
-                        <TouchableOpacity onPress={handleAddText} style={[styles.item, {
-                            position: 'absolute', right: 10, paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-                            paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-                        }]}>
-                            <Text style={[styles.textStyles]}>{'Add'}</Text>
-                        </TouchableOpacity>
-                    </View>
+            <View style={{ marginHorizontal: 10, flex: 1 }}>
 
-                    <View style={{
-                        borderBottomWidth: 1,
-                        borderColor: color.black,
-                        marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
-                    }} />
-                    <View style={{ flex: 1 }}>
-                        <FlatList
-                            data={texts}
-                            renderItem={renderItem}
-                            keyExtractor={(item, index) => index.toString()}
-                            numColumns={3}
-                        />
-                    </View>
-                    <TouchableOpacity onPress={() => press(texts)} style={[styles.btnStyles, { marginBottom: PixelRatio.getPixelSizeForLayoutSize(50 / PixelRatio.get()) }]}>
-                        <Text style={styles.btnTextStyles}>{'Done'}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <CustomTextInput
+                        value={data}
+                        onChangeText={(i) => setData(i)}
+                        type={"whiteBc"}
+                        style={{ width: width - PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()) }}
+                        placeholder={title}
+                    />
+                    <TouchableOpacity onPress={handleAddText} style={[styles.item, {
+                        position: 'absolute', right: 10, paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+                        paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+                    }]}>
+                        <Text style={[styles.textStyles]}>{'Add'}</Text>
                     </TouchableOpacity>
                 </View>
-            </ScrollView>
+
+                <View style={{
+                    borderBottomWidth: 1,
+                    borderColor: color.black,
+                    marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
+                }} />
+                <View style={{ flex: 1 }}>
+                    <FlatList
+                        data={texts}
+                        renderItem={renderItem}
+                        keyExtractor={(item, index) => index.toString()}
+                        numColumns={3}
+                    />
+                </View>
+                <TouchableOpacity onPress={() => press(texts)} style={[styles.btnStyles]}>
+                    <Text style={styles.btnTextStyles}>{'Done'}</Text>
+                </TouchableOpacity>
+            </View>
+
         </View>
     )
 }
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
         backgroundColor: color.black,
         padding: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
         marginBottom: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-        borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
+        borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     },
     btnTextStyles: {
         color: color.white,

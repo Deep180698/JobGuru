@@ -83,10 +83,24 @@ const CustomNormalRBottomSheet = ({ refBottomSheet, onClose, getCall, data, mult
 
     }
   };
-
-
-
-
+  const onPress = async (key) => {
+    switch (key) {
+      case 'Report':
+        data('Report')
+        onClose()
+        break;
+      case 'Delete':
+        data('Delete')
+        onClose()
+        break;
+      case 'Hide':
+        data('Hide')
+        onClose()
+        break;
+      default:
+        break;
+    }
+  };
   return (
     <BottomSheet
       ref={refBottomSheet}
@@ -123,11 +137,11 @@ const CustomNormalRBottomSheet = ({ refBottomSheet, onClose, getCall, data, mult
 
 
         <View style={{}}>
-          <TouchableOpacity activeOpacity={0.6} onPress={onClose} style={{ alignItems: 'center', flexDirection: 'row' }}>
+          <TouchableOpacity activeOpacity={0.6} onPress={() => onPress('Hide')} style={{ alignItems: 'center', flexDirection: 'row' }}>
             <Entypo name='eye-with-line' color={color.red} style={{ flex: 1, textAlign: 'center' }} size={20 / PixelRatio.getFontScale()} />
             <Text style={[styles.textStyle, { flex: 4, color: color.red, fontFamily: FontFamily.Roboto_black }]}>{"Hide Post"}</Text>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.6} onPress={onClose} style={{ alignItems: 'center', flexDirection: 'row', marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+          <TouchableOpacity activeOpacity={0.6} onPress={() => onPress('Report')} style={{ alignItems: 'center', flexDirection: 'row', marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
             <Octicons name='report' color={color.red} style={{ flex: 1, textAlign: 'center' }} size={20 / PixelRatio.getFontScale()} />
             <Text style={[styles.textStyle, { flex: 4, color: color.red, fontFamily: FontFamily.Roboto_black }]}>{"Report Post"}</Text>
           </TouchableOpacity>
@@ -135,11 +149,11 @@ const CustomNormalRBottomSheet = ({ refBottomSheet, onClose, getCall, data, mult
       {getCall == "otherPostContainer" ?
 
         <View style={{}}>
-          <TouchableOpacity activeOpacity={0.6} onPress={onClose} style={{ alignItems: 'center', flexDirection: 'row' }}>
+          <TouchableOpacity activeOpacity={0.6} onPress={() => onPress('Hide')} style={{ alignItems: 'center', flexDirection: 'row' }}>
             <Entypo name='eye-with-line' color={color.red} style={{ flex: 1, textAlign: 'center' }} size={20 / PixelRatio.getFontScale()} />
             <Text style={[styles.textStyle, { flex: 4, color: color.red, fontFamily: FontFamily.Roboto_black }]}>{"Hide Post"}</Text>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.6} onPress={onClose} style={{ alignItems: 'center', flexDirection: 'row', marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+          <TouchableOpacity activeOpacity={0.6} onPress={() => onPress('Delete')} style={{ alignItems: 'center', flexDirection: 'row', marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
             <MaterialCommunityIcons name='delete' color={color.red} style={{ flex: 1, textAlign: 'center' }} size={20 / PixelRatio.getFontScale()} />
             <Text style={[styles.textStyle, { flex: 4, color: color.red, fontFamily: FontFamily.Roboto_black }]}>{"Delete Post"}</Text>
           </TouchableOpacity>

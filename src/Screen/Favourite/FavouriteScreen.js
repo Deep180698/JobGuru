@@ -10,6 +10,7 @@ import * as Animatable from 'react-native-animatable';
 import cacheData from '../../Storage/cacheData'
 import AppConstants from '../../Storage/AppConstants'
 import axios from 'axios'
+import Ionicons from "react-native-vector-icons/Ionicons";
 import ImageCarousel from '../../Component/ImageCarousel'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import CustomButton from '../../Component/CustomButton'
@@ -56,7 +57,13 @@ const FavouriteScreen = (props) => {
       console.log("response.data",response.data.postData);
 
         setData(response.data.postData);
-    });
+    })
+    .catch((error)=>{
+      console.log(error);
+    })
+    .finally(()=>{
+
+    })
   }
   const onSelectFavourite = async(item, index) => {
 
@@ -92,86 +99,39 @@ const FavouriteScreen = (props) => {
 
 
   }
-  // render list
-  const renderItem = ({ item, index }) => {
-    console.log("item?.isMyPost",item?.isMyPost);
+   // render list
+   const renderItem = ({ item, index }) => {
+
     const formattedImages = item?.images.map((image) => ({
       uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + image?.name
     }));
 
-    console.log(item);
     return (
-      <View style={{
-        backgroundColor: color.white,
-        borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-        paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-        paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-        marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-        alignItems: 'center',
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 1,
-        },
-        shadowOpacity: 0.20,
-        shadowRadius: 1.41,
 
-        elevation: 2,
-        marginBottom: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-        borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-      }}>
-
-        {/* Header of post */}
-        <View style={{
-          marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-          marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-          flexDirection: 'row',
-          alignItems: 'center'
-        }}>
-          <Image source={{ uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + item.UserData.profileImage }} style={styles.profileStyle} />
-          <Text style={[styles.textStyle, { flex: 1, fontSize: 14 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Regular, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{item.UserData.firstName} {item.UserData.lastName}</Text>
-          <TouchableOpacity activeOpacity={0.6} onPress={() => item.isMyPost === true || item?.isMyPost === undefined ? openBottomSheet() : openBottomSheet1()}>
-            <Entypo name={'dots-three-vertical'} color={color.black} size={PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get())} />
-          </TouchableOpacity>
-        </View>
-        <View style={{ width: '100%', borderWidth: 0.5, borderColor: color.offWhite }} />
-        {/* Body od post */}
-        <View activeOpacity={0.8} style={{ flex: 1 }}>
-          <View style={{ flex: 1 }}>
-            <ImageCarousel paginationStyle={{ position: 'relative' }} images={formattedImages} />
+      <View style={styles.container1}>
+        <View style={styles.cardContainer}>
+          <View style={styles.imageContainer}>
+            <ImageCarousel paginationStyle={{ position: 'relative' }} style={styles.containerImageStyle} images={formattedImages} />
           </View>
-
-
-
-        </View>
-        <View style={{ width: '100%', borderWidth: 0.5, borderColor: color.offWhite }} />
-        {/* description */}
-
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <View style={{
-            flex: 1,
-            paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-            paddingLeft: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-          }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={[styles.textStyle]}>{item.title}</Text>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={[styles.textStyle, { fontSize: 12 / PixelRatio.getFontScale() }]}>{item.additionalNote}</Text>
-            </View>
-          </View>
-          <TouchableOpacity style={{ marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }} onPress={() => onSelectFavourite(item, index)}>
+          <TouchableOpacity style={styles.favoriteButton} onPress={() => onSelectFavourite(item, index)}>
             <Animatable.View animation={item.isFavourite ? 'bounceIn' : null}>
-              <MaterialCommunityIcons
-                name={item.isFavourite ? 'bookmark' : 'bookmark-outline'}
-                size={PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get())}
-                color={color.black}
+              <Ionicons
+                name={item.isFavourite ? 'heart' : 'heart-outline'}
+                size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())}
+                color={color.white}
               />
             </Animatable.View>
           </TouchableOpacity>
-        </View>
-        <View style={styles.buttonPositionStyle}>
-          <CustomButton press={() => props.navigation.navigate('DetailsPostScreen', { postData: item })} text={"Apply Now"} style={{ backgroundColor: color.black, paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }} textStyle={{ color: color.white }} />
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={() => props.navigation.navigate('DetailsPostScreen', { postData: item })}
+            style={styles.detailsContainer}
+          >
+            <Image source={{ uri: `${AppConstants.AsyncKeyLiterals.Base_URL}/${item.UserData.profileImage}` }} style={styles.profileStyle} />
+            <Text numberOfLines={2} style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
+              {item.title}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     )
@@ -182,13 +142,14 @@ const FavouriteScreen = (props) => {
     
         {/* <Animatable.View duration={1000} animation={"slideInUp"}> */}
       
-          <FlatList
+        <FlatList
             data={data}
+            numColumns={2}
             renderItem={renderItem}
-            contentContainerStyle={{marginTop:PixelRatio.getPixelSizeForLayoutSize(10/PixelRatio.get())}}
+            style={{ marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}
             ListEmptyComponent={() => {
               return (
-                  <NoRecordFound title={"No Post Found"}/>
+                <NoRecordFound title={"No Post Found"} />
               )
             }}
           />
@@ -266,5 +227,66 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     backgroundColor: color.white
-  }
+  },
+
+  containerImageStyle: {
+    borderRadius: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
+    resizeMode: 'stretch',
+    width: width / 2 - PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), // Adjusted width
+    height: height * 0.3, // Adjust the percentage as needed
+  },
+  container1: {
+    width: width / 2 - PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), // Adjusted width
+    margin:PixelRatio.getPixelSizeForLayoutSize(5/PixelRatio.get())
+  },
+  cardContainer: {
+    backgroundColor: color.white,
+    borderRadius: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  imageContainer: {
+    backgroundColor: color.white,
+    borderRadius: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+    elevation: 10,
+  },
+
+  favoriteButton: {
+    position: 'absolute',
+    backgroundColor: color.transparent,
+    right: 0,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+    elevation: 10,
+    padding: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+    borderRadius: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()),
+    marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+  },
+  detailsContainer: {
+    marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 })

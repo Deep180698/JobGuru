@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from 'react'
 import Header from '../../Component/Header'
 import Entypo from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import color from '../../Utils/Color'
 import { Searchbar } from 'react-native-paper';
 import { useSelector } from 'react-redux'
@@ -17,7 +19,7 @@ import CustomButton from '../../Component/CustomButton';
 import CustomLoader from '../../Component/CustomLoader';
 import NoRecordFound from '../../Component/NoRecordFound';
 import CustomNormalRBottomSheet from '../../Component/CustomNormalRBottomSheet';
-const { width, height } = Dimensions.get('screen')
+const { width, height } = Dimensions.get('window');
 let isMyPost = false
 const HomeScreen = (props, { navigation }) => {
 
@@ -26,6 +28,7 @@ const HomeScreen = (props, { navigation }) => {
   const [data, setData] = useState([]);
   const [bannerData, setBannerData] = useState([]);
   const [searchText, setSearchText] = useState('')
+  const [postID, setPostID] = useState('')
   const [refreshing, setRefreshing] = useState(false);
 
   const bottomSheetRef = useRef();
@@ -100,6 +103,40 @@ const HomeScreen = (props, { navigation }) => {
     });
 
   }
+  const onPostDelete = async () => {
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'authorization': await cacheData.getDataFromCachedWithKey(AppConstants.AsyncKeyLiterals.token),
+    }
+
+    // const data1 = await cacheData.getDataFromCachedWithKey(AppConstants.AsyncKeyLiterals.IS_AUTH)
+    // const body = {
+    //   "postID": item._id,
+    //   "UserID": data1.data._id,
+    //   "isFavourite": !item.isFavourite
+
+    // }
+    await axios({
+      method: 'DELETE',
+      url: AppConstants.AsyncKeyLiterals.Base_URL + AppConstants.AsyncKeyLiterals.getPostDelete + postID,
+      data: body,
+      headers: headers
+    }).then(response => {
+
+      console.log(response.data);
+      const newArray = data;
+      newArray.map((i) => {
+        if (item._id === i._id) {
+
+          i.isFavourite = !i.isFavourite
+        }
+      })
+
+      setData([...newArray]);
+    });
+
+  }
   const onSelectType = (item) => {
 
     const newArray = data;
@@ -148,70 +185,33 @@ const HomeScreen = (props, { navigation }) => {
     }));
 
     return (
-      <View style={{
-        width: Dimensions.get('window').width / 2 - PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), // Adjusted width
-        backgroundColor: color.white,
-        borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-        marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-        alignItems: 'center',
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 1,
-        },
-        shadowOpacity: 0.20,
-        shadowRadius: 1.41,
-        elevation: 2,
-        marginBottom: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-        borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-      }}>
 
-        {/* Header of post */}
-        <View style={{
-          marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-          marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-          flexDirection: 'row',
-          alignItems: 'center'
-        }}>
-          <Image source={{ uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + item.UserData.profileImage }} style={styles.profileStyle} />
-          <Text style={[styles.textStyle, { flex: 1, fontSize: 14 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Regular, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{item.UserData.firstName} {item.UserData.lastName}</Text>
-          <TouchableOpacity activeOpacity={0.6} onPress={() => openBottomSheet()}>
-            <Entypo name={'dots-three-vertical'} color={color.black} size={PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get())} />
-          </TouchableOpacity>
-        </View>
-        {/* Body od post */}
-        <View activeOpacity={0.8} style={{ flex: 1 }}>
-          <View style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <View style={styles.cardContainer}>
+          <View style={styles.imageContainer}>
             <ImageCarousel paginationStyle={{ position: 'relative' }} style={styles.containerImageStyle} images={formattedImages} />
           </View>
-        </View>
-        {/* description */}
-
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <View style={{
-            flex: 1,
-            paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-            paddingLeft: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-          }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text numberOfLines={2} style={[styles.textStyle]}>{item.title}</Text>
-            </View>
-          </View>
-          <TouchableOpacity style={{ marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }} onPress={() => onSelectFavourite(item, index)}>
+          <TouchableOpacity style={styles.favoriteButton} onPress={() => onSelectFavourite(item, index)}>
             <Animatable.View animation={item.isFavourite ? 'bounceIn' : null}>
-              <MaterialCommunityIcons
-                name={item.isFavourite ? 'bookmark' : 'bookmark-outline'}
-                size={PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get())}
-                color={color.black}
+              <Ionicons
+                name={item.isFavourite ? 'heart' : 'heart-outline'}
+                size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())}
+                color={color.white}
               />
             </Animatable.View>
           </TouchableOpacity>
-        </View>
-        <View style={styles.buttonPositionStyle}>
-          <CustomButton press={() => props.navigation.navigate('DetailsPostScreen', { postData: item })} text={"Apply Now"} style={{ backgroundColor: color.black, paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }} textStyle={{ color: color.white }} />
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={() => props.navigation.navigate('DetailsPostScreen', { postData: item })}
+            style={styles.detailsContainer}
+          >
+            <Image source={{ uri: `${AppConstants.AsyncKeyLiterals.Base_URL}/${item.UserData.profileImage}` }} style={styles.profileStyle} />
+            <Text numberOfLines={2} style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
+              {item.title}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
-
     )
   }
   return (
@@ -241,7 +241,7 @@ const HomeScreen = (props, { navigation }) => {
           />
         </View> */}
         {/* banner */}
-        <Animatable.View style={{ backgroundColor: color.bgWhite, flex: 1 }} duration={1000} animation={"slideInUp"}>
+        <Animatable.View style={{ backgroundColor: color.bgWhite, flex: 1 }} duration={PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get())} animation={"slideInUp"}>
           {/* <FlatList
             data={bannerData}
             keyExtractor={(item) => item.id}
@@ -256,7 +256,6 @@ const HomeScreen = (props, { navigation }) => {
             data={data}
             numColumns={2}
             renderItem={renderItem}
-            style={{ marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}
             ListEmptyComponent={() => {
               return (
                 <NoRecordFound title={"No Post Found"} />
@@ -264,8 +263,8 @@ const HomeScreen = (props, { navigation }) => {
             }}
           />
         </Animatable.View>
-        <CustomNormalRBottomSheet Height={100} onClose={() => closeBottomSheet()} getCall={'myPostContainer'} refBottomSheet={bottomSheetRef} />
-        <CustomNormalRBottomSheet Height={100} onClose={() => closeBottomSheet1()} getCall={'otherPostContainer'} refBottomSheet={bottomSheetRef1} />
+        <CustomNormalRBottomSheet Height={PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get())} data={(i) => { console.log(i) }} onClose={() => closeBottomSheet()} getCall={'myPostContainer'} refBottomSheet={bottomSheetRef} />
+        <CustomNormalRBottomSheet Height={PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get())} onClose={() => closeBottomSheet1()} getCall={'otherPostContainer'} refBottomSheet={bottomSheetRef1} />
       </ScrollView>
     </View>
   )
@@ -280,8 +279,8 @@ const styles = StyleSheet.create({
     height: PixelRatio.getPixelSizeForLayoutSize(250 / PixelRatio.get()),
   },
   profileStyle: {
-    height: PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get()),
-    width: PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get()),
+    height: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()),
+    width: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()),
     borderRadius: PixelRatio.getPixelSizeForLayoutSize(200 / PixelRatio.get()),
     resizeMode: "contain"
   },
@@ -293,7 +292,6 @@ const styles = StyleSheet.create({
   buttonPositionStyle: {
     alignSelf: 'center',
     margin: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-
   },
   textStyle: {
     fontSize: 12 / PixelRatio.getFontScale(),
@@ -303,11 +301,11 @@ const styles = StyleSheet.create({
   bannerItem: {
     width: PixelRatio.getPixelSizeForLayoutSize(200 / PixelRatio.get()), // Set the width of each banner item
     backgroundColor: color.white,
-    marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    marginVertical: PixelRatio.getPixelSizeForLayoutSize(PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) / PixelRatio.get()),
     marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
     paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-    borderTopLeftRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-    borderTopRightRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    borderTopLeftRadius: PixelRatio.getPixelSizeForLayoutSize(PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) / PixelRatio.get()),
+    borderTopRightRadius: PixelRatio.getPixelSizeForLayoutSize(PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) / PixelRatio.get()),
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: "#000",
@@ -320,7 +318,6 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginBottom: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
     borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-    height: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get())
   },
   bannerText: {
     color: color.black,
@@ -331,14 +328,69 @@ const styles = StyleSheet.create({
   searchbarStyle: {
     marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
     marginBottom: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-    height: 40,
+    height: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()),
     borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     backgroundColor: color.white
   },
   containerImageStyle: {
+    borderRadius: 20,
+    resizeMode: 'stretch',
+    width: width / 2 - PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), // Adjusted width
+    height: height * 0.3, // Adjust the percentage as needed
+  },
+  container: {
+    width: width / 2 - PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), // Adjusted width
+    margin:PixelRatio.getPixelSizeForLayoutSize(5/PixelRatio.get())
+  },
+  cardContainer: {
     backgroundColor: color.white,
-    resizeMode: 'contain',
-    width: Dimensions.get('window').width/2  - PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-    height: PixelRatio.getPixelSizeForLayoutSize(200 / PixelRatio.get()), // adjust the height as needed
-  }
+    borderRadius: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  imageContainer: {
+    backgroundColor: color.white,
+    borderRadius: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+    elevation: 10,
+  },
+
+  favoriteButton: {
+    position: 'absolute',
+    backgroundColor: color.transparent,
+    right: 0,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+    elevation: 10,
+    padding: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+    borderRadius: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()),
+    marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+  },
+  detailsContainer: {
+    marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
 })

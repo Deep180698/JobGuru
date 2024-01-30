@@ -5,6 +5,8 @@ import Header from '../../Component/Header'
 import ImageCarousel from '../../Component/ImageCarousel'
 import AppConstants from '../../Storage/AppConstants'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import Feather from 'react-native-vector-icons/Feather'
 import * as Animatable from 'react-native-animatable';
 import FontFamily from '../../Utils/FontFamily'
 import CustomButton from '../../Component/CustomButton'
@@ -24,11 +26,11 @@ const DetailsPostScreen = (props) => {
         "address": props.route.params.postData.address,
         "createdAt": props.route.params.postData.createdAt,
         "description": props.route.params.postData.description,
-        "firstName": props.route.params.postData.firstName,
+        "firstName": props.route.params.postData.UserData.firstName,
         "images": props.route.params.postData.images,
         "isFavourite": props.route.params.postData.isFavourite,
         "jobType": props.route.params.postData.jobType,
-        "lastName": props.route.params.postData.lastName,
+        "lastName": props.route.params.postData.UserData.lastName,
         "profileImage": props.route.params.postData.UserData.profileImage,
         "salary": props.route.params.postData.salary,
         "skills": props.route.params.postData.skills,
@@ -70,15 +72,19 @@ const DetailsPostScreen = (props) => {
     }
 
     const handleDialPress = () => {
-        const phoneNumberToDial = `tel:${postData.mobileNumber}`;
-        Linking.openURL(phoneNumberToDial);
+        bounceView.bounceIn();
+        setTimeout(() => {
+            const phoneNumberToDial = `tel:${postData.mobileNumber}`;
+            Linking.openURL(phoneNumberToDial);
+        }, 500);
+
     }
 
     return (
         <View style={styles.container}>
             <ParallaxScrollView
                 backgroundColor={color.black}
-                contentBackgroundColor={color.bgWhite}
+                contentBackgroundColor={color.white}
                 parallaxHeaderHeight={PixelRatio.getPixelSizeForLayoutSize(250 / PixelRatio.get())}
                 stickyHeaderHeight={50} // Adjust as needed
                 renderFixedHeader={() => (
@@ -96,21 +102,32 @@ const DetailsPostScreen = (props) => {
                         <ImageCarousel style={styles.containerImageStyle} images={formattedImages} />
                     </View>
                 )}>
-                <Animatable.View duration={1000} animation={"slideInUp"} style={[{ flex: 1, backgroundColor: color.bgWhite, borderRadius: 15 }]}>
-                    <View style={{marginTop:10}}>
-                        <Image source={{uri:AppConstants.AsyncKeyLiterals.Base_URL+'/'+ postData.profileImage}} style={styles.profileStyle}/>
-                    </View>
-                   
+
+                <Animatable.View duration={1000} animation={"slideInUp"} style={[{ flex: 1, backgroundColor: color.white, borderRadius: 15 }]}>
+
+
                     <View style={{
                         marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-                        marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())
                     }}>
+                        <View style={{ marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), flexDirection: 'row', alignItems: 'center' }}>
+                            <Image source={{ uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + postData.profileImage }} style={styles.profileStyle} />
+                            <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), fontFamily: FontFamily.Roboto_black, fontSize: 14 / PixelRatio.getFontScale() }]}>{`${postData.firstName} ${postData.lastName}`}</Text>
+                            <TouchableOpacity style={styles.favoriteButton} onPress={() => onSelectFavourite()}>
+                                <Animatable.View animation={postData.isFavourite ? 'bounceIn' : null}>
+                                    <Ionicons
+                                        name={postData.isFavourite ? 'heart' : 'heart-outline'}
+                                        size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())}
+                                        color={color.black}
+                                    />
+                                </Animatable.View>
+                            </TouchableOpacity>
+                        </View>
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ flex: 1 }}>
                                 <Text style={[styles.textStyle, { fontFamily: FontFamily.Roboto_black, fontSize: 14 / PixelRatio.getFontScale() }]}>{postData.title}</Text>
                                 <Text style={[styles.textStyle, { marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }]}>{postData.description}</Text>
                             </View>
-                            <TouchableOpacity onPress={() => onSelectFavourite()}>
+                            {/* <TouchableOpacity onPress={() => onSelectFavourite()}>
                                 <Animatable.View animation={postData.isFavourite ? 'bounceIn' : null}>
                                     <MaterialCommunityIcons
                                         name={postData.isFavourite ? 'bookmark' : 'bookmark-outline'}
@@ -118,7 +135,8 @@ const DetailsPostScreen = (props) => {
                                         color={color.black}
                                     />
                                 </Animatable.View>
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
+
                         </View>
                         <View style={{ marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
                             <Text style={[styles.textStyle, { fontSize: 14 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_black }]}>{'Additional information'}</Text>
@@ -140,7 +158,7 @@ const DetailsPostScreen = (props) => {
                     </View>
 
 
-                    <View style={styles.btnContainer}>
+                    {/* <View style={styles.btnContainer}>
                         <View style={{ flexDirection: 'row', margin: 5 }}>
                             <View style={{ flex: 1, marginRight: 5 }}>
                                 <CustomButton onPress={handleDialPress}
@@ -164,7 +182,57 @@ const DetailsPostScreen = (props) => {
                                 textStyle={[{ color: color.white }]}
                             />
                         </View>
+                    </View> */}
+                    <View style={{
+                        flexDirection: 'row',
+                        backgroundColor: color.bgWhite,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+                        paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+                        marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+
+                    }}>
+                        <TouchableOpacity
+                            style={{
+                                marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+                            }}
+                            onPress={handleDialPress}
+                        >
+                            <Animatable.View ref={(ref) => (bounceView = ref)} animation={'bounceIn'}>
+                                <Ionicons
+                                    name='call'
+                                    size={20 / PixelRatio.getFontScale()}
+                                    color={color.white}
+                                    style={{
+                                        backgroundColor: color.red,
+                                        borderRadius: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()),
+                                        padding: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+                                    }}
+                                />
+                            </Animatable.View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{
+                            marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+                        }}>
+                            <Feather name='message-circle' size={20 / PixelRatio.getFontScale()} color={color.white}
+                                style={{
+                                    backgroundColor: color.green,
+                                    borderRadius: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()),
+                                    padding: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+                                }} />
+                        </TouchableOpacity>
+
                     </View>
+                    <Text style={[styles.textStyle, { textAlign: 'center', marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), }]}>{`OR`}</Text>
+
+                    <CustomButton
+                        press={() => props.navigation.navigate('DetailsPostScreen', { postData: item })}
+                        text={"Apply Direct"} style={{
+                            backgroundColor: color.black, paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), alignSelf: 'center', borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+                        }}
+                        textStyle={[{ color: color.white }]}
+                    />
                 </Animatable.View >
             </ParallaxScrollView>
         </View>
@@ -176,14 +244,17 @@ export default DetailsPostScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.bgWhite
+        backgroundColor: color.bgWhite,
+
     },
     profileStyle: {
         height: PixelRatio.getPixelSizeForLayoutSize(80 / PixelRatio.get()),
         width: PixelRatio.getPixelSizeForLayoutSize(80 / PixelRatio.get()),
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
-        resizeMode: "contain"
-      },
+        resizeMode: "contain",
+
+
+    },
     textStyle: {
         fontSize: 12 / PixelRatio.getFontScale(),
         color: color.black,
@@ -201,10 +272,19 @@ const styles = StyleSheet.create({
         backgroundColor: color.bgWhite,
         marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
     },
-    containerImageStyle:{
+    containerImageStyle: {
         backgroundColor: color.white,
         resizeMode: 'contain',
         width: Dimensions.get('window').width,
         height: PixelRatio.getPixelSizeForLayoutSize(250 / PixelRatio.get()), // adjust the height as needed
-      }
+    },
+    favoriteButton: {
+        position: 'absolute',
+        backgroundColor: color.transparent,
+        right: 0,
+        padding: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+        borderRadius: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()),
+        marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+        marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+    },
 })

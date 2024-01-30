@@ -20,11 +20,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.black,
     padding: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-    elevation: 5, // Change this value as needed
-    shadowColor: color.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
+  
   },
   textStyles: {
     color: color.white,

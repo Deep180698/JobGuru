@@ -9,7 +9,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import FontFamily from '../Utils/FontFamily';
 import Header from './Header';
 import { Searchbar } from 'react-native-paper';
-const { height, width } = Dimensions.get('screen');
+const { height, width } = Dimensions.get('window');
 import AppConstants from '../Storage/AppConstants'
 import { updateCountryCode } from '../Storage/Action'
 import { useDispatch } from 'react-redux'
@@ -105,7 +105,7 @@ const CustomRBottomSheet = ({ refBottomSheet, getCall, data }) => {
         : null}
 
       {getCall == "AddSkills" ?
-        <View style={{ backgroundColor: 'red', flex: 1 }}>
+        <View style={{flex:1}}>
           <CustomAutoComplate
             press={(texts) => data(texts)}
             title={"Add skills"} />
