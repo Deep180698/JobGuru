@@ -4,7 +4,7 @@ import color from '../../Utils/Color'
 import FontFamily from '../../Utils/FontFamily'
 import SwipeableItem from '../../Component/SwipeableItem'
 
-const ChatScreen = () => {
+const ChatScreen = (props) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const [data, setData] = useState([
@@ -37,12 +37,12 @@ const ChatScreen = () => {
   renderItem = ({ item }) => {
     return (
       <SwipeableItem
-
         item={item}
         onSwipeLeft={() => handleSwipeLeft(item.id)}
         onSwipeRight={() =>handleSwipeRight(item.id)}
         onClick={() => {
-         
+          props.navigation.navigate('Message')
+
         }}
       />
     )

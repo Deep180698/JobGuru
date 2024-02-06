@@ -98,30 +98,63 @@ const DetailsPostScreen = (props) => {
                 )}
                 showsVerticalScrollIndicator={false}
                 renderForeground={() => (
-                    <View style={{}}>
+                    <View style={{marginTop:50}}>
+                        <TouchableOpacity style={styles.favoriteButton} onPress={() => onSelectFavourite()}>
+                            <Animatable.View animation={postData.isFavourite ? 'bounceIn' : null}>
+                                <Ionicons
+                                    name={postData.isFavourite ? 'heart' : 'heart-outline'}
+                                    size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())}
+                                    color={color.black}
+                                />
+                            </Animatable.View>
+                        </TouchableOpacity>
+
                         <ImageCarousel style={styles.containerImageStyle} images={formattedImages} />
                     </View>
                 )}>
 
                 <Animatable.View duration={1000} animation={"slideInUp"} style={[{ flex: 1, backgroundColor: color.white, borderRadius: 15 }]}>
-
-
                     <View style={{
                         marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
                     }}>
                         <View style={{ marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), flexDirection: 'row', alignItems: 'center' }}>
                             <Image source={{ uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + postData.profileImage }} style={styles.profileStyle} />
                             <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), fontFamily: FontFamily.Roboto_black, fontSize: 14 / PixelRatio.getFontScale() }]}>{`${postData.firstName} ${postData.lastName}`}</Text>
-                            <TouchableOpacity style={styles.favoriteButton} onPress={() => onSelectFavourite()}>
-                                <Animatable.View animation={postData.isFavourite ? 'bounceIn' : null}>
-                                    <Ionicons
-                                        name={postData.isFavourite ? 'heart' : 'heart-outline'}
-                                        size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())}
-                                        color={color.black}
-                                    />
-                                </Animatable.View>
-                            </TouchableOpacity>
+
+                            <View style={{ flexDirection: 'row' }}>
+                                <TouchableOpacity
+                                    style={{
+                                        marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+                                    }}
+                                    onPress={handleDialPress}
+                                >
+                                    <Animatable.View ref={(ref) => (bounceView = ref)} animation={'bounceIn'}>
+                                        <Ionicons
+                                            name='call'
+                                            size={20 / PixelRatio.getFontScale()}
+                                            color={color.white}
+                                            style={{
+                                                backgroundColor: color.black,
+                                                borderRadius: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()),
+                                                padding: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+                                            }}
+                                        />
+                                    </Animatable.View>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{
+                                    marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+                                }}>
+                                    <Feather name='message-circle' size={20 / PixelRatio.getFontScale()} color={color.white}
+                                        style={{
+                                            backgroundColor: color.black,
+                                            borderRadius: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()),
+                                            padding: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+                                        }} />
+                                </TouchableOpacity>
+
+                            </View>
                         </View>
+
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ flex: 1 }}>
                                 <Text style={[styles.textStyle, { fontFamily: FontFamily.Roboto_black, fontSize: 14 / PixelRatio.getFontScale() }]}>{postData.title}</Text>
@@ -157,75 +190,6 @@ const DetailsPostScreen = (props) => {
 
                     </View>
 
-
-                    {/* <View style={styles.btnContainer}>
-                        <View style={{ flexDirection: 'row', margin: 5 }}>
-                            <View style={{ flex: 1, marginRight: 5 }}>
-                                <CustomButton onPress={handleDialPress}
-                                    text={"Call"}
-                                    style={{ backgroundColor: color.black, paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }}
-                                    textStyle={[{ color: color.white }]}
-                                />
-                            </View>
-                            <View style={{ flex: 1, marginLeft: 5 }}>
-                                <CustomButton press={() => props.navigation.navigate('DetailsPostScreen', { postData: item })}
-                                    text={"Message"}
-                                    style={{ backgroundColor: color.black, paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }}
-                                    textStyle={[{ color: color.white }]}
-                                />
-                            </View>
-                        </View>
-                        <View style={{ margin: 5 }}>
-                            <CustomButton
-                                press={() => props.navigation.navigate('DetailsPostScreen', { postData: item })}
-                                text={"Apply Now"} style={{ backgroundColor: color.black, paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }}
-                                textStyle={[{ color: color.white }]}
-                            />
-                        </View>
-                    </View> */}
-                    <View style={{
-                        flexDirection: 'row',
-                        backgroundColor: color.bgWhite,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-                        paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-                        marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-
-                    }}>
-                        <TouchableOpacity
-                            style={{
-                                marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-                            }}
-                            onPress={handleDialPress}
-                        >
-                            <Animatable.View ref={(ref) => (bounceView = ref)} animation={'bounceIn'}>
-                                <Ionicons
-                                    name='call'
-                                    size={20 / PixelRatio.getFontScale()}
-                                    color={color.white}
-                                    style={{
-                                        backgroundColor: color.red,
-                                        borderRadius: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()),
-                                        padding: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-                                    }}
-                                />
-                            </Animatable.View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{
-                            marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-                        }}>
-                            <Feather name='message-circle' size={20 / PixelRatio.getFontScale()} color={color.white}
-                                style={{
-                                    backgroundColor: color.green,
-                                    borderRadius: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()),
-                                    padding: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-                                }} />
-                        </TouchableOpacity>
-
-                    </View>
-                    <Text style={[styles.textStyle, { textAlign: 'center', marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), }]}>{`OR`}</Text>
-
                     <CustomButton
                         press={() => props.navigation.navigate('DetailsPostScreen', { postData: item })}
                         text={"Apply Direct"} style={{
@@ -252,8 +216,6 @@ const styles = StyleSheet.create({
         width: PixelRatio.getPixelSizeForLayoutSize(80 / PixelRatio.get()),
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
         resizeMode: "contain",
-
-
     },
     textStyle: {
         fontSize: 12 / PixelRatio.getFontScale(),
@@ -282,6 +244,9 @@ const styles = StyleSheet.create({
         position: 'absolute',
         backgroundColor: color.transparent,
         right: 0,
+        top:0,
+        bottom:0,
+        zIndex:2,
         padding: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()),
         marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),

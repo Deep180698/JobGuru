@@ -1,13 +1,8 @@
 import { StyleSheet, FlatList, View, RefreshControl, Text, Image, PixelRatio, TouchableOpacity, ScrollView, Dimensions } from 'react-native'
 import React, { useState, useEffect, useRef } from 'react'
 import Header from '../../Component/Header'
-import Entypo from "react-native-vector-icons/Entypo";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import color from '../../Utils/Color'
-import { Searchbar } from 'react-native-paper';
-import { useSelector } from 'react-redux'
 import * as Animatable from 'react-native-animatable';
 import FontFamily from '../../Utils/FontFamily';
 import apiCall from '../../Utils/apiCall';
@@ -15,7 +10,6 @@ import AppConstants from '../../Storage/AppConstants';
 import cacheData from '../../Storage/cacheData';
 import axios from 'axios';
 import ImageCarousel from '../../Component/ImageCarousel';
-import CustomButton from '../../Component/CustomButton';
 import CustomLoader from '../../Component/CustomLoader';
 import NoRecordFound from '../../Component/NoRecordFound';
 import CustomNormalRBottomSheet from '../../Component/CustomNormalRBottomSheet';

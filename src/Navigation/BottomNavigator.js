@@ -8,7 +8,7 @@ import color from '../Utils/Color';
 import { View } from 'react-native';
 import PostScreen from '../Screen/Post/PostScreen';
 import ImageSelection from '../Screen/Post/ImageSelection';
-import Profile from '../Screen/EditProfile/Profile';
+import UserProfile from '../Screen/EditProfile/UserProfile';
 
 const Tab = createBottomTabNavigator();
 
@@ -41,7 +41,7 @@ const App = () => {
         />
         <Tab.Screen
           name="Profile"
-          component={Profile}
+          component={UserProfile}
           options={{
             tabBarIcon: 'user',
           }}
