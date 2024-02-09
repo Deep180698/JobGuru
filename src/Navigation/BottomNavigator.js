@@ -40,7 +40,7 @@ const App = () => {
           }}
         />
         <Tab.Screen
-          name="Profile"
+          name="UserProfile"
           component={UserProfile}
           options={{
             tabBarIcon: 'user',

@@ -1,10 +1,11 @@
 // CustomTabBar.js
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, PixelRatio } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, PixelRatio } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import color from '../Utils/Color';
+import FontFamily from '../Utils/FontFamily';
 
 const CustomTabBar = ({ state, descriptors, navigation }) => {
     const currentRouteName = state.routes[state.index].name;
@@ -12,7 +13,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
     if (currentRouteName === 'ImageSelection') {
         return null; // Hide the custom tab bar for PostScreen
     }
-    if (currentRouteName === 'Profile') {
+    if (currentRouteName === 'UserProfile') {
         return null; // Hide the custom tab bar for PostScreen
     }
 
@@ -45,16 +46,38 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                     >
                         {console.log(options.tabBarIcon)}
                         {options.tabBarIcon == 'home' ?
-                            <Ionicons name={isFocused ? "home" : 'home-outline'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
+                            <View style={{ alignItems: 'center' }}>
+                                <Ionicons name={isFocused ? "home" : 'home-outline'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
+                                <Text style={[styles.textStyle]}>
+                                    {'Home'}
+                                </Text>
+                            </View>
                             : null}
                         {options.tabBarIcon == 'Chat' ?
-                            <Ionicons name={isFocused ? "chatbox" : 'chatbox-outline'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
+                            <View style={{ alignItems: 'center' }}>
+                                <Ionicons name={isFocused ? "chatbox" : 'chatbox-outline'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
+                                <Text style={[styles.textStyle]}>
+                                    {'Chat'}
+                                </Text>
+                            </View>
                             : null}
+
                         {options.tabBarIcon == 'Plus' ?
-                            <AntDesign name={isFocused ? "plussquare" : 'plussquareo'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
+                            <View style={{ alignItems: 'center' }}>
+                                <AntDesign name={isFocused ? "plussquare" : 'plussquareo'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
+                                <Text style={[styles.textStyle]}>
+                                    {'Post'}
+                                </Text>
+                            </View>
                             : null}
                         {options.tabBarIcon == 'user' ?
-                            <FontAwesome name={isFocused ? "user" : 'user-o'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
+                            <View style={{ alignItems: 'center' }}>
+                                <FontAwesome name={isFocused ? "user" : 'user-o'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
+                                <Text style={[styles.textStyle]}>
+                                    {'Profile'}
+                                </Text>
+                            </View>
+
                             : null}
                     </TouchableOpacity>
                 );
@@ -65,28 +88,22 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
 
 const styles = StyleSheet.create({
     tabContainer: {
-        backgroundColor: color.black,
-        borderRadius: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
-        marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-        marginBottom: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
-        marginTop: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+        backgroundColor:color.black,
         flexDirection: 'row',
         alignItems: 'center',
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-
-        elevation: 5,
+        paddingVertical: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
     },
     tab: {
         flex: 1,
         alignItems: 'center',
-        paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     },
+    textStyle: {
+        fontSize: 14 / PixelRatio.getFontScale(),
+        color: color.white,
+        fontFamily: FontFamily.Roboto_Regular,
+        marginTop: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+
+    }
 });
 
 export default CustomTabBar;

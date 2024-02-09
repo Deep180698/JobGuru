@@ -29,7 +29,7 @@ const UserProfile = (props) => {
             if (dataFromCache.data && dataFromCache.data.userData) {
                 setData(dataFromCache.data.userData);
                 setLoading(false); // Set loading to false when data is retrieved
-                console.log(dataFromCache.data.userData.profileImage);
+                console.log(dataFromCache.data.userData);
             }
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -40,7 +40,7 @@ const UserProfile = (props) => {
         const headers = {
             'authorization': await cacheData.getDataFromCachedWithKey(AppConstants.AsyncKeyLiterals.token),
         }
-        const result = await apiCall.apiGETCall(AppConstants.AsyncKeyLiterals.getPost, headers);
+        const result = await apiCall.apiGETCall(AppConstants.AsyncKeyLiterals.getMyPost, headers);
         setPostData(result)
 
     }
@@ -86,30 +86,60 @@ const UserProfile = (props) => {
             <CustomLoader isVisible={loading} />
             <Header screenName={'normal'} title={"Profile"} onPress={() => props.navigation.goBack()} />
             <ScrollView>
-                <View style={{
-                    alignSelf: 'center',
-                    marginTop: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get())
-                }}>
-                    {data && data.profileImage && (
-                        <Image   style={styles.imageContainer1} source={{ uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + data.profileImage }} />
-                    )}
+                <View style={{ marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+                    <View style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        flex: 1,
+                        marginTop: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get())
+                    }}>
+                        <View style={{ flex: 0.3 }}>
+                            {data && data.profileImage && (
+                                <Image style={styles.imageContainer1} source={{ uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + data.profileImage }} />
+                            )}
+                        </View>
+                        <View style={{ flex: 0.7, alignItems: 'center' }}>
+                            <TouchableOpacity activeOpacity={0.6} onPress={() => props.navigation.navigate('Profile')}>
+                                <Text style={[styles.textStyle, {
+                                    marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+                                    paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+                                    paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()),
+                                    borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+                                    fontFamily: FontFamily.Roboto_Regular,
+                                    borderWidth: 1,
+                                    fontSize: 14 / PixelRatio.getFontScale()
+                                }]}>
+                                    {'Edit Profile'}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+                        {data && data.firstName && data.lastName && (
+                            <Text style={[styles.textStyle]}>
+                                {data.firstName + ' ' + data.lastName}
+                            </Text>)}
+                        {data && data.mobileNumber && (
+                            <Text style={[styles.textStyle]}>
+                                {data.mobileNumber}
+                            </Text>)}
+                    </View>
                 </View>
-                <TouchableOpacity activeOpacity={0.6} onPress={()=>props.navigation.navigate('Profile')}>
-                    <Text style={[styles.textStyle, {
-                        marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-                        fontFamily: FontFamily.Roboto_Regular,
-                        textAlign: 'center',
-                        fontSize: 14 / PixelRatio.getFontScale()
-                    }]}>
-                        {'Edit Profile'}
-                    </Text>
-                </TouchableOpacity>
-                <View style={{ justifyContent: 'center', height: 50, backgroundColor: color.black, marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }} >
+                <View style={{
+                    justifyContent: 'center',
+                    borderColor: color.gray,
+                    borderBottomWidth: 1,
+                    backgroundColor: color.white,
+                    marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
+
+                }} >
                     <Text style={[styles.textStyle, {
                         fontFamily: FontFamily.Roboto_Regular,
                         textAlign: 'center',
                         fontSize: 14 / PixelRatio.getFontScale(),
-                        color: color.white
+                        color: color.black,
+                        marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
+
                     }]}>
                         {'Post'}
                     </Text>
@@ -138,15 +168,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     textStyle: {
-        fontSize: 12 / PixelRatio.getFontScale(),
+        fontSize: 14 / PixelRatio.getFontScale(),
         color: color.black,
-        fontFamily: FontFamily.Roboto_Light
+        fontFamily: FontFamily.Roboto_Regular
     },
     imageContainer1: {
         resizeMode: 'contain',
-        width: PixelRatio.getPixelSizeForLayoutSize(150 / PixelRatio.get()),
-        height: PixelRatio.getPixelSizeForLayoutSize(150 / PixelRatio.get()),
-        borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+        width: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()),
+        height: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()),
+        borderRadius: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()),
     },
     containerImageStyle: {
         borderRadius: 20,

@@ -11,6 +11,7 @@ const AppConstants = {
         token:"token",
         getField:'/fields',
         getPost:'/getPost',
+        getMyPost:'/getMyPost',
         getFavourite:'/getFavourite',
         postFavourite:'/postFavourite',
         getLogin:'/login',
