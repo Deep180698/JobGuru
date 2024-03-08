@@ -22,7 +22,7 @@ const Header = ({ screenName, onPress, onNavigate, title, profileImage }) => {
                     <Ionicons name='notifications' color={color.white} size={20} />
                 </TouchableOpacity>
                 <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
-                    <Octicons name='three-bars' color={color.white} size={20} />
+                    <Octicons name='three-bars' color={color.white} size={20}/>
                 </TouchableOpacity>
             </View>
         </Appbar.Header>
