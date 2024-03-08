@@ -48,34 +48,34 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                         {options.tabBarIcon == 'home' ?
                             <View style={{ alignItems: 'center' }}>
                                 <Ionicons name={isFocused ? "home" : 'home-outline'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
-                                <Text style={[styles.textStyle]}>
+                                {/* <Text style={[styles.textStyle]}>
                                     {'Home'}
-                                </Text>
+                                </Text> */}
                             </View>
                             : null}
                         {options.tabBarIcon == 'Chat' ?
                             <View style={{ alignItems: 'center' }}>
                                 <Ionicons name={isFocused ? "chatbox" : 'chatbox-outline'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
-                                <Text style={[styles.textStyle]}>
+                                {/* <Text style={[styles.textStyle]}>
                                     {'Chat'}
-                                </Text>
+                                </Text> */}
                             </View>
                             : null}
 
                         {options.tabBarIcon == 'Plus' ?
                             <View style={{ alignItems: 'center' }}>
                                 <AntDesign name={isFocused ? "plussquare" : 'plussquareo'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
-                                <Text style={[styles.textStyle]}>
+                                {/* <Text style={[styles.textStyle]}>
                                     {'Post'}
-                                </Text>
+                                </Text> */}
                             </View>
                             : null}
                         {options.tabBarIcon == 'user' ?
                             <View style={{ alignItems: 'center' }}>
                                 <FontAwesome name={isFocused ? "user" : 'user-o'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
-                                <Text style={[styles.textStyle]}>
+                                {/* <Text style={[styles.textStyle]}>
                                     {'Profile'}
-                                </Text>
+                                </Text> */}
                             </View>
 
                             : null}

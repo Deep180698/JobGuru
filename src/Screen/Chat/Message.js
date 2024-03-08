@@ -28,7 +28,7 @@ const Message = () => {
 
   const fetchMessages = async () => {
     try {
-      const response = await axios.get('http://10.0.0.217:3000/api/get-all-messages');
+      const response = await axios.get('http://172.19.48.208:3000/api/get-all-messages');
       setMessages(response.data.messages);
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -38,7 +38,7 @@ const Message = () => {
   const sendMessage = async () => {
     try {
       // Send a message to the server via HTTP POST
-      const response = await axios.post('http://10.0.0.217:3000/api/send-message', {
+      const response = await axios.post('http://172.19.48.208:3000/api/send-message', {
         user,
         text: message,
       });
