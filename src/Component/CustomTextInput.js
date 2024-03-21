@@ -63,12 +63,14 @@ const CustomTextInput = ({ style, placeholder, type, value, leftIcon, RightIcon,
                     mode='outlined'
                     value={value}
                     textColor={color.black}
-                    outlineStyle={{ borderColor: color.black }}
+                    outlineStyle={{ borderColor: color.gray }}
                     style={[styles.TextInputStyle]}
                     onChangeText={(i) => onChangeText(i)}
                     cursorColor={color.black}
                     label={placeholder}
+                    placeholderTextColor={color.gray}
                     contentStyle={[{width:width},style]}
+                
                 />
                 : null}
 
@@ -82,10 +84,10 @@ const styles = StyleSheet.create({
     TextInputStyle: {
         backgroundColor: color.white,
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-        marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+        marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
         paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
         flexDirection: 'row',
-        fontSize: 12 / PixelRatio.getFontScale(),
+        fontSize: 14 / PixelRatio.getFontScale(),
         fontFamily: FontFamily.Roboto_Regular
     }
 })

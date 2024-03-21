@@ -25,8 +25,8 @@ const App = () => {
           }}
         />
         <Tab.Screen
-          name="ImageSelection"
-          component={ImageSelection}
+          name="PostScreen"
+          component={PostScreen}
           options={{
             tabBarIcon: 'Plus',
           }}

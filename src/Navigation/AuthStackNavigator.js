@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Linking } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from '../Screen/SplashScreen';
+import OnBordingScreen from '../Screen/OnBording/OnBordingScreen';
 import AuthScreen from '../Screen/Auth/AuthScreen';
 import UserDetails from '../Screen/Auth/UserDetails';
 import LoginScreen from '../Screen/Auth/LoginScreen';
@@ -68,7 +69,7 @@ const AuthStackNavigator = () => {
 
   return (
    
-        <Stack.Navigator initialRouteName={"SplashScreen"} screenOptions={{
+        <Stack.Navigator initialRouteName={"AuthScreen"} screenOptions={{
           headerShown: false,
           cardStyleInterpolator: SlideFromRight,
           
@@ -77,6 +78,7 @@ const AuthStackNavigator = () => {
         }} >
 
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
+          <Stack.Screen name="OnBordingScreen" component={OnBordingScreen} />
           <Stack.Screen name="AuthScreen" component={AuthScreen} />
           <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} />
           <Stack.Screen name="LoginScreen" component={LoginScreen} />

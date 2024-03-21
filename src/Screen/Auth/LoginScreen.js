@@ -13,6 +13,7 @@ import { ScrollView } from 'react-native';
 import CustomTextInput from '../../Component/CustomTextInput';
 import axios from 'axios';
 import CustomLoader from '../../Component/CustomLoader';
+import AntDesign from 'react-native-vector-icons/AntDesign'
 
 
 const LoginScreen = (props) => {
@@ -34,7 +35,7 @@ const LoginScreen = (props) => {
     const fetchData = async () => {
 
         setIsVisible(true)
-        
+
         const headers = {
             "Content-type": "application/json"
         }
@@ -82,7 +83,7 @@ const LoginScreen = (props) => {
                 setIsVisible(false)
 
             }
-        }).finally(()=>{
+        }).finally(() => {
             setIsVisible(false)
 
         })
@@ -115,93 +116,106 @@ const LoginScreen = (props) => {
 
     return (
         <View style={styles.container}>
-            <CustomLoader isVisible={isVisible}/>
-            <ImageBackground source={require('../../assets/BackGround.png')} style={{ width: width, height: height }}>
+            <CustomLoader isVisible={isVisible} />
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
 
-                <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
-                    <Animatable.Image duration={3000} animation={'fadeIn'} source={require('../../assets/logo.png')} style={styles.logoStyle} />
+                <AntDesign name='left' size={25 / PixelRatio.getFontScale()} color={color.black} />
 
-                    <Animatable.Text duration={3000} animation={'fadeIn'} style={[styles.textStyles, {
-                        color: color.white,
-                        fontSize: 25 / PixelRatio.getFontScale(),
-                        fontFamily: FontFamily.Roboto_BoldItalic,
-                        textAlign: 'center', padding: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())
-                    }]}>Welcome</Animatable.Text>
 
-                    <View style={{ flex: 1 }}>
+                <Animatable.Image duration={3000} animation={'fadeIn'} source={require('../../assets/logo_text.png')} style={styles.logoStyle} />
+
+                <Animatable.Text duration={3000} animation={'fadeIn'} style={[styles.textStyles, {
+                    fontSize: 30 / PixelRatio.getFontScale(),
+                    fontFamily: FontFamily.Roboto_Bold,
+                    marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+
+                }]}>{'Welcome Back 👋'}</Animatable.Text>
+
+                <Animatable.Text duration={3000} animation={'fadeIn'} style={[styles.textStyles, {
+                    fontSize: 14 / PixelRatio.getFontScale(),
+                    fontFamily: FontFamily.Roboto_Light,
+                    color: color.gray,
+                    marginTop: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+
+                }]}>{'Let’s log in. Apply to jobs!'}</Animatable.Text>
+                <View style={{ flex: 1 }}>
+                    <View style={{
+
+                        marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
+
+                    }}>
+
                         <View style={{
-
-                            marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
-                            backgroundColor: color.white,
-                            marginTop: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()),
-                            paddingBottom: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()),
-                            shadowColor: "#000",
-                            shadowOffset: {
-                                width: 0,
-                                height: 2,
-                            },
-                            shadowOpacity: 0.25,
-                            shadowRadius: 3.84,
-                            elevation: 5,
+                            marginTop: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get())
                         }}>
 
-                            <View style={{
-                                marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
-                                marginTop: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get())
-                            }}>
+                            {/* Email Style*/}
+                            <CustomTextInput
+                                value={email}
+                                onChangeText={(i) => setEmail(i)}
+                                isVisible={isVisible}
+                                onVisible={() => setIsVisible(!isVisible)}
+                                type={"whiteBc"}
+                                placeholder={"Email"}
+                            />
 
-                                {/* Email Style*/}
-                                <CustomTextInput
-                                    value={email}
-                                    onChangeText={(i) => setEmail(i)}
-                                    isVisible={isVisible}
-                                    onVisible={() => setIsVisible(!isVisible)}
-                                    type={"whiteBc"}
-                                    placeholder={"Email"}
-                                />
-
-                                {/* Password Style */}
-                                <CustomTextInput
-                                    value={password}
-                                    onChangeText={(i) => setPassword(i)}
-                                    isVisible={isVisible}
-                                    onVisible={() => setIsVisible(!isVisible)}
-                                    type={"whiteBc"}
-                                    placeholder={"Password"}
-                                />
+                            {/* Password Style */}
+                            <CustomTextInput
+                                value={password}
+                                onChangeText={(i) => setPassword(i)}
+                                isVisible={isVisible}
+                                onVisible={() => setIsVisible(!isVisible)}
+                                type={"whiteBc"}
+                                placeholder={"Password"}
+                            />
 
 
-                                {/* Login btn */}
-                                <CustomButton press={validatefunc} style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }} text="Login" />
-                                <TouchableOpacity activeOpacity={0.6} onPress={() => props.navigation.navigate('ResetPasswordScreen')} style={{ alignItems: 'center', marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                                    <Text style={styles.textStyles}>{"Forgot your password ?"}</Text>
-                                </TouchableOpacity>
+                            {/* Login btn */}
+                            <CustomButton
+                                onPress={validatefunc}
+                                text="Login"
+                                backgroundColor={color.primerycolor}
+                                textColor={color.white}
+                            />
+                            <TouchableOpacity activeOpacity={0.6} onPress={() => props.navigation.navigate('ForgotPasswordScreen')} style={{ alignItems: 'center', marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+                                <Text style={[styles.textStyles, { color: color.primerycolor }]}>{"Forgot your password ?"}</Text>
+                            </TouchableOpacity>
 
-
-                            </View>
 
                         </View>
+
                     </View>
-                    <View style={{ flexDirection: 'row', alignSelf: 'center', marginBottom: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()) }}>
-                        <Text style={styles.textStyles}>{"Don't you have account? "}</Text>
-                        <TouchableOpacity activeOpacity={0.6} onPress={() => props.navigation.navigate('SignUpScreen')}>
-                            <Text style={[styles.textStyles, { color: color.golden, fontFamily: FontFamily.Roboto_Bold, fontSize: 12 / PixelRatio.getFontScale() }]}>{"Register Here"}</Text>
-                        </TouchableOpacity>
+                    <Text style={[styles.textStyles, { textAlign: 'center', fontSize: 14 / PixelRatio.getFontScale(), color: color.gray, marginVertical: PixelRatio.getPixelSizeForLayoutSize(50 / PixelRatio.get()) }]}>{" -------------------- Or continue with --------------------"}</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+                        <AntDesign name="google" size={30 / PixelRatio.getFontScale()} color={color.black} />
+                        <AntDesign name="facebook-square" size={30 / PixelRatio.getFontScale()} style={{ marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()) }} color={color.primerycolor} />
+                        <AntDesign name="apple1" size={28 / PixelRatio.getFontScale()} color={color.black} />
                     </View>
-                    <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"normal"} />
-                </ScrollView>
-            </ImageBackground>
+                </View>
+
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()) }}>
+                    <Text style={[styles.textStyles, { color: color.gray }]}>{"Haven’t an account? "}</Text>
+                    <TouchableOpacity activeOpacity={0.6} onPress={() => props.navigation.navigate('SignUpScreen')}>
+                        <Text style={[styles.textStyles, { color: color.primerycolor, fontFamily: FontFamily.Roboto_Bold, fontSize: 12 / PixelRatio.getFontScale() }]}>{"Register"}</Text>
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
+            <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"normal"} />
         </View>
     )
 }
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.black,
+        backgroundColor: color.background,
+        paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())
+
     },
     logoStyle: {
-        height: PixelRatio.getPixelSizeForLayoutSize(150 / PixelRatio.get()),
-        width: PixelRatio.getPixelSizeForLayoutSize(150 / PixelRatio.get())
+        height: PixelRatio.getPixelSizeForLayoutSize(50 / PixelRatio.get()),
+        width: PixelRatio.getPixelSizeForLayoutSize(150 / PixelRatio.get()),
+        resizeMode: 'contain',
+        marginTop: PixelRatio.getPixelSizeForLayoutSize(50 / PixelRatio.get()),
     },
     btnStyles: {
         backgroundColor: color.golden,
@@ -210,8 +224,8 @@ const styles = StyleSheet.create({
     },
     textStyles: {
         color: color.black,
-        fontSize: 12 / PixelRatio.getFontScale(),
-        fontFamily: FontFamily.Roboto_Light
+        fontSize: 14 / PixelRatio.getFontScale(),
+        fontFamily: FontFamily.Roboto_Regular
     }
 })
 

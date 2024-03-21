@@ -37,7 +37,7 @@ const PhoneNumberInput = ({ countryCode, mobileNumber }) => {
                 value={country_Code}
                 textColor={color.black}
                 onFocus={() => { openBottomSheet() }}
-                outlineStyle={{ borderColor: color.black }}
+                outlineStyle={{ borderColor: color.gray }}
                 style={[styles.TextInputStyle, { flex: 0.3, marginRight: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}
                 onChangeText={(i) => [dispatch(updateCountryCode(i)), setcountry_Code(i)]}
                 cursorColor={color.black}
@@ -48,7 +48,7 @@ const PhoneNumberInput = ({ countryCode, mobileNumber }) => {
                 mode='outlined'
                 value={phone_Number}
                 textColor={color.black}
-                outlineStyle={{ borderColor: color.black, }}
+                outlineStyle={{ borderColor: color.gray, }}
                 style={[styles.TextInputStyle]}
                 onChangeText={(i) => [setPhone_Number(i),mobileNumber(i)]}
                 cursorColor={color.black}

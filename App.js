@@ -22,7 +22,7 @@ const App = () => {
     <Provider store={store}>
       <PaperProvider theme={theme}>
         <NavigationContainer>
-        <StatusBar backgroundColor={color.black}/>
+        <StatusBar  backgroundColor={color.background} barStyle={'dark-content'}/>
           <InternetConnectivity />
           <DynamicLinkHandler />
           <DrawerNavigatior />

@@ -25,7 +25,7 @@ import { useDispatch } from 'react-redux'
 import { authFunc } from '../../Storage/Action'
 
 const UserDetails = (props) => {
-    const { email, password } = props.route.params
+    const { email, password } = props.route.params;
 
     const dispatch = useDispatch();
 
@@ -45,7 +45,7 @@ const UserDetails = (props) => {
         checkTermCon: false
     });
     const [message, setMessage] = useState('');
-  
+
     const [alertVisible, setAlertVisible] = useState(false)
     const [isSucess, setIsSucess] = useState(false)
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -240,14 +240,14 @@ const UserDetails = (props) => {
         });
     }
     return (
-        <View style={{ flex: 1, backgroundColor: color.black }}>
-            <ScrollView>
+        <View style={styles.container}>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
                 <Header title={"Profile Details"} screenName={"normal"} onPress={() => props.navigation.goBack()} />
 
-                <View style={{ flexDirection: 'row', backgroundColor: color.white }}>
+                <View style={{ flexDirection: 'row', backgroundColor: color.background }}>
                     <View style={{
                         flex: 0.6,
-                        backgroundColor: color.white,
+                        backgroundColor: color.background,
                         marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
 
                     }}>
@@ -263,7 +263,7 @@ const UserDetails = (props) => {
                                 <AntDesign name='plus' color={color.black} size={PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get())} />
                             </TouchableOpacity>}
                     </View>
-                    <View style={{ flex: 1, paddingHorizontal: 10, alignSelf: 'center', backgroundColor: color.white, marginTop: PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get()), }}>
+                    <View style={{ flex: 1, paddingHorizontal: 10, alignSelf: 'center', backgroundColor: color.background, marginTop: PixelRatio.getPixelSizeForLayoutSize(25 / PixelRatio.get()), }}>
                         <View style={{ flex: 1 }}>
                             <CustomTextInput
                                 value={userDetails.firstName}
@@ -287,7 +287,7 @@ const UserDetails = (props) => {
                     </View>
                 </View>
 
-                <View style={{ backgroundColor: color.white, paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), paddingBottom: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+                <View style={{ backgroundColor: color.background, paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), paddingBottom: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
 
                     <PhoneNumberInput countryCode={(i) => setUserDetails({
                         ...userDetails,
@@ -378,12 +378,21 @@ const UserDetails = (props) => {
                         placeholder={"Zip-Code"}
                     />
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center',marginVertical:PixelRatio.getPixelSizeForLayoutSize(10/PixelRatio.get()) }}>
                         <Checkbox onPress={() => setUserDetails({ ...userDetails, checkTermCon: !userDetails.checkTermCon })} color={color.golden} status={userDetails.checkTermCon ? 'checked' : 'unchecked'} />
-                        <Text style={[styles.textStyles, { marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"I agree to the "}<Text style={{ textDecorationLine: 'underline', fontFamily: FontFamily.Roboto_Bold }}>{"terms and condition"}</Text></Text>
+                        <Text style={[styles.textStyles, { color: color.gray }]}>{"I agree to the "}</Text>
+                        <TouchableOpacity activeOpacity={0.6} >
+                            <Text style={[styles.textStyles, { color: color.primerycolor, fontFamily: FontFamily.Roboto_Bold }]}>{"terms and condition"}</Text>
+                        </TouchableOpacity>
                     </View>
                     {/* Login btn */}
-                    <CustomButton press={validatefunc} style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()), }} text="Sign Up" />
+                    <CustomButton
+                        onPress={validatefunc}
+                        text="Sign Up"
+                        backgroundColor={color.primerycolor}
+                        textColor={color.white}
+                    />
+
                 </View>
                 <CustomNormalRBottomSheet Height={120} onClose={closeBottomSheet} refBottomSheet={bottomSheetRef} multiple={false} getCall="imageSelection" data={(item) => getImages(item)} />
                 <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"normal"} />
@@ -396,6 +405,11 @@ const UserDetails = (props) => {
 export default UserDetails
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: color.background,
+        paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())
+    },
     phoneInputContainer: {
         borderWidth: 1,
         borderColor: color.black,
@@ -445,7 +459,7 @@ const styles = StyleSheet.create({
     textStyles: {
         color: color.black,
         fontFamily: FontFamily.Roboto_Regular,
-        fontSize: 12 / PixelRatio.getFontScale()
+        fontSize: 14 / PixelRatio.getFontScale()
     },
     btnStyle: {
         backgroundColor: color.white,

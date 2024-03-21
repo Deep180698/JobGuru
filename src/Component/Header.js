@@ -6,31 +6,22 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import color from '../Utils/Color';
 import FontFamily from '../Utils/FontFamily';
 import AppConstants from '../Storage/AppConstants';
-
+import AntDesign from 'react-native-vector-icons/AntDesign'
 const Header = ({ screenName, onPress, onNavigate, title, profileImage }) => {
     const renderHomeHeader = () => (
         <Appbar.Header style={[styles.headerContainer, {
-            marginBottom: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get())
         }]}>
-            <Image source={{ uri: `${AppConstants.AsyncKeyLiterals.Base_URL}/${profileImage}` }} style={styles.profileStyle} />
-            <View style={styles.userInfoContainer}>
-                <Text style={[styles.textStyles, { fontFamily: FontFamily.Roboto_Thin, fontSize: 12, color: color.white }]}>Hi, </Text>
-                <Text style={styles.textStyles}>{title}</Text>
-            </View>
-            <View style={styles.actionButtonsContainer}>
-                <TouchableOpacity activeOpacity={0.6} style={styles.notificationButton} onPress={() => onNavigate('notifications')}>
-                    <Ionicons name='notifications' color={color.white} size={20} />
-                </TouchableOpacity>
                 <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
-                    <Octicons name='three-bars' color={color.white} size={20}/>
+                    <Octicons name='three-bars' color={color.black} size={20} />
                 </TouchableOpacity>
-            </View>
         </Appbar.Header>
     );
 
     const renderNormalHeader = () => (
         <Appbar.Header style={[styles.headerContainer, styles.normalHeader]}>
-            <Appbar.BackAction color={color.white} onPress={onPress} />
+            <TouchableOpacity style={{marginRight:PixelRatio.getPixelSizeForLayoutSize(10/PixelRatio.get())}} activeOpacity={0.6} onPress={onPress}>
+                <AntDesign name='left' size={25 / PixelRatio.getFontScale()} color={color.black} />
+            </TouchableOpacity>
             <Appbar.Content titleStyle={styles.textStyles} color={color.white} title={title} />
         </Appbar.Header>
     );
@@ -45,7 +36,7 @@ const Header = ({ screenName, onPress, onNavigate, title, profileImage }) => {
 
 const styles = StyleSheet.create({
     headerContainer: {
-        backgroundColor: color.black,
+        backgroundColor: color.background,
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
@@ -68,7 +59,7 @@ const styles = StyleSheet.create({
         marginRight: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     },
     textStyles: {
-        color: color.white,
+        color: color.black,
         fontSize: 16 / PixelRatio.getFontScale(),
         fontFamily: FontFamily.Roboto_Medium,
     },

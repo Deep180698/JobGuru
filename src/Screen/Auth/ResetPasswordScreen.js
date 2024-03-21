@@ -13,6 +13,7 @@ import { Checkbox } from 'react-native-paper';
 import FontFamily from '../../Utils/FontFamily';
 import apiCall from '../../Utils/apiCall';
 import CustomTextInput from '../../Component/CustomTextInput';
+import Header from '../../Component/Header';
 
 const ResetPasswordScreen = (props) => {
     const [firstName, setFirstName] = useState('')
@@ -130,63 +131,66 @@ const ResetPasswordScreen = (props) => {
     return (
         <View style={styles.container}>
             <KeyboardAvoidingView behavior="padding" style={styles.container}>
-                <ImageBackground source={require('../../assets/BackGround.png')} style={{ width: width, height: height }}>
 
-                    <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-                        <Image source={require('../../assets/logo.png')} style={styles.logoStyle} />
+                <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+                    <Header screenName={"normal"} onPress={() => props.navigation.goBack()} />
 
-                        <Animatable.Text animation={"fadeIn"} duration={3000} style={[styles.textStyles, {
-                            color: color.white,
-                            fontSize: 25 / PixelRatio.getFontScale(),
-                            fontFamily: FontFamily.Roboto_BoldItalic,
-                            textAlign: 'center', padding: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())
-                        }]}>{"Rest Password"}</Animatable.Text>
-                        <View  style={{
+
+                    <Animatable.Image duration={3000} animation={'fadeIn'} source={require('../../assets/logo_text.png')} style={styles.logoStyle} />
+
+                    <Animatable.Text duration={3000} animation={'fadeIn'} style={[styles.textStyles, {
+                        fontSize: 30 / PixelRatio.getFontScale(),
+                        fontFamily: FontFamily.Roboto_Bold,
+                        marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+
+                    }]}>{'Reset Password 👍'}</Animatable.Text>
+
+                    <Animatable.Text duration={3000} animation={'fadeIn'} style={[styles.textStyles, {
+                        fontSize: 14 / PixelRatio.getFontScale(),
+                        fontFamily: FontFamily.Roboto_Light,
+                        color: color.gray,
+                        marginTop: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+
+                    }]}>{'Let’s change a password. And apply to jobs!'}</Animatable.Text>
+                    <View style={{
+                        marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
+
+                    }}>
+
+                        <View style={{
                             marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
-                            backgroundColor: color.white,
-                            marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
-                            paddingBottom: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
-                            marginBottom: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
-                            shadowColor: "#000",
-                            shadowOffset: {
-                                width: 0,
-                                height: 2,
-                            },
-                            shadowOpacity: 0.25,
-                            shadowRadius: 3.84,
-                            elevation: 5,
+                            marginTop: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
+
                         }}>
 
-                            <View style={{
-                                marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
-                                marginTop: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
-
-                            }}>
 
 
-
-                                <CustomTextInput
-                                    onChangeText={(i) => setPassword(i)}
-                                    isVisible={isVisible}
-                                    onVisible={() => setIsVisible(!isVisible)}
-                                    type={"whiteBc"}
-                                    placeholder={"Password"}
-                                />
-                                <CustomTextInput
-                                    onChangeText={(i) => setconfirmPassword(i)}
-                                    isVisible={isVisible}
-                                    onVisible={() => setIsVisible(!isVisible)}
-                                    type={"whiteBc"}
-                                    placeholder={"Confirm Password"}
-                                />
-                                {/* Login btn */}
-                                <CustomButton press={validatefunc} style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }} text="Reset Password" />
-                            </View>
-
+                            <CustomTextInput
+                                onChangeText={(i) => setPassword(i)}
+                                isVisible={isVisible}
+                                onVisible={() => setIsVisible(!isVisible)}
+                                type={"whiteBc"}
+                                placeholder={"Password"}
+                            />
+                            <CustomTextInput
+                                onChangeText={(i) => setconfirmPassword(i)}
+                                isVisible={isVisible}
+                                onVisible={() => setIsVisible(!isVisible)}
+                                type={"whiteBc"}
+                                placeholder={"Confirm Password"}
+                            />
+                            {/* Login btn */}
+                            <CustomButton
+                                onPress={validatefunc}
+                                text="Reset Password"
+                                backgroundColor={color.primerycolor}
+                                textColor={color.white}
+                            />
                         </View>
-                        <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"login"} />
-                    </ScrollView>
-                </ImageBackground>
+
+                    </View>
+                    <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"login"} />
+                </ScrollView>
             </KeyboardAvoidingView>
         </View >
 
@@ -195,11 +199,15 @@ const ResetPasswordScreen = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.black,
+        backgroundColor: color.background,
+        paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
+
     },
     logoStyle: {
-        height: PixelRatio.getPixelSizeForLayoutSize(150 / PixelRatio.get()),
-        width: PixelRatio.getPixelSizeForLayoutSize(150 / PixelRatio.get())
+        height: PixelRatio.getPixelSizeForLayoutSize(50 / PixelRatio.get()),
+        width: PixelRatio.getPixelSizeForLayoutSize(150 / PixelRatio.get()),
+        resizeMode: 'contain',
+        marginTop: PixelRatio.getPixelSizeForLayoutSize(50 / PixelRatio.get()),
     },
     btnStyles: {
         backgroundColor: color.golden,
@@ -208,9 +216,9 @@ const styles = StyleSheet.create({
     },
     textStyles: {
         color: color.black,
-        fontSize: 16 / PixelRatio.getFontScale(),
-        fontFamily: FontFamily.Roboto_Light
-    }
+        fontSize: 14 / PixelRatio.getFontScale(),
+        fontFamily: FontFamily.Roboto_Regular
+    },
 })
 
 

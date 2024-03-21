@@ -18,6 +18,9 @@ import CustomRBottomSheet from '../../Component/CustomRBottomSheet';
 import CustomNormalRBottomSheet from '../../Component/CustomNormalRBottomSheet';
 import CustomAlert from '../../Component/CustomAlert';
 import CustomLoader from '../../Component/CustomLoader';
+import * as Animatable from 'react-native-animatable';
+import CustomButton from '../../Component/CustomButton';
+
 const checkboxItems = [
     'FullTime', 'PartTime', 'Seasonal',
     'Contract', 'Freelance', 'Internship',
@@ -38,7 +41,6 @@ const PostScreen = (props) => {
     };
 
     const [state, setState] = useState({
-        imageList: props.route.params.ImageData || [],
         firstName: '',
         lastName: '',
         profileImage: '',
@@ -100,17 +102,6 @@ const PostScreen = (props) => {
         setIsVisible(true)
 
         const formData = new FormData();
-
-        state.imageList.forEach((image, index) => {
-            const pathSegments = image.path.split('/');
-
-            const imageName = pathSegments[pathSegments.length - 1];
-            formData.append("images", {
-                uri: image.path,
-                type: image.mime,
-                name: imageName,
-            });
-        });
         formData.append("title", state.title)
         formData.append("description", state.description)
         formData.append("salary", state.salary)
@@ -202,11 +193,11 @@ const PostScreen = (props) => {
             <View style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                width: screenWidth / 2.5,
+                width: screenWidth/2.7,
                 marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-                marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
+                marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
             }}>
-                <Text style={[styles.textStyles, { width: '40%' }]}>{item}</Text>
+                <Text style={[styles.textStyles,{flex:0.8}]}>{item}</Text>
 
                 <Checkbox
                     label={item}
@@ -227,20 +218,35 @@ const PostScreen = (props) => {
 
                     {/* description */}
                     <View style={{ marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                        <View style={{
-                            flexDirection: 'row',
-                            borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-                        }}>
-                            <Image
-                                style={styles.ProfileImage}
-                                source={{ uri: state.profileImage ? AppConstants.AsyncKeyLiterals.Base_URL + '/' + state.profileImage : 'https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?size=626&ext=jpg&ga=GA1.1.2062017442.1699557938&semt=sph' }} />
-                            <View style={{ flexDirection: 'row', marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                                <Text style={[styles.textStyles, { fontSize: 16 / PixelRatio.getFontScale(), color: color.black, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{state.firstName}</Text>
-                                <Text style={[styles.textStyles, { fontSize: 16 / PixelRatio.getFontScale(), color: color.black, marginLeft: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }]}>{state.lastName}</Text>
-                            </View>
-                        </View>
+                     
 
-                        <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+                        <View style={{ flexDirection: 'row' }}>
+
+                            <View style={{ flex: 1 }}>
+                                <Animatable.Text duration={3000} animation={'fadeIn'} style={[styles.textStyles, {
+                                    fontSize: 18 / PixelRatio.getFontScale(),
+                                    fontFamily: FontFamily.Roboto_Regular,
+                                    color: color.gray,
+                                    marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+
+                                }]}>{'Create New Post!'}</Animatable.Text>
+
+                                <Animatable.Text duration={3000} animation={'fadeIn'} style={[styles.textStyles, {
+                                    fontSize: 28 / PixelRatio.getFontScale(),
+                                    fontFamily: FontFamily.Roboto_Bold,
+                                    color: color.black,
+                                    marginTop: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+
+                                }]}>{`${state.firstName} ${state.lastName} 👍`}</Animatable.Text>
+                            </View>
+                            <Image
+                                resizeMode='contain'
+                                source={{ uri: `${AppConstants.AsyncKeyLiterals.Base_URL}/${state.profileImage}` }}
+                                style={styles.profileStyle}
+                            />
+
+                        </View>
+                        <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), }}>
 
                             {/* Titile */}
 
@@ -282,7 +288,7 @@ const PostScreen = (props) => {
 
                             {/* Job type */}
                             <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                                <Text style={[styles.textStyles, { flex: 1, color: color.black, fontSize: 12 / PixelRatio.getFontScale() }]} >{"Job Type"}</Text>
+                                <Text style={[styles.textStyles, { flex: 1, color: color.black }]} >{"Job Type"}</Text>
 
                                 <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }}>
 
@@ -345,16 +351,19 @@ const PostScreen = (props) => {
                                 </View>
                             </ View>
                         </View>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+                      {/* Create Post */}
+                      <CustomButton
+                                onPress={createPost}
+                                text="Create"
+                                backgroundColor={color.primerycolor}
+                                textColor={color.white}
+                                btnStyle={{flex:1}}
+                            />
+                       
                     </View>
-                    {/* Next btn */}
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-                        <TouchableOpacity onPress={() => props.navigation.goBack()} activeOpacity={0.6} style={styles.floatBtnStyle}>
-                            <Text style={[styles.textStyles, { color: color.white }]}>{"Back"}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => createPost()} activeOpacity={0.6} style={[styles.floatBtnStyle, { left: 0 }]}>
-                            <Text style={[styles.textStyles, { color: color.white }]}>{"Upload"}</Text>
-                        </TouchableOpacity>
                     </View>
+                   
                 </View>
             </View>
 
@@ -365,22 +374,13 @@ const PostScreen = (props) => {
             <CustomLoader isVisible={isVisible} />
 
 
-            <View style={styles.container}>
-                <Header screenName={"normal"} title={'Post'} onPress={() => props.navigation.goBack()} />
-                <Wizard activeIndex={state.activeIndex} onActiveIndexChanged={() => { }}>
-                    <Wizard.Step state={() => getStepState(0)} label={'Image Selection'} />
-                    <Wizard.Step state={() => getStepState(1)} label={'Post details'} />
-                </Wizard>
+            <Header screenName={"normal"} title={'Post'} onPress={() => props.navigation.goBack()} />
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
 
-                <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
-
-                    {/*  page */}
-                    {state.isNext === '2' ? DescriptionItem() : null}
-
-                    <CustomRBottomSheet multiple={state.multiple} getCall={state.type} refBottomSheet={bottomSheetRef} data={(item) => getCall(item)} />
-                    <CustomAlert onClose={() => setState({ ...state, isAlert: false })} visible={state.isAlert} alert={'normal'} message={state.message} />
-                </ScrollView>
-            </View >
+                {DescriptionItem()}
+            </ScrollView>
+            <CustomRBottomSheet multiple={state.multiple} getCall={state.type} refBottomSheet={bottomSheetRef} data={(item) => getCall(item)} />
+            <CustomAlert onClose={() => setState({ ...state, isAlert: false })} visible={state.isAlert} alert={'normal'} message={state.message} />
 
         </View>
     )
@@ -392,7 +392,8 @@ export default PostScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.white
+        backgroundColor: color.background,
+        paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())
     },
     btnStyles: {
         backgroundColor: color.black,
@@ -402,9 +403,15 @@ const styles = StyleSheet.create({
     },
     textStyles: {
         color: color.black,
-        fontSize: 12 / PixelRatio.getFontScale(),
+        fontSize: 14 / PixelRatio.getFontScale(),
         fontFamily: FontFamily.Roboto_Regular,
 
+    },
+    profileStyle: {
+        height: PixelRatio.getPixelSizeForLayoutSize(80 / PixelRatio.get()),
+        width: PixelRatio.getPixelSizeForLayoutSize(80 / PixelRatio.get()),
+        borderRadius: PixelRatio.getPixelSizeForLayoutSize(200 / PixelRatio.get()),
+        resizeMode: "contain",
     },
     imageListStyel: {
         aspectRatio: 1,

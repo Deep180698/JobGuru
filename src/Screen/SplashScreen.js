@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, PixelRatio, TouchableOpacity } from 'react-native'
+import { View, Text, Image, StyleSheet, PixelRatio, TouchableOpacity, Dimensions, ImageBackground } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import color from '../Utils/Color'
 import AppConstants from '../Storage/AppConstants'
@@ -9,7 +9,9 @@ import { authFunc } from '../Storage/Action'
 import Entypo from 'react-native-vector-icons/Entypo'
 import FontFamily from '../Utils/FontFamily'
 import { Avatar, Button, Card, FAB } from 'react-native-paper';
-
+// Assuming this component file is in the same directory as the assets folder
+import startImage from '../assets/Start.jpg';
+const { height, width } = Dimensions.get('screen')
 const SplashScreen = (props) => {
 
   const [screenName, setScreenName] = useState('firstScreen')
@@ -41,33 +43,34 @@ const SplashScreen = (props) => {
         throw new Error('No user data!');
       }
     } else {
+      setTimeout(() => {
+        props.navigation.reset({
+          index: 0,
+          routes: [{ name: "OnBordingScreen" }],
+        });
+      }, 2000);
+     
       throw new Error("User isn't logged in");
     }
 
   },
     []);
 
-  const _NextPage = () => {
-    props.navigation.reset({
-      index: 0,
-      routes: [{ name: "AuthScreen" }],
-    });
-  }
-  const screenChange = (name) => {
-    setScreenName(name)
-  }
-  const FirstScreen = () => {
-    return (
+
+
+
+  return (
+    <View style={styles.container}>
       <View style={{ flex: 1 }}>
+        <ImageBackground style={{ height: height, width: width }} source={startImage}>
+          <Animatable.View duration={3000} animation={'fadeIn'} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
 
-        <Animatable.View duration={3000} animation={'fadeIn'} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Image resizeMode='contain'
+              source={require('../assets/logo4.png')}
+              style={[styles.logoStyle]} />
 
-          <Image resizeMode='contain'
-            source={require('../assets/logo.png')}
-            style={[styles.logoStyle]} />
-        
-        </Animatable.View>
-        <FAB
+          </Animatable.View>
+          <FAB
             icon="chevron-right"
             color={color.black}
             rippleColor={color.white}
@@ -75,100 +78,16 @@ const SplashScreen = (props) => {
             style={styles.fab}
             onPress={() => screenChange('secondScreen')}
           />
-      </View>
-    )
-  }
-  const SecondScreen = () => {
-    return (
-      <View style={{ flex: 1 }}>
-        <Animatable.View duration={3000} animation={'fadeIn'} style={{ flex: 1 }}>
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Image resizeMode='contain'
-              source={require('../assets/logo.png')}
-              style={[styles.secondScreenlogoStyle]} />
-            <Text style={[styles.textStyles, { textAlign: 'center', fontSize: 18 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Bold }]}>{'Welcome to JobGuru'}</Text>
-            <Text style={[styles.textStyles, { textAlign: 'center', fontFamily: FontFamily.Roboto_Regular }]}>{'Your Gateway to Career Opportunities'}</Text>
-            <Text style={[styles.textStyles, { textAlign: 'center', fontFamily: FontFamily.Roboto_LightItalic }]}>{'Embark on a journey towards your dream career with JobGuru. Our job search platform is designed to connect you with meaningful employment opportunities tailored to your skills and aspirations.'}</Text>
-          </View>
-        </Animatable.View>
-
-        <FAB
-          icon="chevron-right"
-          color={color.black}
-          rippleColor={color.white}
-          customSize={PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get())}
-          style={styles.fab}
-          onPress={() => screenChange('thirdScreen')}
-        />
-
-        <FAB
-          icon="chevron-left"
-          color={color.black}
-          rippleColor={color.white}
-          customSize={PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get())}
-          style={[styles.fab1]}
-          onPress={() => screenChange('firstScreen')}
-        />
+        </ImageBackground>
       </View>
 
-    )
-  }
-  const ThirdScreen = () => {
-    return (
-      <View style={{ flex: 1 }}>
-        <Animatable.View duration={3000} animation={'fadeIn'} style={{ flex: 1 }}>
-          <Image resizeMode='contain'
-            source={require('../assets/logo.png')}
-            // fadeIn
-            style={[styles.thirdScreenlogoStyle]} />
-          <View style={{ flex: 1, }}>
-            <Text style={[styles.textStyles, { fontSize: 18 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Bold }]}>{'Effortless Job Discovery'}</Text>
-            <Text style={[styles.textStyles, { fontFamily: FontFamily.Roboto_Regular }]}>{'Explore a vast array of job listings from top companies in various industries'}</Text>
-            <Text style={[styles.textStyles, { fontSize: 18 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Bold }]}>{'Personalized Recommendations'}</Text>
-            <Text style={[styles.textStyles, { fontFamily: FontFamily.Roboto_Regular }]}>{'Receive tailored job suggestions based on your skills, experience, and preferences'}</Text>
-            <Text style={[styles.textStyles, { fontSize: 18 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Bold }]}>{'Seamless Application Process'}</Text>
-            <Text style={[styles.textStyles, { fontFamily: FontFamily.Roboto_Regular }]}>{'Apply to your desired positions with just a few taps, and track your application status effortlessly'}</Text>
-            <Text style={[styles.textStyles, { fontSize: 18 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Bold }]}>{'Networking Opportunities'}</Text>
-            <Text style={[styles.textStyles, { fontFamily: FontFamily.Roboto_Regular }]}>{'Connect with professionals in your field, attend industry events, and expand your professional network'}</Text>
-            <Text style={[styles.textStyles, { fontSize: 18 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Bold }]}>{'Resourceful Career Insights'}</Text>
-            <Text style={[styles.textStyles, { fontFamily: FontFamily.Roboto_Regular }]}>{'Access career resources, interview tips, and industry insights to enhance your job search strategy'}</Text>
-          </View>
-        </Animatable.View>
-
-        <FAB
-          icon="chevron-right"
-          color={color.black}
-          rippleColor={color.white}
-          customSize={PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get())}
-          style={styles.fab}
-          onPress={() => _NextPage()}
-        />
-        <FAB
-          icon="chevron-left"
-          color={color.black}
-          rippleColor={color.white}
-          customSize={PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get())}
-          style={[styles.fab1]}
-          onPress={() => screenChange('secondScreen')}
-        />
-      </View>
-    )
-  }
-
-  return (
-    <View style={styles.container}>
-      {screenName === 'firstScreen' ? FirstScreen() : null}
-      {screenName === 'secondScreen' ? SecondScreen() : null}
-      {screenName === 'thirdScreen' ? ThirdScreen() : null}
-
-    </View>
+    </View >
   )
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.black,
-    paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    backgroundColor: color.white,
 
   },
   logoStyle: {

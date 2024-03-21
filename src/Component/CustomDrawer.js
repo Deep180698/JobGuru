@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
   drawer: {
     flex: 0.7,
-    backgroundColor: color.black,
+    backgroundColor: color.background,
 
   },
   viewStyle1: {

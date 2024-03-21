@@ -10,7 +10,7 @@ import FontFamily from '../Utils/FontFamily';
 const CustomTabBar = ({ state, descriptors, navigation }) => {
     const currentRouteName = state.routes[state.index].name;
 
-    if (currentRouteName === 'ImageSelection') {
+    if (currentRouteName === 'PostScreen') {
         return null; // Hide the custom tab bar for PostScreen
     }
     if (currentRouteName === 'UserProfile') {
@@ -47,7 +47,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                         {console.log(options.tabBarIcon)}
                         {options.tabBarIcon == 'home' ?
                             <View style={{ alignItems: 'center' }}>
-                                <Ionicons name={isFocused ? "home" : 'home-outline'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
+                                <Ionicons name={isFocused ? "home" : 'home-outline'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.primerycolor} />
                                 {/* <Text style={[styles.textStyle]}>
                                     {'Home'}
                                 </Text> */}
@@ -55,7 +55,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                             : null}
                         {options.tabBarIcon == 'Chat' ?
                             <View style={{ alignItems: 'center' }}>
-                                <Ionicons name={isFocused ? "chatbox" : 'chatbox-outline'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
+                                <Ionicons name={isFocused ? "chatbox" : 'chatbox-outline'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.primerycolor} />
                                 {/* <Text style={[styles.textStyle]}>
                                     {'Chat'}
                                 </Text> */}
@@ -64,7 +64,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
 
                         {options.tabBarIcon == 'Plus' ?
                             <View style={{ alignItems: 'center' }}>
-                                <AntDesign name={isFocused ? "plussquare" : 'plussquareo'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
+                                <AntDesign name={isFocused ? "plussquare" : 'plussquareo'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.primerycolor} />
                                 {/* <Text style={[styles.textStyle]}>
                                     {'Post'}
                                 </Text> */}
@@ -72,7 +72,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                             : null}
                         {options.tabBarIcon == 'user' ?
                             <View style={{ alignItems: 'center' }}>
-                                <FontAwesome name={isFocused ? "user" : 'user-o'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.white} />
+                                <FontAwesome name={isFocused ? "user" : 'user-o'} size={isFocused ? 25 / PixelRatio.getFontScale() : 20 / PixelRatio.getFontScale()} color={color.primerycolor} />
                                 {/* <Text style={[styles.textStyle]}>
                                     {'Profile'}
                                 </Text> */}
@@ -88,7 +88,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
 
 const styles = StyleSheet.create({
     tabContainer: {
-        backgroundColor:color.black,
+        backgroundColor:color.white,
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     },
     textStyle: {
         fontSize: 14 / PixelRatio.getFontScale(),
-        color: color.white,
+        color: color.black,
         fontFamily: FontFamily.Roboto_Regular,
         marginTop: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
 

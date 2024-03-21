@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet, PixelRatio, Image, ImageBackground, Dimensions } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, PixelRatio, Image, ImageBackground, Dimensions, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import color from '../../Utils/Color'
 const { height, width } = Dimensions.get('window');
@@ -8,7 +8,9 @@ import FontFamily from '../../Utils/FontFamily';
 import CustomTextInput from '../../Component/CustomTextInput';
 import AppConstants from '../../Storage/AppConstants';
 import axios from 'axios';
-
+import * as Animatable from 'react-native-animatable';
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import Header from '../../Component/Header';
 const SignUpScreen = (props) => {
     const [firstName, setFirstName] = useState('Deep')
     const [lasttName, setLastName] = useState('Patel')
@@ -159,50 +161,62 @@ const SignUpScreen = (props) => {
                     type={"whiteBc"}
                     placeholder={"Confirm Password"}
                 />
+                <CustomButton
+                    onPress={validatefunc}
+                    text="Next"
+                    backgroundColor={color.primerycolor}
+                    textColor={color.white}
+                />
 
-                <CustomButton press={validatefunc} style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }} text="Next" />
             </View>
         )
     }
 
     return (
         <View style={styles.container}>
-            <ImageBackground source={require('../../assets/BackGround.png')} style={{ width: width, height: height }}>
 
-                <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+                <Header screenName={"normal"} onPress={() => props.navigation.goBack()} />
+                <Animatable.Image duration={3000} animation={'fadeIn'} source={require('../../assets/logo_text.png')} style={styles.logoStyle} />
+                <Animatable.Text duration={3000} animation={'fadeIn'} style={[styles.textStyles, {
+                    fontSize: 30 / PixelRatio.getFontScale(),
+                    fontFamily: FontFamily.Roboto_Bold,
+                    marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
 
-                    <View style={{ flex: 1 }}>
-                        <Image source={require('../../assets/logo.png')} style={styles.logoStyle} />
+                }]}>{'Registration 👍'}</Animatable.Text>
 
-                        <View style={{
-                            alignSelf: 'center',
-                        }}  >
-                            <Text style={[styles.textStyles, { color: color.white, fontSize: 20 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Italic }]}>{"Create Yout Profile"}</Text>
-                        </View>
-                        <View
-                            style={{
-                                marginTop: height / 9.5,
-                                backgroundColor: color.white,
-                                paddingBottom: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
-                                marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
-                                marginBottom: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
-                                shadowColor: "#000",
-                                shadowOffset: {
-                                    width: 0,
-                                    height: 2,
-                                },
-                                shadowOpacity: 0.25,
-                                shadowRadius: 3.84,
-                                elevation: 5,
-                            }}>
+                <Animatable.Text duration={3000} animation={'fadeIn'} style={[styles.textStyles, {
+                    fontSize: 14 / PixelRatio.getFontScale(),
+                    fontFamily: FontFamily.Roboto_Light,
+                    color: color.gray,
+                    marginTop: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
 
-                            {InputBlock()}
+                }]}>{'Let’s Register. Apply to jobs!'}</Animatable.Text>
+                <View style={{ flex: 1 }}>
+                    <View
+                        style={{
+                            marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
 
-                        </View>
+                        }}>
+
+                        {InputBlock()}
+
                     </View>
-                    <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"normal"} />
-                </ScrollView>
-            </ImageBackground>
+                    <Text style={[styles.textStyles, { textAlign: 'center', fontSize: 14 / PixelRatio.getFontScale(), color: color.gray, marginVertical: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()) }]}>{" ------------------------------ Or continue with ------------------------------"}</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+                        <AntDesign name="google" size={30 / PixelRatio.getFontScale()} color={color.black} />
+                        <AntDesign name="facebook-square" size={30 / PixelRatio.getFontScale()} style={{ marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()) }} color={color.primerycolor} />
+                        <AntDesign name="apple1" size={28 / PixelRatio.getFontScale()} color={color.black} />
+                    </View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()), marginBottom: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()) }}>
+                        <Text style={[styles.textStyles, { color: color.gray }]}>{"Haven’t an account? "}</Text>
+                        <TouchableOpacity activeOpacity={0.6} onPress={() => props.navigation.navigate('SignUpScreen')}>
+                            <Text style={[styles.textStyles, { color: color.primerycolor, fontFamily: FontFamily.Roboto_Bold, fontSize: 12 / PixelRatio.getFontScale() }]}>{"Register"}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"normal"} />
+            </ScrollView>
         </View >
 
     )
@@ -210,11 +224,14 @@ const SignUpScreen = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.black,
+        backgroundColor: color.background,
+        paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())
     },
     logoStyle: {
-        height: PixelRatio.getPixelSizeForLayoutSize(150 / PixelRatio.get()),
-        width: PixelRatio.getPixelSizeForLayoutSize(150 / PixelRatio.get())
+        height: PixelRatio.getPixelSizeForLayoutSize(50 / PixelRatio.get()),
+        width: PixelRatio.getPixelSizeForLayoutSize(150 / PixelRatio.get()),
+        resizeMode: 'contain',
+        marginTop: PixelRatio.getPixelSizeForLayoutSize(50 / PixelRatio.get()),
     },
     btnStyles: {
         backgroundColor: color.golden,
@@ -223,8 +240,8 @@ const styles = StyleSheet.create({
     },
     textStyles: {
         color: color.black,
-        fontSize: 16 / PixelRatio.getFontScale(),
-        fontFamily: FontFamily.Roboto_Light
+        fontSize: 14 / PixelRatio.getFontScale(),
+        fontFamily: FontFamily.Roboto_Regular
     },
     imageStyle: {
         height: PixelRatio.getPixelSizeForLayoutSize(120 / PixelRatio.get()),

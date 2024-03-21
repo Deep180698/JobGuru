@@ -1,138 +1,163 @@
-
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, PixelRatio } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, Image, StyleSheet, PixelRatio } from 'react-native';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import color from '../Utils/Color';
-import { Image } from 'react-native-animatable';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import Entypo from 'react-native-vector-icons/Entypo'
-import AntDesign from 'react-native-vector-icons/AntDesign'
-import Fontisto from 'react-native-vector-icons/Fontisto'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import AppConstants from '../Storage/AppConstants';
 import cacheData from '../Storage/cacheData';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomAlert from '../Component/CustomAlert';
 import FontFamily from '../Utils/FontFamily';
+import CustomButton from '../Component/CustomButton';
 
 function CustomDrawerContent() {
   const navigation = useNavigation();
-  const [alertVisible, setAlertVisible] = useState(false)
-  const [isSucess, setIsSucess] = useState(false)
-  const [message, setMessage] = useState('')
-  const navigateToScreen = (screenName) => {
-    console.log("1111");
-    navigation.navigate(screenName);
-  }
+  const [alertVisible, setAlertVisible] = useState(false);
+  const { authData } = useSelector((state) => state.reducer);
+  const [userDetails, setUserDetails] = useState({
+    firstName: '',
+    lastName: '',
+    profileImage: '',
+  });
 
+  useEffect(() => {
+    getProfileData();
+  }, []);
+
+  const getProfileData = async () => {
+    setUserDetails({
+      ...userDetails,
+      firstName: authData.data.userData.firstName,
+      lastName: authData.data.userData.lastName,
+      profileImage: authData.data.userData.profileImage,
+    });
+  };
 
   const closeAlert = () => {
-
-
-    setAlertVisible(false)
-
+    setAlertVisible(false);
   };
+
   const doLogout = () => {
-    setAlertVisible(false)
-    navigation.dispatch(DrawerActions.closeDrawer())
-
+    setAlertVisible(false);
+    navigation.dispatch(DrawerActions.closeDrawer());
     cacheData.removeAllDataFromCache();
-
-
     setTimeout(() => {
       navigation.reset({
         index: 0,
-        routes: [
-          {
-            name: "AuthScreen",
-          },
-        ],
+        routes: [{ name: 'AuthScreen' }],
       });
     }, 200);
-  }
+  };
+
   return (
     <View style={styles.container}>
-      <View>
-        <Image source={{ uri: 'https://img.freepik.com/free-photo/smiling-young-female-construction-worker-wearing-safety-helmet-safety-vest-holding-pointing-mobile-phone_409827-206.jpg?size=626&ext=jpg&ga=GA1.1.1980120515.1699564547&semt=ais' }} style={styles.imageStyle} />
-      </View>
       {/* Drawer Item */}
       <View style={{ flex: 1 }}>
-        {/* Home */}
-        <TouchableOpacity activeOpacity={0.6} onPress={() => navigateToScreen("HomeScreen")} style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-          <Entypo name='home' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
-          <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"Dashboard"}</Text>
-
+        <View style={{ flexDirection: 'row' }}>
+          <View style={styles.profileContainer}>
+            <Image
+              resizeMode='contain'
+              source={{ uri: `${AppConstants.AsyncKeyLiterals.Base_URL}/${userDetails.profileImage}` }}
+              style={styles.profileStyle}
+            />
+            <Text style={[styles.textStyle, styles.profileName]}>{`${userDetails.firstName} ${userDetails.lastName}`}</Text>
+            <Text style={[styles.textStyle, styles.profileText]}>View Profile</Text>
+          </View>
+          <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.dispatch(DrawerActions.closeDrawer())}>
+            <AntDesign name='close' size={25 / PixelRatio.getFontScale()} color={color.black} />
+          </TouchableOpacity>
+        </View>
+        {/* Menu Items */}
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('HomeScreen')}>
+          <Entypo name='home' size={25 / PixelRatio.getFontScale()} color={color.gray} />
+          <Text style={styles.menuText}>Dashboard</Text>
         </TouchableOpacity>
-        {/* Favourite */}
-        <TouchableOpacity activeOpacity={0.6} onPress={() => navigateToScreen("FavouriteScreen")} style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-          {/* <MaterialIcons name='favorite' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} /> */}
-          <MaterialCommunityIcons
-            name={'bookmark'}
-            size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())}
-            color={color.white}
-          />
-          <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"Favourite"}</Text>
-
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('FavouriteScreen')}>
+          <MaterialCommunityIcons name='bookmark' size={25 / PixelRatio.getFontScale()} color={color.gray} />
+          <Text style={styles.menuText}>Favourite</Text>
         </TouchableOpacity>
-        {/* Edit profile */}
-        <TouchableOpacity activeOpacity={0.6} onPress={() => navigateToScreen("Profile")} style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-          <MaterialCommunityIcons name='account' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
-          <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"Profile"}</Text>
-
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Profile')}>
+          <MaterialCommunityIcons name='account' size={25 / PixelRatio.getFontScale()} color={color.gray} />
+          <Text style={styles.menuText}>Profile</Text>
         </TouchableOpacity>
-        {/* FAQ */}
-        <TouchableOpacity activeOpacity={0.6} onPress={() => navigateToScreen("FaqScreen")} style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-          <MaterialCommunityIcons name='message-question' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
-          <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"FAQ"}</Text>
-
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('FaqScreen')}>
+          <MaterialCommunityIcons name='message-question' size={25 / PixelRatio.getFontScale()} color={color.gray} />
+          <Text style={styles.menuText}>FAQ</Text>
         </TouchableOpacity>
-        {/* report */}
-        <TouchableOpacity activeOpacity={0.6} onPress={() => navigateToScreen("ReportScreen")} style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-          <MaterialIcons name='report' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
-          <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"Report"}</Text>
-
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('ReportScreen')}>
+          <MaterialIcons name='report' size={25 / PixelRatio.getFontScale()} color={color.gray} />
+          <Text style={styles.menuText}>Report</Text>
         </TouchableOpacity>
-        {/* Setting */}
-        <TouchableOpacity activeOpacity={0.6} onPress={() => navigateToScreen("SettingScreen")} style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-          <Fontisto name='player-settings' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
-          <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"Settings and Privacy"}</Text>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('SettingScreen')}>
+          <Fontisto name='player-settings' size={25 / PixelRatio.getFontScale()} color={color.gray} />
+          <Text style={styles.menuText}>Settings and Privacy</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem} onPress={() => setAlertVisible(true)}>
+          <MaterialCommunityIcons name='logout' size={25 / PixelRatio.getFontScale()} color={color.red} />
+          <Text style={styles.menuText}>Logout</Text>
         </TouchableOpacity>
       </View>
-      {/* Logout */}
-      <TouchableOpacity activeOpacity={0.6} onPress={() => setAlertVisible(true)} style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()), marginBottom: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()), marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-        <MaterialCommunityIcons name='logout' size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} color={color.white} />
-        <Text style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>{"Logout"}</Text>
-      </TouchableOpacity>
-      <CustomAlert visible={alertVisible} message={"Do you want to logut ?"} onSucess={doLogout} onClose={() => closeAlert()} alert={"logout"} />
-
+      {/* Login btn */}
+      <CustomButton
+        onPress={()=>{}}
+        text="Go Premium"
+        backgroundColor={color.primerycolor}
+        textColor={color.white}
+      />
+      <CustomAlert visible={alertVisible} message='Do you want to logout?' onSucess={doLogout} onClose={closeAlert} alert='logout' />
     </View>
   );
 }
+
 export default CustomDrawerContent;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.black
+    backgroundColor: color.background,
+    paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
   },
-  imageStyle: {
-    height: PixelRatio.getPixelSizeForLayoutSize(150 / PixelRatio.get()),
+  profileContainer: {
+    flex: 1,
+    marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
+    alignItems: 'center',
   },
   profileStyle: {
-    height: PixelRatio.getPixelSizeForLayoutSize(50 / PixelRatio.get()),
-    width: PixelRatio.getPixelSizeForLayoutSize(50 / PixelRatio.get()),
+    height: PixelRatio.getPixelSizeForLayoutSize(120 / PixelRatio.get()),
+    width: PixelRatio.getPixelSizeForLayoutSize(120 / PixelRatio.get()),
     borderRadius: PixelRatio.getPixelSizeForLayoutSize(200 / PixelRatio.get()),
-    resizeMode: "contain"
+    resizeMode: 'contain',
   },
-  heartPositionStyle: {
-    position: 'absolute',
-    right: 0,
-    marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-    marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
-  },
-  textStyle: {
-    fontSize: 12 / PixelRatio.getFontScale(),
-    color: color.white,
-    fontFamily: FontFamily.Roboto_Light
+  profileName: {
+    fontSize: 25 / PixelRatio.getFontScale(),
+    fontFamily: FontFamily.Roboto_Bold,
+    marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    color: color.black,
 
-  }
-})
+  },
+  profileText: {
+    fontSize: 16 / PixelRatio.getFontScale(),
+    color: color.primerycolor,
+    fontFamily: FontFamily.Roboto_Regular,
+    marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    marginBottom: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+    marginVertical: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
+  },
+
+  menuText: {
+    marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    fontSize: 14 / PixelRatio.getFontScale(),
+    color: color.black,
+    fontFamily: FontFamily.Roboto_Regular,
+  },
+});

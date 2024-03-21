@@ -132,83 +132,112 @@ const HomeScreen = (props) => {
       uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + image?.name
     }));
 
+    console.log(item);
     return (
-      <View style={styles.container}>
+      <View style={{ flex: 1, backgroundColor: color.background }}>
         <View style={styles.cardContainer}>
-          <View style={styles.imageContainer}>
-            <ImageCarousel style={styles.containerImageStyle} images={formattedImages} />
-          </View>
-          <TouchableOpacity style={styles.favoriteButton} onPress={() => onSelectFavourite(item)}>
-            <Animatable.View animation={item.isFavourite ? 'bounceIn' : null}>
-              <Ionicons
-                name={item.isFavourite ? 'heart' : 'heart-outline'}
-                size={20}
-                color={color.white}
-              />
-            </Animatable.View>
-          </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.6}
             onPress={() => props.navigation.navigate('DetailsPostScreen', { postData: item })}
-            style={styles.detailsContainer}
+            style={styles._detailsContainer}
           >
-            <Image source={{ uri: `${AppConstants.AsyncKeyLiterals.Base_URL}/${item.UserData.profileImage}` }} style={styles.profileStyle} />
-            <Text numberOfLines={2} style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
-              {item.title}
-            </Text>
+            <Image source={{ uri: `${AppConstants.AsyncKeyLiterals.Base_URL}/${item.UserData.profileImage}` }} style={styles.profileStyle1} />
+            <View style={{ flex: 1 }}>
+              <Text numberOfLines={2} style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), fontFamily: FontFamily.Roboto_black }]}>
+                {item.title}
+              </Text>
+              <Text numberOfLines={2} style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
+                {item.description}
+              </Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Text numberOfLines={2} style={[styles.textStyle, { marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
+                  {item.salary}
+                </Text>
+                <Text numberOfLines={2} style={[styles.textStyle, { marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
+                  {item.address}
+                </Text>
+              </View>
+              <Text numberOfLines={2} style={[styles.textStyle, { flex: 1, marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
+                {item.jobType}
+              </Text>
+            </View>
           </TouchableOpacity>
         </View>
+        <TouchableOpacity style={styles.favoriteButton} onPress={() => onSelectFavourite(item)}>
+          <Animatable.View animation={item.isFavourite ? 'bounceIn' : null}>
+
+            <Ionicons
+              name={item.isFavourite ? 'heart' : 'heart-outline'}
+              size={20}
+              color={color.white}
+            />
+          </Animatable.View>
+        </TouchableOpacity>
       </View>
     );
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: color.bgWhite }}>
+    <View style={styles.container}>
       <CustomLoader isVisible={false} />
-      <View>
-        <Header screenName={'Home'} profileImage={userDetails.profileImage} title={`${userDetails.firstName} ${userDetails.lastName}`} onNavigate={onNavigateScreen} onPress={() => props.navigation.openDrawer()} />
-        <View style={styles.searchbarContainer}>
-          <Searchbar
-            style={styles.searchbarStyle}
-            value={searchText}
-            inputStyle={styles.textStyle}
-            onChangeText={(i) => setSearchText(i)}
-            placeholder='Search job'
-          />
+      <Header screenName={'Home'} onPress={() => props.navigation.openDrawer()} />
+
+      <View style={{ flexDirection: 'row' }}>
+
+        <View style={{ flex: 1 }}>
+          <Animatable.Text duration={3000} animation={'fadeIn'} style={[styles.textStyle, {
+            fontSize: 18 / PixelRatio.getFontScale(),
+            fontFamily: FontFamily.Roboto_Regular,
+            color: color.gray,
+            marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+
+          }]}>{'Welcome Back!'}</Animatable.Text>
+
+          <Animatable.Text duration={3000} animation={'fadeIn'} style={[styles.textStyle, {
+            fontSize: 28 / PixelRatio.getFontScale(),
+            fontFamily: FontFamily.Roboto_Bold,
+            color: color.black,
+            marginTop: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+
+          }]}>{`${userDetails.firstName} ${userDetails.lastName} 👋`}</Animatable.Text>
         </View>
-      </View>
-      <ScrollView style={{ backgroundColor: color.bgWhite }} refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={() => {
-            setRefreshing(true);
-            getPostData();
-          }}
+        <Image
+          resizeMode='contain'
+          source={{ uri: `${AppConstants.AsyncKeyLiterals.Base_URL}/${userDetails.profileImage}` }}
+          style={styles.profileStyle}
         />
-      } showsVerticalScrollIndicator={false}>
-        <View style={styles.bannerContainer}>
-          <FlatList
-            data={bannerData}
-            keyExtractor={(item) => item.id}
-            renderItem={renderItem1}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-          />
-        </View>
-        <View style={styles.listContainer}>
-          <FlatList
-            ref={flatListRef}
-            data={data}
-            numColumns={2}
-            renderItem={renderItem}
-            ListEmptyComponent={() => {
-              return (
-                <NoRecordFound title={"No Post Found"} />
-              );
-            }}
-          />
-        </View>
-      </ScrollView>
+
+      </View>
+      <View style={styles.searchbarContainer}>
+        <Searchbar
+          style={styles.searchbarStyle}
+          value={searchText}
+          inputStyle={styles.textStyle}
+          onChangeText={(i) => setSearchText(i)}
+          placeholder='Search a job or position'
+          placeholderTextColor={color.placeholdertext}
+          iconColor={color.placeholdertext}
+        />
+      </View>
+      <View style={styles.bannerContainer}>
+        <FlatList
+          data={bannerData}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem1}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
+      <FlatList
+        ref={flatListRef}
+        data={data}
+        renderItem={renderItem}
+        ListEmptyComponent={() => {
+          return (
+            <NoRecordFound title={"No Post Found"} />
+          );
+        }}
+      />
       <CustomNormalRBottomSheet Height={100} data={(i) => { console.log(i) }} onClose={() => closeBottomSheet()} getCall={'myPostContainer'} refBottomSheet={bottomSheetRef} />
       <CustomNormalRBottomSheet Height={100} onClose={() => closeBottomSheet1()} getCall={'otherPostContainer'} refBottomSheet={bottomSheetRef1} />
     </View>
@@ -218,15 +247,19 @@ const HomeScreen = (props) => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
+    flex: 1,
+    backgroundColor: color.background
+  },
   bannerContainer: {
-    backgroundColor: color.bgWhite,
-    marginTop: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()),
+    backgroundColor: color.background,
   },
   bannerItem: {
     backgroundColor: color.white,
-    marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+    marginVertical: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
     marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-    paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+    paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     borderTopLeftRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     borderTopRightRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     justifyContent: 'center',
@@ -236,7 +269,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.20,
     shadowRadius: 1.41,
     elevation: PixelRatio.getPixelSizeForLayoutSize(2 / PixelRatio.get()),
-    marginBottom: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
     borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
   },
   bannerItemContainer: {
@@ -254,24 +286,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',  // Ensure the search icon and text are aligned horizontally
     alignItems: 'center',  // Align items in the center vertically
     justifyContent: 'center', // Align items in the center horizontally
-    backgroundColor: color.white,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-    position: 'absolute',
-    width: '90%',
     alignSelf: 'center',
     bottom: PixelRatio.getPixelSizeForLayoutSize(0 / PixelRatio.get()),
-    marginBottom:PixelRatio.getPixelSizeForLayoutSize(-30 / PixelRatio.get()),
-    zIndex: 2
+    marginVertical: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
   },
   searchbarStyle: {
-    flex: 1,  // Ensure the Searchbar takes up all available space
-    borderRadius: 20,
-    backgroundColor: color.white,
-    borderRadius: 20,
+    borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    backgroundColor: color.searchbtn,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -284,18 +305,9 @@ const styles = StyleSheet.create({
     width: width / 2 - PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
     height: height * 0.3,
   },
-  container: {
-    width: width / 2 - PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-    margin: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get())
-  },
+
   cardContainer: {
-    backgroundColor: color.white,
-    borderRadius: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+    backgroundColor: color.white
   },
   imageContainer: {
     backgroundColor: color.white,
@@ -310,29 +322,37 @@ const styles = StyleSheet.create({
   },
   favoriteButton: {
     position: 'absolute',
-    backgroundColor: color.transparent,
-    right: PixelRatio.getPixelSizeForLayoutSize(0 / PixelRatio.get()),
-    shadowColor: '#000',
-    shadowOffset: { width: PixelRatio.getPixelSizeForLayoutSize(0 / PixelRatio.get()), height: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) },
+    top: 0,
+    zIndex: 1,
+    backgroundColor: color.tranperant,
+    shadowColor: '#ffffff',
+    shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.34,
     shadowRadius: 6.27,
-    elevation: 10,
+    elevation: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+    right: PixelRatio.getPixelSizeForLayoutSize(0 / PixelRatio.get()),
     padding: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
     borderRadius: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()),
     marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
   },
-  detailsContainer: {
+  _detailsContainer: {
     marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   profileStyle: {
-    height: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()),
-    width: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()),
-    borderRadius: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
-    resizeMode: "contain"
+    height: PixelRatio.getPixelSizeForLayoutSize(80 / PixelRatio.get()),
+    width: PixelRatio.getPixelSizeForLayoutSize(80 / PixelRatio.get()),
+    borderRadius: PixelRatio.getPixelSizeForLayoutSize(200 / PixelRatio.get()),
+    resizeMode: "contain",
+  },
+  profileStyle1: {
+    height: PixelRatio.getPixelSizeForLayoutSize(50 / PixelRatio.get()),
+    width: PixelRatio.getPixelSizeForLayoutSize(50 / PixelRatio.get()),
+    borderRadius: PixelRatio.getPixelSizeForLayoutSize(200 / PixelRatio.get()),
+    resizeMode: "contain",
   },
   iconStyle: {
     height: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()),
@@ -340,7 +360,7 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   textStyle: {
-    fontSize: 12 / PixelRatio.getFontScale(),
+    fontSize: 14 / PixelRatio.getFontScale(),
     color: color.black,
     fontFamily: FontFamily.Roboto_Light,
   },
