@@ -67,7 +67,8 @@ const CustomRBottomSheet = ({ refBottomSheet, getCall, data }) => {
         container: {
           borderTopLeftRadius: 10,
           borderTopRightRadius: 10,
-
+          paddingHorizontal:20,
+          backgroundColor:color.background
         },
         // Conditionally set the height based on getCall
 

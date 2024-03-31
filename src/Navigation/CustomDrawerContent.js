@@ -31,9 +31,9 @@ function CustomDrawerContent() {
   const getProfileData = async () => {
     setUserDetails({
       ...userDetails,
-      firstName: authData.data.userData.firstName,
-      lastName: authData.data.userData.lastName,
-      profileImage: authData.data.userData.profileImage,
+      firstName: authData?.data?.userData?.firstName,
+      lastName: authData?.data?.userData?.lastName,
+      profileImage: authData?.data?.userData?.profileImage,
     });
   };
 

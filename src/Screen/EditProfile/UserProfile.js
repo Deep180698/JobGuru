@@ -47,17 +47,12 @@ const UserProfile = (props) => {
     // render list
     const renderItem = ({ item, index }) => {
 
-        const formattedImages = item?.images.map((image) => ({
-            uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + image?.name
-        }));
 
         return (
 
             <View style={styles.container}>
                 <View style={styles.cardContainer}>
-                    <View style={styles.imageContainer}>
-                        <ImageCarousel paginationStyle={{ position: 'relative' }} style={styles.containerImageStyle} images={formattedImages} />
-                    </View>
+
                     <TouchableOpacity style={styles.favoriteButton} onPress={() => onSelectFavourite(item, index)}>
                         <Animatable.View animation={item.isFavourite ? 'bounceIn' : null}>
                             <Ionicons
@@ -82,80 +77,65 @@ const UserProfile = (props) => {
         )
     }
     return (
-        <View style={{ flex: 1, backgroundColor: color.bgWhite }}>
+        <View style={styles.container}>
             <CustomLoader isVisible={loading} />
-            <Header screenName={'normal'} title={"Profile"} onPress={() => props.navigation.goBack()} />
-            <ScrollView>
-                <View style={{ marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                    <View style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        flex: 1,
-                        marginTop: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get())
-                    }}>
-                        <View style={{ flex: 0.3 }}>
-                            {data && data.profileImage && (
-                                <Image style={styles.imageContainer1} source={{ uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + data.profileImage }} />
-                            )}
-                        </View>
-                        <View style={{ flex: 0.7, alignItems: 'center' }}>
-                            <TouchableOpacity activeOpacity={0.6} onPress={() => props.navigation.navigate('Profile')}>
-                                <Text style={[styles.textStyle, {
-                                    marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-                                    paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-                                    paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(40 / PixelRatio.get()),
-                                    borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
-                                    fontFamily: FontFamily.Roboto_Regular,
-                                    borderWidth: 1,
-                                    fontSize: 14 / PixelRatio.getFontScale()
-                                }]}>
-                                    {'Edit Profile'}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                        {data && data.firstName && data.lastName && (
-                            <Text style={[styles.textStyle]}>
-                                {data.firstName + ' ' + data.lastName}
-                            </Text>)}
-                        {data && data.mobileNumber && (
-                            <Text style={[styles.textStyle]}>
-                                {data.mobileNumber}
-                            </Text>)}
-                    </View>
-                </View>
-                <View style={{
-                    justifyContent: 'center',
-                    borderColor: color.gray,
-                    borderBottomWidth: 1,
-                    backgroundColor: color.white,
-                    marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
+            <Header screenName={'userProfile'} title={"Profile"} onNavigate={()=>props.navigation.navigate('Profile')} onPress={() => props.navigation.goBack()} />
+            <View style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
+            }}>
+                {data && data.profileImage && (
+                    <Image style={styles.imageContainer1} source={{ uri: AppConstants.AsyncKeyLiterals.Base_URL + '/' + data.profileImage }} />
+                )}
+                {data && data.firstName && data.lastName && (
+                    <Text style={[styles.textStyle, { fontSize: 22 / PixelRatio.getFontScale(), fontFamily: FontFamily.Roboto_Bold, marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
+                        {data.firstName + ' ' + data.lastName}
+                    </Text>)}
 
-                }} >
-                    <Text style={[styles.textStyle, {
-                        fontFamily: FontFamily.Roboto_Regular,
-                        textAlign: 'center',
-                        fontSize: 14 / PixelRatio.getFontScale(),
-                        color: color.black,
-                        marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get())
+            </View>
+            <View style={{
+                flexDirection: 'row',
+                marginTop: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()),
+            }}>
+                <TouchableOpacity style={styles.boxContainer}>
+                    <Text style={[styles.boxtextStyle, { fontFamily: FontFamily.Roboto_Bold }]}>{'27'}</Text>
+                    <Text style={[styles.boxtextStyle, { color: color.textColor1 }]}>{'Applied'}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.boxContainer}>
+                    <Text style={[styles.boxtextStyle, { fontFamily: FontFamily.Roboto_Bold }]}>{'19'}</Text>
+                    <Text style={[styles.boxtextStyle, { color: color.textColor1 }]}>{'Reviewed'}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.boxContainer}>
+                    <Text style={[styles.boxtextStyle, { fontFamily: FontFamily.Roboto_Bold }]}>{'14'}</Text>
+                    <Text style={[styles.boxtextStyle, { color: color.textColor1 }]}>{'Interview'}</Text>
+                </TouchableOpacity>
 
-                    }]}>
-                        {'Post'}
-                    </Text>
-                </View>
-                {/* List Data */}
-                <FlatList
-                    data={postData}
-                    numColumns={2}
-                    renderItem={renderItem}
-                    ListEmptyComponent={() => {
-                        return (
-                            <NoRecordFound title={"No Post Found"} />
-                        )
-                    }}
-                />
-            </ScrollView>
+            </View>
+
+            <View style={{
+                flexDirection: 'row',
+                marginTop: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()),
+                justifyContent: 'space-between',
+                
+
+            }}>
+                <Text style={[styles.boxtextStyle, { flex: 1, fontFamily: FontFamily.Roboto_Bold, fontSize: 18 / PixelRatio.getFontScale() }]}>{'Resume'}</Text>
+                <TouchableOpacity onPress={() => props.navigation.navigate('FileUpload')} style={[{}]}>
+                    <Text style={[styles.boxtextStyle, { color: color.primerycolor, fontFamily: FontFamily.Roboto_Regular, fontSize: 18 / PixelRatio.getFontScale() }]}>{'Add Resume'}</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={{
+                flexDirection: 'row',
+                marginTop: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()),
+                justifyContent: 'space-between',
+
+            }}>
+                <Text style={[styles.boxtextStyle, { flex: 1, fontFamily: FontFamily.Roboto_Bold, fontSize: 18 / PixelRatio.getFontScale() }]}>{'Portfolio'}</Text>
+                <TouchableOpacity style={[{}]}>
+                    <Text style={[styles.boxtextStyle, { color: color.primerycolor, fontFamily: FontFamily.Roboto_Regular, fontSize: 18 / PixelRatio.getFontScale() }]}>{'See All'}</Text>
+                </TouchableOpacity>
+            </View>
         </View>
 
     );
@@ -164,8 +144,8 @@ const UserProfile = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: color.background,
+        paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())
     },
     textStyle: {
         fontSize: 14 / PixelRatio.getFontScale(),
@@ -174,8 +154,8 @@ const styles = StyleSheet.create({
     },
     imageContainer1: {
         resizeMode: 'contain',
-        width: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()),
-        height: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()),
+        width: PixelRatio.getPixelSizeForLayoutSize(120 / PixelRatio.get()),
+        height: PixelRatio.getPixelSizeForLayoutSize(120 / PixelRatio.get()),
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(100 / PixelRatio.get()),
     },
     containerImageStyle: {
@@ -184,10 +164,7 @@ const styles = StyleSheet.create({
         width: width / 2 - PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), // Adjusted width
         height: height * 0.3, // Adjust the percentage as needed
     },
-    container: {
-        width: width / 2 - PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), // Adjusted width
-        margin: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get())
-    },
+
     cardContainer: {
         backgroundColor: color.white,
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()),
@@ -238,6 +215,17 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
+    boxContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    boxtextStyle: {
+        fontSize: 16 / PixelRatio.getFontScale(),
+        color: color.black,
+        fontFamily: FontFamily.Roboto_Regular,
+        marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get())
+    }
 });
 
 export default UserProfile;

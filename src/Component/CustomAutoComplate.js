@@ -5,7 +5,7 @@ import CustomTextInput from './CustomTextInput'
 import FontFamily from '../Utils/FontFamily'
 import CustomButton from './CustomButton'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-const { width, height } = Dimensions.get('screen')
+const { width, height } = Dimensions.get('window')
 const CustomAutoComplate = ({ title, press }) => {
     const [data, setData] = useState('')
     const [texts, setTexts] = useState([]);
@@ -46,20 +46,21 @@ const CustomAutoComplate = ({ title, press }) => {
         <View style={styles.container}>
             <View style={{ marginHorizontal: 10, flex: 1 }}>
 
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', justifyContent:'center',alignItems: 'center' }}>
                     <CustomTextInput
                         value={data}
                         onChangeText={(i) => setData(i)}
                         type={"whiteBc"}
-                        style={{ width: width - PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()) }}
+                        style={{ width:width -  PixelRatio.getPixelSizeForLayoutSize(70 / PixelRatio.get())}}
                         placeholder={title}
                     />
                     <TouchableOpacity onPress={handleAddText} style={[styles.item, {
-                        position: 'absolute', right: 10, paddingVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+                        position: 'absolute', right: 10,
                         paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
                     }]}>
                         <Text style={[styles.textStyles]}>{'Add'}</Text>
                     </TouchableOpacity>
+                   
                 </View>
 
                 <View style={{
@@ -75,9 +76,13 @@ const CustomAutoComplate = ({ title, press }) => {
                         numColumns={3}
                     />
                 </View>
-                <TouchableOpacity onPress={() => press(texts)} style={[styles.btnStyles]}>
-                    <Text style={styles.btnTextStyles}>{'Done'}</Text>
-                </TouchableOpacity>
+                <CustomButton
+                    onPress={() => press(texts)}
+                    text="Done"
+                    backgroundColor={color.primerycolor}
+                    textColor={color.white}
+                />
+
             </View>
 
         </View>
@@ -89,7 +94,8 @@ export default CustomAutoComplate
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.white,
+        backgroundColor: color.background,
+
     },
     textStyles: {
         color: color.white,
@@ -98,7 +104,7 @@ const styles = StyleSheet.create({
 
     },
     item: {
-        backgroundColor: color.black,
+        backgroundColor: color.primerycolor,
         marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
         paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
         paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),

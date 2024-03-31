@@ -16,6 +16,7 @@ import FaqScreen from '../Screen/FAQ/FaqScreen';
 import ReportScreen from '../Screen/Report/ReportScreen';
 import FavouriteScreen from '../Screen/Favourite/FavouriteScreen';
 import Profile from '../Screen/EditProfile/Profile';
+import FileUpload from '../Screen/EditProfile/FileUpload';
 import UserProfile from '../Screen/EditProfile/UserProfile';
 import PostScreen from '../Screen/Post/PostScreen';
 import DetailsPostScreen from '../Screen/Post/DetailsPostScreen';
@@ -69,7 +70,7 @@ const AuthStackNavigator = () => {
 
   return (
    
-        <Stack.Navigator initialRouteName={"AuthScreen"} screenOptions={{
+        <Stack.Navigator initialRouteName={"SplashScreen"} screenOptions={{
           headerShown: false,
           cardStyleInterpolator: SlideFromRight,
           
@@ -91,6 +92,7 @@ const AuthStackNavigator = () => {
           <Stack.Screen name="FavouriteScreen" component={FavouriteScreen} />
           <Stack.Screen name="UserProfile" component={UserProfile} />
           <Stack.Screen name="Profile" component={Profile} />
+          <Stack.Screen name="FileUpload" component={FileUpload} />
           <Stack.Screen name="SettingScreen" component={SettingScreen} />
           <Stack.Screen name="PostScreen" component={PostScreen} />
           <Stack.Screen name="ImageSelection" component={ImageSelection} />

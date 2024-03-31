@@ -18,6 +18,11 @@ const color ={
     placeholdertext:'#95969D',
     cardColor1:'#EBF1FF',
     cardColor:'#FFEBF3',
+
+
+    background1:'#F2F2F3',
+
+    textColor1:'#AFB0B6'
 }
 
 export default color;

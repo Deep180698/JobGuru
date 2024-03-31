@@ -24,6 +24,7 @@ const LoginScreen = (props) => {
     const [isVisible, setIsVisible] = useState(false)
     const [alertVisible, setAlertVisible] = useState(false)
     const [isSucess, setIsSucess] = useState(false)
+    const [isUser, setIsUser] = useState(true)
     const [message, setMessage] = useState('')
 
     const dispatch = useDispatch();
@@ -54,7 +55,6 @@ const LoginScreen = (props) => {
             if (response.status === 200) {
 
                 dispatch(authFunc(response.data))
-
                 const asyncItem = AppConstants.AsyncKeyLiterals;
                 cacheData.saveDataToCachedWithKey(asyncItem.isLoggedIn, true);
                 cacheData.saveDataToCachedWithKey(asyncItem.IS_AUTH, response.data);
@@ -149,6 +149,14 @@ const LoginScreen = (props) => {
                             marginTop: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get())
                         }}>
 
+                            <View style={{ flexDirection: 'row' ,borderWidth:1,borderColor:color.gray,borderRadius:PixelRatio.getPixelSizeForLayoutSize(5/PixelRatio.get())}}>
+                                <TouchableOpacity onPress={()=>setIsUser(true)}activeOpacity={0.6} style={{ flex: 1, backgroundColor: isUser ? color.primerycolor : color.white ,borderTopLeftRadius:PixelRatio.getPixelSizeForLayoutSize(5/PixelRatio.get()),borderBottomLeftRadius:PixelRatio.getPixelSizeForLayoutSize(5/PixelRatio.get()) ,paddingVertical:PixelRatio.getPixelSizeForLayoutSize(10/PixelRatio.get()) }}>
+                                    <Text style={[styles.textStyles, { textAlign: 'center',color: isUser ? color.white : color.black }]}>{'User Login'}</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={()=>setIsUser(false)} activeOpacity={0.6}style={{ flex: 1,backgroundColor: isUser ? color.white : color.primerycolor,paddingVertical:PixelRatio.getPixelSizeForLayoutSize(10/PixelRatio.get()),borderTopRightRadius:PixelRatio.getPixelSizeForLayoutSize(5/PixelRatio.get()),borderBottomRightRadius:PixelRatio.getPixelSizeForLayoutSize(5/PixelRatio.get()) }}>
+                                    <Text style={[styles.textStyles, { textAlign: 'center',color: isUser ? color.black : color.white }]}>{'Company Login'}</Text>
+                                </TouchableOpacity>
+                            </View>
                             {/* Email Style*/}
                             <CustomTextInput
                                 value={email}

@@ -51,6 +51,7 @@ const PostScreen = (props) => {
         texts: [],
         isNext: '2',
         description: '',
+        requirement: '',
         message: '',
         salary: '',
         selectedType: [],
@@ -104,6 +105,7 @@ const PostScreen = (props) => {
         const formData = new FormData();
         formData.append("title", state.title)
         formData.append("description", state.description)
+        formData.append("requirement", state.requirement)
         formData.append("salary", state.salary)
         formData.append("skills", state.texts.join(', '))
         formData.append("jobType", state.selectedType.join(', '))
@@ -193,11 +195,11 @@ const PostScreen = (props) => {
             <View style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                width: screenWidth/2.7,
+                width: screenWidth / 2.7,
                 marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
                 marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
             }}>
-                <Text style={[styles.textStyles,{flex:0.8}]}>{item}</Text>
+                <Text style={[styles.textStyles, { flex: 0.8 }]}>{item}</Text>
 
                 <Checkbox
                     label={item}
@@ -218,34 +220,10 @@ const PostScreen = (props) => {
 
                     {/* description */}
                     <View style={{ marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                     
 
-                        <View style={{ flexDirection: 'row' }}>
 
-                            <View style={{ flex: 1 }}>
-                                <Animatable.Text duration={3000} animation={'fadeIn'} style={[styles.textStyles, {
-                                    fontSize: 18 / PixelRatio.getFontScale(),
-                                    fontFamily: FontFamily.Roboto_Regular,
-                                    color: color.gray,
-                                    marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
 
-                                }]}>{'Create New Post!'}</Animatable.Text>
 
-                                <Animatable.Text duration={3000} animation={'fadeIn'} style={[styles.textStyles, {
-                                    fontSize: 28 / PixelRatio.getFontScale(),
-                                    fontFamily: FontFamily.Roboto_Bold,
-                                    color: color.black,
-                                    marginTop: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-
-                                }]}>{`${state.firstName} ${state.lastName} 👍`}</Animatable.Text>
-                            </View>
-                            <Image
-                                resizeMode='contain'
-                                source={{ uri: `${AppConstants.AsyncKeyLiterals.Base_URL}/${state.profileImage}` }}
-                                style={styles.profileStyle}
-                            />
-
-                        </View>
                         <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), }}>
 
                             {/* Titile */}
@@ -316,6 +294,17 @@ const PostScreen = (props) => {
                                         keyExtractor={(item, index) => index.toString()}
                                         numColumns={3}
                                     />
+
+                                    {/* Requirment  */}
+                                    <CustomTextInput
+                                        value={state.requirement}
+                                        onChangeText={(i) => setState({
+                                            ...state,
+                                            requirement: i
+                                        })}
+                                        type={"Address"}
+                                        placeholder={"Requirement"}
+                                    />
                                     {/* Addition note */}
                                     <CustomTextInput
                                         value={state.additionalNote}
@@ -352,18 +341,18 @@ const PostScreen = (props) => {
                             </ View>
                         </View>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-                      {/* Create Post */}
-                      <CustomButton
+                            {/* Create Post */}
+                            <CustomButton
                                 onPress={createPost}
                                 text="Create"
                                 backgroundColor={color.primerycolor}
                                 textColor={color.white}
-                                btnStyle={{flex:1}}
+                                btnStyle={{ flex: 1 }}
                             />
-                       
+
+                        </View>
                     </View>
-                    </View>
-                   
+
                 </View>
             </View>
 
@@ -372,8 +361,6 @@ const PostScreen = (props) => {
     return (
         <View style={styles.container}>
             <CustomLoader isVisible={isVisible} />
-
-
             <Header screenName={"normal"} title={'Post'} onPress={() => props.navigation.goBack()} />
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
 
@@ -459,7 +446,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     item: {
-        backgroundColor: color.black,
+        backgroundColor: color.primerycolor,
         marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
         paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
         paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),

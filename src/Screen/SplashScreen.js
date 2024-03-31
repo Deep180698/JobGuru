@@ -22,6 +22,7 @@ const SplashScreen = (props) => {
     const isLoggedIn = await cacheData.getDataFromCachedWithKey(
       AppConstants.AsyncKeyLiterals.isLoggedIn,
     );
+
     if (isLoggedIn) {
       const userData = await cacheData.getDataFromCachedWithKey(
         AppConstants.AsyncKeyLiterals.IS_AUTH,

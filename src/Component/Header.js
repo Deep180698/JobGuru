@@ -25,21 +25,45 @@ const Header = ({ screenName, onPress, onNavigate, title, profileImage }) => {
             <Appbar.Content titleStyle={styles.textStyles} color={color.white} title={title} />
         </Appbar.Header>
     );
+    const renderUserProfileHeader = () => (
+        <Appbar.Header style={[styles.headerContainer, styles.normalHeader,{justifyContent:'space-between'}]}>
+            <TouchableOpacity style={{marginRight:PixelRatio.getPixelSizeForLayoutSize(10/PixelRatio.get())}} activeOpacity={0.6} onPress={onPress}>
+                <AntDesign name='left' size={25 / PixelRatio.getFontScale()} color={color.black} />
+            </TouchableOpacity>
+            <TouchableOpacity  style={{marginRight:PixelRatio.getPixelSizeForLayoutSize(10/PixelRatio.get())}} activeOpacity={0.6} onPress={onNavigate}>
+                <Text style={[styles.textStyles,{color:color.textColor1}]}>{"Edit"}</Text>
+            </TouchableOpacity>
+        </Appbar.Header>
+    );
+    const renderFileUploadHeader = () => (
+        <Appbar.Header style={[styles.headerContainer, styles.normalHeader,{justifyContent:'space-between'}]}>
+            <TouchableOpacity style={{marginRight:PixelRatio.getPixelSizeForLayoutSize(10/PixelRatio.get())}} activeOpacity={0.6} onPress={onPress}>
+                <AntDesign name='left' size={25 / PixelRatio.getFontScale()} color={color.black} />
+            </TouchableOpacity>
+            <Appbar.Content titleStyle={styles.textStyles} color={color.white} title={title} />
+
+            <TouchableOpacity  style={{marginRight:PixelRatio.getPixelSizeForLayoutSize(10/PixelRatio.get())}} activeOpacity={0.6} onPress={onNavigate}>
+                <Text style={[styles.textStyles,{color:color.textColor1}]}>{"Skip"}</Text>
+            </TouchableOpacity>
+        </Appbar.Header>
+    );
 
     return (
         <View>
             {screenName === "Home" && renderHomeHeader()}
             {screenName === "normal" && renderNormalHeader()}
+            {screenName === "userProfile" && renderUserProfileHeader()}
+            {screenName === "fileUpload" && renderFileUploadHeader()}
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     headerContainer: {
+    
         backgroundColor: color.background,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
     },
     profileStyle: {
         height: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()),
