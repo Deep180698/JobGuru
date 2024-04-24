@@ -211,7 +211,7 @@ const Profile = (props) => {
             headers: headers
         }).then(response => {
 
-            console.log("responce Data ====> ",response);
+            console.log("responce Data ====> ", response);
             authData.data.userData = response.data.userData
 
             const asyncItem = AppConstants.AsyncKeyLiterals;
@@ -368,7 +368,13 @@ const Profile = (props) => {
 
 
                     {/* Login btn */}
-                    <CustomButton press={validatefunc} style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()), }} text="Update" />
+                  
+                    <CustomButton
+                        onPress={validatefunc}
+                        text="Update"
+                        backgroundColor={color.primerycolor}
+                        textColor={color.white}
+                    />
                 </View>
                 <CustomNormalRBottomSheet Height={120} refBottomSheet={bottomSheetRef} multiple={false} getCall="imageSelection" data={(item) => getImages(item)} />
                 <CustomAlert isSucess={isSucess} visible={alertVisible} message={message} onClose={closeAlert} alert={"normal"} />

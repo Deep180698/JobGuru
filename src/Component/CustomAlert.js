@@ -37,7 +37,7 @@ const CustomAlert = ({ visible, message, onClose, alert, onSucess }) => {
               paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get()),
               paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
             }}>
-              <Text style={[styles.textStyles, { paddingVertical: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }]}>{message}</Text>
+              <Text style={[styles.textStyles, { fontSize:16/PixelRatio.getFontScale(),paddingVertical: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }]}>{message}</Text>
               <View style={{
                 flexDirection: 'row', alignSelf: 'flex-end',
                 paddingVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
     marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(30 / PixelRatio.get()),
-    backgroundColor: color.black,
+    backgroundColor: color.primerycolor,
     justifyContent: 'center',
 
   },

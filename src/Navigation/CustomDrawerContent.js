@@ -26,6 +26,7 @@ function CustomDrawerContent() {
 
   useEffect(() => {
     getProfileData();
+    console.log(authData);
   }, []);
 
   const getProfileData = async () => {

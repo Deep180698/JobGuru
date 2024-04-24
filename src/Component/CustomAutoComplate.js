@@ -81,6 +81,7 @@ const CustomAutoComplate = ({ title, press }) => {
                     text="Done"
                     backgroundColor={color.primerycolor}
                     textColor={color.white}
+                    btnStyle={{marginVertical:PixelRatio.getPixelSizeForLayoutSize(20/PixelRatio.get())}}
                 />
 
             </View>

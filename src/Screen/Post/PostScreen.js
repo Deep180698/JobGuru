@@ -3,14 +3,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import color from '../../Utils/Color'
 import Header from '../../Component/Header'
 const screenWidth = Dimensions.get('window').width;
-// import { Checkbox } from 'react-native-paper';
-import { Checkbox } from 'react-native-paper'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import FontFamily from '../../Utils/FontFamily'
-import { Wizard } from 'react-native-ui-lib';
 import CustomTextInput from '../../Component/CustomTextInput'
-import CustomAddress from '../../Component/CustomAddress'
 import cacheData from '../../Storage/cacheData';
 import AppConstants from '../../Storage/AppConstants';
 import axios from 'axios';
@@ -20,41 +15,55 @@ import CustomAlert from '../../Component/CustomAlert';
 import CustomLoader from '../../Component/CustomLoader';
 import * as Animatable from 'react-native-animatable';
 import CustomButton from '../../Component/CustomButton';
-
-const checkboxItems = [
-    'FullTime', 'PartTime', 'Seasonal',
-    'Contract', 'Freelance', 'Internship',
-    'Temporary', 'Remote', 'Other'
+import CustomDropdownComponent from '../../Component/CustomDropdownComponent';
+const data = [
+    { label: 'Item 1', value: 'Full-Time' },
+    { label: 'Item 2', value: 'part-Time' },
+    { label: 'Item 3', value: 'Seasonal' },
+    { label: 'Item 4', value: 'Contract' },
+    { label: 'Item 5', value: 'Temporary' },
+    { label: 'Item 6', value: 'Freelance' },
+    { label: 'Item 7', value: 'Remote' },
+    { label: 'Item 8', value: 'Internship' },
 ];
+
+
 const PostScreen = (props) => {
 
-    const bottomSheetRef = useRef();
-    const bottomSheetRef1 = useRef();
+
+    const [companyDetails, setCompanyDetails] = useState({
+        companyName: 'Test',
+        department: 'Test',
+        addressline1: 'Test',
+        addressline2: 'Test',
+        country: 'Test',
+        province: 'Test',
+        city: 'Test',
+        postalcode: 'Test',
+
+    });
+    const [userDetails, setUserDetails] = useState({
+        firstName: 'Test',
+        lastName: 'Test',
+        profileImage: 'Test',
+    });
+
+    const [jobDetails, setJobDetails] = useState({
+        title: 'Test',
+        position: 'Test',
+        description: 'Test',
+        requirement: 'Test',
+        salary: 'Test',
+        additionalNote: 'Test',
+        skills: '',
+        texts: [], 
+        type: '',
+        jobTypeArray: []
+    });
 
 
-    const openBottomSheet = () => {
-
-        bottomSheetRef.current.open();
-    };
-    const closeBottomSheet = () => {
-        bottomSheetRef.current.close();
-    };
 
     const [state, setState] = useState({
-        firstName: '',
-        lastName: '',
-        profileImage: '',
-        title: '',
-        address: '',
-        type: '',
-        additionalNote: '',
-        texts: [],
-        isNext: '2',
-        description: '',
-        requirement: '',
-        message: '',
-        salary: '',
-        selectedType: [],
         isOpen: false,
         skillsOpen: false,
         multiple: true,
@@ -64,7 +73,11 @@ const PostScreen = (props) => {
         activeIndex: 1,
         completedStepIndex: null,
     });
+
     const [isVisible, setIsVisible] = useState(false)
+    const [step, setStape] = useState(0)
+    const [isNext, setIsNext] = useState(2)
+    const [salaryType, setSalaryType] = useState('Yearly'); // Default value is 'Yearly'
 
 
     useEffect(() => {
@@ -75,298 +88,418 @@ const PostScreen = (props) => {
     const getData = async () => {
         const data = await cacheData.getDataFromCachedWithKey(AppConstants.AsyncKeyLiterals.IS_AUTH)
         console.log(data);
-        setState({
-            ...state,
+        setUserDetails({
+            ...userDetails,
             firstName: data?.data?.userData?.firstName,
             lastName: data?.data?.userData?.lastName,
             profileImage: data?.data?.userData?.profileImage,
         });
     }
 
-    // JobType picker
-    const handleCheckboxChange = (jobType) => {
-        const isSelected = state.selectedType.includes(jobType);
 
-        const updatedjobTypes = isSelected
-            ? state.selectedType.filter((item) => item !== jobType)
-            : [...state.selectedType, jobType];
-
-
-        setState({
-            ...state,
-            selectedType: updatedjobTypes,
-        });
-    };
 
     const createPost = async () => {
 
-        setIsVisible(true)
+        if(step === 0){
+            setStape(step + 1)
+        }else{
 
-        const formData = new FormData();
-        formData.append("title", state.title)
-        formData.append("description", state.description)
-        formData.append("requirement", state.requirement)
-        formData.append("salary", state.salary)
-        formData.append("skills", state.texts.join(', '))
-        formData.append("jobType", state.selectedType.join(', '))
-        formData.append("additionalNote", state.additionalNote)
-        formData.append("address", state.address)
+            const formData = new FormData();
 
-        console.log(JSON.stringify(formData));
-        const headers = {
-            'authorization': await cacheData.getDataFromCachedWithKey(AppConstants.AsyncKeyLiterals.token),
-            'Content-Type': 'multipart/form-data'
-        }
-        await axios({
-            method: 'POST',
-            url: AppConstants.AsyncKeyLiterals.Base_URL + AppConstants.AsyncKeyLiterals.CreatPost,
-            data: formData,
-            headers: headers
-        }).then(response => {
-            console.log("status", response.status);
-            setIsVisible(false)
+            // Add each part of the form data
+            formData.append("companyDetails", JSON.stringify(companyDetails));
+            formData.append("userDetails", JSON.stringify(userDetails));
+            formData.append("jobDetails", JSON.stringify(jobDetails));
+          
+            // Make the POST request
+            try {
+              const response = await axios.post(
+                AppConstants.AsyncKeyLiterals.Base_URL + AppConstants.AsyncKeyLiterals.CreatPost, // Replace with your backend API endpoint
+                formData, // FormData object containing the form data
+                {
+                  headers: {
+                    'authorization': await cacheData.getDataFromCachedWithKey(AppConstants.AsyncKeyLiterals.token),
 
-            props.navigation.replace('BottomNavigator')
-        }).catch(error => {
-            if (error.response.status === 401) {
-                setIsVisible(false)
+                    'Content-Type': 'multipart/form-data', // Set the content type header
+                    // Other headers if needed
+                  },
+                }
+              );
+          
+              // Handle successful response
+              props.navigation.replace('BottomNavigator')
 
-                setState({
-                    ...state, message: error.response.data.error, isAlert: true
-                })
-
-            } else {
-                setIsVisible(false)
-
-                setState({
-                    ...state, message: error.message, isAlert: true
-                })
+              console.log('Response:', response.data);
+              // Do something with the response if needed
+            } catch (error) {
+              // Handle error
+              console.error('Error:', error);
+              // Do something with the error if needed
             }
-        });
+
+      
+    }
     }
 
-    const getCall = (item) => {
+    const getCall = () => {
+        jobDetails.texts.push(jobDetails.skills)
+        setJobDetails({
+            ...jobDetails,
+            skills: ''
+        })
 
-        if (state.type == 'AddSkills') {
-            console.log("item", item);
-            setState({
-                ...state,
-                texts: item
-            })
-            closeBottomSheet()
+    }
+    const getJobTypeCall = () => {
+        console.log(jobDetails.type);
+        jobDetails.jobTypeArray.push(jobDetails.type)
+        setJobDetails({
+            ...jobDetails,
+            type: ''
+        })
+    }
 
-        }
-    }
-    const getStepState = (index) => {
-        const state1 = Wizard.States.DISABLED;
-        if (state.completedStepIndex && state.completedStepIndex > index - 1) {
-            state1 = Wizard.States.COMPLETED;
-        } else if (state.activeIndex === index || state.completedStepIndex === index - 1) {
-            state1 = Wizard.States.ENABLED;
-        }
-        return state1;
-    }
     const handleItemPress = (index) => {
         // Create a copy of the array
-        const updatedTexts = [...state.texts];
+        const updatedTexts = [...jobDetails.texts];
 
         // Remove the item at the specified index
         updatedTexts.splice(index, 1);
 
         // Update the state with the new array
-        setState({
-            ...state,
+        setJobDetails({
+            ...jobDetails,
             texts: updatedTexts
         })
     };
+    const handleItemPress1 = (index) => {
+        // Create a copy of the array
+        const updatedTexts = [...jobDetails.jobTypeArray];
 
-    const renderSkillsItem = ({ item, index }) => (
-        <View>
-            <View style={styles.item}>
-                <Text style={[styles.textStyles, { color: color.white }]}>{item}</Text>
-            </View>
-            <TouchableOpacity activeOpacity={0.6} onPress={() => handleItemPress(index)} style={{ position: 'absolute', right: 0, top: 0, zIndex: 2, backgroundColor: color.white, borderRadius: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }} >
-                <AntDesign name='closecircle' color={color.red} size={PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get())} />
-            </TouchableOpacity>
-        </View>
-    );
-    const renderCheckItem = ({ item, index }) => {
-        return (
-            <View style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                width: screenWidth / 2.7,
-                marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-                marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-            }}>
-                <Text style={[styles.textStyles, { flex: 0.8 }]}>{item}</Text>
+        // Remove the item at the specified index
+        updatedTexts.splice(index, 1);
 
-                <Checkbox
-                    label={item}
-                    labelStyle={[styles.textStyles]}
-                    status={state.selectedType.includes(item) ? 'checked' : 'unchecked'}
-                    onPress={() => handleCheckboxChange(item)}
-                />
-            </View>
-        )
+        // Update the state with the new array
+        setJobDetails({
+            ...jobDetails,
+            jobTypeArray: updatedTexts
+        })
     };
 
 
-    const DescriptionItem = () => {
+    const firstStep = () => {
         return (
-            <View style={{ flex: 1 }}>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
 
-                <View style={{ flex: 1, justifyContent: 'space-between' }}>
+                <View style={{ flex: 1 }}>
+                    <Header screenName={"normal"} title={'Post'} onPress={() => props.navigation.goBack()} />
 
-                    {/* description */}
-                    <View style={{ marginHorizontal: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
+                    <Text style={[styles.textStyles, { fontSize: 18 / PixelRatio.getFontScale(), textAlign: 'center', marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), fontFamily: FontFamily.Roboto_Bold }]}>{'Company Details'}</Text>
 
+                    {/* Company_Name */}
+                    <CustomTextInput
+                        value={companyDetails.companyName}
+                        onChangeText={(i) => setCompanyDetails({
+                            ...companyDetails,
+                            companyName: i,
+                        })}
+                        type={"whiteBc"}
+                        placeholder={"Company Name"}
+                    />
+                    {/* Department */}
 
+                    <CustomTextInput
+                        value={companyDetails.department}
+                        onChangeText={(i) => setCompanyDetails({
+                            ...companyDetails,
+                            department: i,
+                        })}
+                        type={"whiteBc"}
+                        placeholder={"Department"}
+                    />
+                    {/* Address */}
 
-
-                        <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), }}>
-
-                            {/* Titile */}
-
-                            <CustomTextInput
-                                value={state.title}
-                                onChangeText={(i) => setState({
-                                    ...state,
-                                    title: i,
-                                })}
-                                type={"whiteBc"}
-                                placeholder={"Title"}
-                            />
-                            {/* Description */}
-                            <CustomTextInput
-                                value={state.description}
-                                onChangeText={(i) => setState({
-                                    ...state,
-                                    description: i
-                                })}
-                                type={"Address"}
-                                placeholder={"Description"}
-                            />
-                            {/* Salary */}
-                            <View style={{ justifyContent: 'center' }}>
+                    <View>
+                        <CustomTextInput
+                            value={companyDetails.addressline1}
+                            onChangeText={(i) => setCompanyDetails({
+                                ...companyDetails,
+                                addressline1: i,
+                            })}
+                            type={"whiteBc"}
+                            placeholder={"Address Line 1"}
+                        />
+                        <CustomTextInput
+                            value={companyDetails.addressline2}
+                            onChangeText={(i) => setCompanyDetails({
+                                ...companyDetails,
+                                addressline2: i,
+                            })}
+                            type={"whiteBc"}
+                            placeholder={"Address Line 2 (Optional)"}
+                        />
+                        <CustomTextInput
+                            value={companyDetails.country}
+                            onChangeText={(i) => setCompanyDetails({
+                                ...companyDetails,
+                                country: i,
+                            })}
+                            type={"whiteBc"}
+                            placeholder={"Country"}
+                        />
+                        <CustomTextInput
+                            value={companyDetails.province}
+                            onChangeText={(i) => setCompanyDetails({
+                                ...companyDetails,
+                                province: i,
+                            })}
+                            type={"whiteBc"}
+                            placeholder={"Province"}
+                        />
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <View style={{ width: '48%' }}>
                                 <CustomTextInput
-                                    value={state.salary}
-                                    onChangeText={(i) => setState({
-                                        ...state,
-                                        salary: i
+                                    value={companyDetails.city}
+                                    onChangeText={(i) => setCompanyDetails({
+                                        ...companyDetails,
+                                        province: i,
                                     })}
                                     type={"whiteBc"}
-                                    placeholder={"Salary"}
+                                    placeholder={"City"}
+
                                 />
-                                <TouchableOpacity onPress={() => { }} style={{ position: 'absolute', right: 10 }}>
-                                    <Text style={{ color: color.black }}>{`| ${'Hourly'}`}</Text>
-                                </TouchableOpacity>
+
                             </View>
+                            <View style={{ width: '48%' }}>
 
-
-                            {/* Job type */}
-                            <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }}>
-                                <Text style={[styles.textStyles, { flex: 1, color: color.black }]} >{"Job Type"}</Text>
-
-                                <View style={{ marginTop: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()) }}>
-
-
-                                    <FlatList
-                                        data={checkboxItems}
-                                        renderItem={renderCheckItem}
-                                        keyExtractor={(item, index) => index.toString()}
-                                        numColumns={2}
-                                    />
-
-
-                                    {/* Skills */}
-                                    <TouchableOpacity onPress={() => [setState({
-                                        ...state,
-                                        // skillsOpen: true,
-                                        type: 'AddSkills',
-                                    }), openBottomSheet()]}
-                                        style={[styles.blockStyle, { marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()) }]}>
-                                        <Text style={styles.textStyles}>{'Add Skills'}</Text>
-                                    </TouchableOpacity>
-                                    <FlatList
-                                        data={state.texts}
-                                        renderItem={renderSkillsItem}
-                                        keyExtractor={(item, index) => index.toString()}
-                                        numColumns={3}
-                                    />
-
-                                    {/* Requirment  */}
-                                    <CustomTextInput
-                                        value={state.requirement}
-                                        onChangeText={(i) => setState({
-                                            ...state,
-                                            requirement: i
-                                        })}
-                                        type={"Address"}
-                                        placeholder={"Requirement"}
-                                    />
-                                    {/* Addition note */}
-                                    <CustomTextInput
-                                        value={state.additionalNote}
-                                        onChangeText={(i) => setState({
-                                            ...state,
-                                            additionalNote: i
-                                        })}
-                                        type={"Address"}
-                                        placeholder={"Additional Note (Optional)"}
-                                    />
-
-                                    {/* Address */}
-                                    <View style={{ justifyContent: 'center' }}>
-                                        <CustomTextInput
-                                            value={state.address}
-
-                                            onChangeText={(i) => setState({
-                                                ...state,
-                                                address: i
-                                            })}
-                                            type={"whiteBc"}
-                                            placeholder={"Address"}
-                                        />
-                                        <TouchableOpacity onPress={() => setState({
-                                            ...state,
-                                            addresOpen: true,
-                                            skillsOpen: false
-                                        })}
-                                            style={{ position: 'absolute', right: 10 }}>
-                                            <Ionicons name='location-sharp' color={color.black} size={PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get())} />
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            </ View>
-                        </View>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-                            {/* Create Post */}
-                            <CustomButton
-                                onPress={createPost}
-                                text="Create"
-                                backgroundColor={color.primerycolor}
-                                textColor={color.white}
-                                btnStyle={{ flex: 1 }}
-                            />
-
+                                <CustomTextInput
+                                    value={companyDetails.postalcode}
+                                    onChangeText={(i) => setCompanyDetails({
+                                        ...companyDetails,
+                                        postalcode: i,
+                                    })}
+                                    type={"whiteBc"}
+                                    placeholder={"Postal Code"}
+                                />
+                            </View>
                         </View>
                     </View>
-
                 </View>
-            </View>
-
+            </ScrollView>
         )
     }
+    const secondStep = () => {
+        return (
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+
+                <View style={{ flex: 1 }}>
+                    <Header screenName={"normal"} title={'Post'} onPress={() => setStape(step - 1)} />
+
+                    <Text style={[styles.textStyles, { fontSize: 18 / PixelRatio.getFontScale(), textAlign: 'center', marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()), fontFamily: FontFamily.Roboto_Bold }]}>{'Job Details'}</Text>
+                    {/* Position */}
+                    <CustomTextInput
+                        value={jobDetails.title}
+                        onChangeText={(i) => setJobDetails({
+                            ...jobDetails,
+                            title: i,
+                        })}
+                        type={"whiteBc"}
+                        placeholder={"Position"}
+                    />
+                    {/* Description  */}
+                    <CustomTextInput
+                        value={jobDetails.description}
+                        onChangeText={(i) => setJobDetails({
+                            ...jobDetails,
+                            description: i,
+                        })}
+                        type={"Address"}
+                        placeholder={"Description"}
+                    />
+                    {/* Requirement  */}
+                    <CustomTextInput
+                        value={jobDetails.requirement}
+                        onChangeText={(i) => setJobDetails({
+                            ...jobDetails,
+                            requirement: i,
+                        })}
+                        type={"Address"}
+                        placeholder={"Requirement"}
+                    />
+
+                    <View>
+                        <View style={{ justifyContent: 'center' }}>
+                            <CustomTextInput
+                                value={jobDetails.salary}
+                                onChangeText={(i) => setJobDetails({
+                                    ...jobDetails,
+                                    salary: i,
+                                })}
+                                type={"whiteBc"}
+                                placeholder={"Salary"}
+                            />
+                            <TouchableOpacity onPress={() => setSalaryType(salaryType === 'Yearly' ? 'Hourly' : 'Yearly')} style={{ position: 'absolute', right: 10 }}>
+                                <Text style={{ color: 'black' }}>{`| ${salaryType === 'Yearly' ? 'Hourly' : 'Yearly'}`}</Text>
+                            </TouchableOpacity>
+                        </View>
+                        {/* Addition note */}
+                        <CustomTextInput
+                            value={jobDetails.additionalNote}
+                            onChangeText={(i) => setJobDetails({
+                                ...jobDetails,
+                                additionalNote: i,
+                            })}
+                            type={"Address"}
+                            placeholder={"Additional Note (Optional)"}
+                        />
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+
+                        <View style={{
+                            flex: 1, marginTop: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+                        }}>
+                            <CustomDropdownComponent data={data} placeholder={'Select Job Type'} selectedValue={(i) => [
+                                setJobDetails({
+                                    ...jobDetails,
+                                    type: i,
+                                })]} />
+
+                        </View>
+                        {jobDetails.skills !== ''}{
+                            <TouchableOpacity
+                                onPress={() => getJobTypeCall()}
+                                style={{
+                                    backgroundColor: color.primerycolor,
+                                    marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+                                    padding: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+                                    borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+                                }}>
+                                <Text style={[styles.textStyles, { color: color.white }]}>{'Add'}</Text>
+                            </TouchableOpacity>
+                        }
+
+                    </View>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
+                        {jobDetails.jobTypeArray.map((item, index) => (
+                            <View>
+                                <View style={styles.item}>
+                                    <Text style={[styles.textStyles, { color: color.white }]}>{item}</Text>
+                                </View>
+                                <TouchableOpacity activeOpacity={0.6} onPress={() => handleItemPress1(index)} style={{ position: 'absolute', right: 0, top: 0, zIndex: 2, backgroundColor: color.white, borderRadius: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }} >
+                                    <AntDesign name='closecircle' color={color.red} size={PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get())} />
+                                </TouchableOpacity>
+                            </View>
+                        ))}
+                    </View>
+                    {/* Skills */}
+
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <View style={{ flex: 1 }}>
+                            <CustomTextInput
+                                value={jobDetails.skills}
+                                onChangeText={(i) => [setJobDetails({
+                                    ...jobDetails,
+                                    skills: i,
+                                })]}
+                                type={"whiteBc"}
+                                placeholder={"Add Skills"}
+                            />
+                        </View>
+
+                        {jobDetails.skills !== ''}{
+                            <TouchableOpacity
+                                onPress={() => getCall()}
+                                style={{
+                                    backgroundColor: color.primerycolor,
+                                    marginLeft: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+                                    padding: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+                                    borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
+                                }}>
+                                <Text style={[styles.textStyles, { color: color.white }]}>{'Add'}</Text>
+                            </TouchableOpacity>
+                        }
+                    </View>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 20 }}>
+                        {jobDetails.texts.map((item, index) => (
+                            <View>
+                                <View style={styles.item}>
+                                    <Text style={[styles.textStyles, { color: color.white }]}>{item}</Text>
+                                </View>
+                                <TouchableOpacity activeOpacity={0.6} onPress={() => handleItemPress(index)} style={{ position: 'absolute', right: 0, top: 0, zIndex: 2, backgroundColor: color.white, borderRadius: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }} >
+                                    <AntDesign name='closecircle' color={color.red} size={PixelRatio.getPixelSizeForLayoutSize(15 / PixelRatio.get())} />
+                                </TouchableOpacity>
+                            </View>
+                        ))}
+                    </View>
+                </View>
+
+            </ScrollView>
+        )
+    }
+   
     return (
         <View style={styles.container}>
             <CustomLoader isVisible={isVisible} />
-            <Header screenName={"normal"} title={'Post'} onPress={() => props.navigation.goBack()} />
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+            <View style={{ flex: 1 }}>
+                {step === 0 ? firstStep() : null}
+                {step === 1 ? secondStep() : null}
 
-                {DescriptionItem()}
-            </ScrollView>
-            <CustomRBottomSheet multiple={state.multiple} getCall={state.type} refBottomSheet={bottomSheetRef} data={(item) => getCall(item)} />
+
+
+            </View>
+
+            {/* Create Post */}
+            <View>
+                {step === 0 ?
+                    <CustomButton
+                        onPress={createPost}
+                        text={'Next'}
+                        backgroundColor={color.primerycolor}
+                        textColor={color.white}
+                        btnStyle={{ marginVertical: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }}
+                    />
+
+                    : null}
+                {step !== 0 && step !== 1 ?
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <CustomButton
+                            onPress={() => { setStape(step - 1) }}
+                            text={'Back'}
+                            backgroundColor={color.primerycolor}
+                            textColor={color.white}
+                            btnStyle={{ width: '48%', marginVertical: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }}
+                        />
+                        <CustomButton
+                            onPress={() => { setStape(step + 1) }}
+                            text={'Next'}
+                            backgroundColor={color.primerycolor}
+                            textColor={color.white}
+                            btnStyle={{ width: '48%', marginVertical: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }}
+                        />
+                    </View>
+                    : null}
+
+                {step === 1 ?
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <CustomButton
+                            onPress={() => { setStape(step - 1) }}
+                            text={'Back'}
+                            backgroundColor={color.primerycolor}
+                            textColor={color.white}
+                            btnStyle={{ width: '48%', marginVertical: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }}
+                        />
+                        <CustomButton
+                            onPress={createPost}
+                            text={'create'}
+                            backgroundColor={color.primerycolor}
+                            textColor={color.white}
+                            btnStyle={{ width: '48%', marginVertical: PixelRatio.getPixelSizeForLayoutSize(20 / PixelRatio.get()) }}
+                        />
+                    </View>
+
+                    : null}
+
+            </View>
+            {/* <CustomRBottomSheet multiple={state.multiple} getCall={state.type} refBottomSheet={bottomSheetRef} data={(item) => getCall(item)} /> */}
             <CustomAlert onClose={() => setState({ ...state, isAlert: false })} visible={state.isAlert} alert={'normal'} message={state.message} />
 
         </View>

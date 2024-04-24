@@ -12,14 +12,14 @@ const CustomTextInput = ({ style, placeholder, type, value, leftIcon, RightIcon,
     }, [])
 
     return (
-        <View>
+        <View style={{}}>
             {type === 'firstName' ?
                 <TextInput
                     mode='outlined'
                     value={value}
                     contentStyle={{width:width}}
                     textColor={color.black}
-                    outlineStyle={{ borderColor: color.black }}
+                    outlineStyle={{ borderColor: color.gray}}
                     placeholderTextColor={color.white}
                     textAlignVertical='top'
                     textContentType='streetAddressLine1'
@@ -35,7 +35,7 @@ const CustomTextInput = ({ style, placeholder, type, value, leftIcon, RightIcon,
                     mode='outlined'
                     value={value}
                     textColor={color.white}
-                    outlineStyle={{ borderColor: color.white }}
+                    outlineStyle={{ borderColor: color.gray }}
                     style={styles.TextInputStyle}
                     onChangeText={(i) => [onChangeText(i)]}
                     label={placeholder}
@@ -49,7 +49,7 @@ const CustomTextInput = ({ style, placeholder, type, value, leftIcon, RightIcon,
                     mode='outlined'
                     value={value}
                     textColor={color.black}
-                    outlineStyle={{ borderColor: color.black }}
+                    outlineStyle={{ borderColor: color.gray }}
                     multiline={true}
                     style={[styles.TextInputStyle, { height: 80, textAlignVertical: 'top' }]}
                     onChangeText={(i) => [onChangeText(i)]}
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     TextInputStyle: {
         backgroundColor: color.white,
         borderRadius: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
-        marginVertical: PixelRatio.getPixelSizeForLayoutSize(10 / PixelRatio.get()),
+        marginVertical: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
         paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(5 / PixelRatio.get()),
         flexDirection: 'row',
         fontSize: 14 / PixelRatio.getFontScale(),
